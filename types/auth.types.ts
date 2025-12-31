@@ -4,7 +4,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    status: string;
-    token: string;
-    expired_at: string;
+    success: boolean;
+    message: string;
+    data: {
+        token: string;
+        expires_at: string;
+        type: string;
+    };
 }

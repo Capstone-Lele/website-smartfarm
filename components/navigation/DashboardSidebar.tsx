@@ -12,9 +12,10 @@ import { GrMoney } from "react-icons/gr";
 import { MdOutlineStoreMallDirectory } from "react-icons/md";
 import { LuDatabase } from "react-icons/lu";
 import useToggleSidebar from "@/lib/hooks/useToggleSidebar";
+import { usePathname } from "next/navigation";
 
 export const items = [
-  { title: "Main Menu", type: "title" },
+  { title: "Menu Utama", type: "title" },
   {
     name: "Beranda",
     icon: <LuLayoutDashboard />,
@@ -39,7 +40,7 @@ export const items = [
     href: "/dashboard/reports",
     type: "menu",
   },
-  { title: "Management", type: "title" },
+  { title: "Manajemen", type: "title" },
   {
     name: "Pengguna",
     icon: <LuUsersRound />,
@@ -155,10 +156,15 @@ const MenuItem = ({
   href: string;
   isOpen: boolean;
 }) => {
+
+  const pathName = usePathname();
+
   return (
     <Link
       href={href}
-      className="flex h-10 items-center gap-3 mt-1 cursor-pointer px-3 py-2 rounded-xs hover:bg-primary-surface hover:text-primary"
+      className={`flex h-10 items-center gap-3 mt-1 cursor-pointer px-3 py-2 rounded-xs hover:bg-primary-surface hover:text-primary ${
+        pathName === href ? "bg-primary-surface text-primary" : ""
+      }`}
     >
       <span className="text-xl">{icon}</span>
       <p
@@ -185,6 +191,8 @@ const DropdownMenuItem = ({
   isOpen: boolean;
   toggle: () => void;
 }) => {
+  const pathName = usePathname();
+
   return (
     <div
       className="w-full mt-1"
@@ -223,7 +231,9 @@ const DropdownMenuItem = ({
             <Link
               key={index}
               href={subMenu.href}
-              className="p-2 rounded-xs font-medium hover:bg-primary-surface hover:text-primary"
+              className={`p-2 rounded-xs font-medium hover:bg-primary-surface hover:text-primary ${
+                pathName === subMenu.href ? "bg-primary-surface text-primary" : ""
+              }`}
             >
               {subMenu.name}
             </Link>

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { getCookie } from 'cookies-next';
+import { decrypt } from '../session';
 
 export class ApiError extends Error {
     status: number;
@@ -24,8 +25,12 @@ axiosInstance.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
         const token =  getCookie('session_token') as string | undefined;
         console.log('Token Value:', token);
-        if (token) {
-            config.headers.Authorization = token;
+
+        const session = await decrypt(token);
+        console.log('Decrypted Session:', session);
+
+        if (session?.token) {
+            config.headers.Authorization = session.token;
         }
         return config;
     },

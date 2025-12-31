@@ -1,0 +1,24 @@
+"use client";
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
+
+type Category = {
+  id: string;
+  name: string;
+};
+
+export const columnsCategory: ColumnDef<Category>[] = [
+  {
+    id: "No",
+    header: () => <span className="">No</span>,
+    cell: ({ row }) => {
+      return <span>{row.index + 1}</span>;
+    },
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="NAMA" />
+    ),
+  },
+];
