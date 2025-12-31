@@ -1,17 +1,7 @@
 "use client";
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { FiSidebar } from "react-icons/fi";
 import { Separator } from "../ui/separator";
-
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   Popover,
   PopoverContent,
@@ -24,21 +14,45 @@ import { FiUser } from "react-icons/fi";
 import { MdOutlineLogout } from "react-icons/md";
 import useToggleSidebar from "@/lib/hooks/useToggleSidebar";
 import { useLogout } from "@/lib/hooks/services/useAuth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { getCookieDecryptedSession } from "@/lib/session";
+import BreadCrumbPath from "../breadcrumb";
+import dataPath from "@/lib/constants/path";
 
 const DashboardNavbar = () => {
+  const pathname = usePathname();
   const { isOpen, toggle } = useToggleSidebar();
+
+  const checkPathname = () => {
+    for (const item of dataPath) {
+      if (pathname === item.path) {
+        return item.name;
+      }
+      if (item.sub_paths) {
+        for (const subItem of item.sub_paths) {
+          if (pathname === subItem.path) {
+            return subItem.name;
+          }
+        }
+      }
+    }
+    return "";
+  };
 
   return (
     <main>
       <nav className="w-full h-18 bg-white border-b border-gray-200 flex items-center justify-between px-4">
         <div className="flex items-center">
           <div onClick={toggle}>
-            <FiSidebar className={`text-2xl ${isOpen ? "rotate-180" : ""} cursor-pointer`} />
+            <FiSidebar
+              className={`text-2xl ${
+                isOpen ? "rotate-180" : ""
+              } cursor-pointer`}
+            />
           </div>
-          <div className="mx-4 h-6 w-px bg-gray-300" />
+          <div className="mx-4 h-6 w-0.5 bg-gray-300" />
           <h1 className="text-xl text-gray-800 font-semibold">
-            Dashboard Navbar
+            {checkPathname()}
           </h1>
         </div>
         <div>
@@ -47,18 +61,7 @@ const DashboardNavbar = () => {
       </nav>
       <nav className="border-b h-12 flex items-center px-4">
         <div>
-          <Breadcrumb>
-            <BreadcrumbList className="">
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/dashboard">Beranda</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem></BreadcrumbItem>
-              <BreadcrumbPage>Dashboard</BreadcrumbPage>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <BreadCrumbPath />
         </div>
       </nav>
     </main>
@@ -70,6 +73,7 @@ export default DashboardNavbar;
 const UserProfile = () => {
   const logoutMutation = useLogout();
   const route = useRouter();
+  const [dataSession, setDataSession] = useState<any>(null);
 
   const onLogout = async () => {
     try {
@@ -81,21 +85,30 @@ const UserProfile = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getCookieDecryptedSession();
+      console.log("User Session:", session);
+      setDataSession(session);
+    };
+    fetchSession();
+  }, []);
+
   return (
     <Popover>
       <PopoverTrigger className="flex items-center cursor-pointer">
+        <div className="mr-3 text-right ">
+          <p className="font-medium text-gray-800">{dataSession?.name || ""}</p>
+          <p className="text-sm text-gray-500">{dataSession?.role || ""}</p>
+        </div>
         <div>
           <Image
             src="/images/default.jpg"
             alt="User Profile"
             width={40}
             height={40}
-            className=" rounded-full"
+            className=" rounded-full border border-primary"
           />
-        </div>
-        <div className="ml-3">
-          <p className="font-medium text-gray-800">John Doe</p>
-          <p className="text-sm text-gray-500">Admin</p>
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 text-sm ">

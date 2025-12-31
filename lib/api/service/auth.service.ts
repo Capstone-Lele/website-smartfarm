@@ -1,40 +1,36 @@
-import { LoginRequest, LoginResponse } from '@/types/auth.types';
-import { apiClient } from '../client';
-import { API_ENDPOINTS } from '../endpoint';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { LoginRequest, LoginResponse } from "@/types/auth.types";
+import { apiClient } from "../client";
+import { API_ENDPOINTS } from "../endpoint";
+import { clearSession, createSession } from "@/lib/session";
 
 export const authService = {
-    login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-        // const response = await apiClient.post<LoginResponse>(
-        //     API_ENDPOINTS.AUTH.LOGIN,
-        //     credentials
-        // );
+  login: async (credentials: LoginRequest): Promise<LoginResponse> => {
+    // const response = await apiClient.post<LoginResponse>(
+    //     API_ENDPOINTS.AUTH.LOGIN,
+    //     credentials
+    // );
 
-        await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        // dummy response for testing
-        const response: LoginResponse = {
-            status: 'success',
-            token: 'dummy_token_123456',
-            expired_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 jm
-        };
-        
-        if (response.token && response.expired_at) {
-            setCookie('session_token', response.token, {
-                expires: new Date(response.expired_at),
-                path: '/',
-                sameSite: 'lax',
-            });
-        }
-        
-        return response;
-    },
+    // dummy response for testing
+    const response: LoginResponse = {
+      success: true,
+      message: "Login successful",
+      data: {
+        expires_at: "2026-01-30 22:37:16",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdlMDA1MDE5LTAxMGQtNGNjMy04OWJhLTMzYjA4YWY0ZjIxMiIsIm5hbWUiOiJFbXBsb3llZSBVc2VyIDEiLCJlbWFpbCI6ImVtcGxveWVlMUBleGFtcGxlLmNvbSIsInJvbGUiOiJlbXBsb3llZSIsImlhdCI6MTc2NzEwNTQzNiwiZXhwIjoxNzY3MTA5MDM2fQ.O0FR-19jAYz_MtJ9iTW5nvtluyK7leYYXymgXmrv8pM",
+        type: "Bearer",
+      },
+    };
 
-    logout: async (): Promise<string> => {
-        // await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
-        deleteCookie('session_token', { path: '/' });
+    return response;
+  },
 
-        return "success";
-    }
+  logout: async (): Promise<string> => {
+    // await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
+    await clearSession();
 
+    return "success";
+  },
 };

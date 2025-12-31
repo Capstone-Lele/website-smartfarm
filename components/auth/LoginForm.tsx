@@ -35,9 +35,9 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const route = useRouter();
   const [seePassword, setSeePassword] = useState(false);
   const loginMutation = useLogin();
-  const route = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,13 +49,13 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
 
-
     try {
       const result = await loginMutation.mutateAsync(data);
       console.log("Login successful", result);
       // olah data redirect dst.
       // herer....
       route.push("/dashboard");
+      console.log("Redirecting to dashboard...");
     } catch (error) {
       console.error("Login failed", error);
     }
