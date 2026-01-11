@@ -10,10 +10,8 @@ type Category = {
 export const columnsCategory: ColumnDef<Category>[] = [
   {
     id: "No",
-    header: () => <span className="">No</span>,
-    cell: ({ row }) => {
-      return <span>{row.index + 1}</span>;
-    },
+    accessorKey: "No",
+    header: () => <span className="">NO</span>,
   },
   {
     accessorKey: "name",

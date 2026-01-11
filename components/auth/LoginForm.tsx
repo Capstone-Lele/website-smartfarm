@@ -24,14 +24,15 @@ import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "@/components/ui/spinner";
-import { useLogin } from "@/lib/hooks/services/useAuth";
+import { useLogin } from "@/lib/api/service/auth/useAuth";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email tidak valid" }),
   password: z
     .string()
-    .min(6, { message: "Password harus terdiri dari minimal 6 karakter" }),
+    .min(8, { message: "Password harus terdiri dari minimal 8 karakter" }),
 });
 
 const LoginForm = () => {
@@ -48,16 +49,17 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-
     try {
       const result = await loginMutation.mutateAsync(data);
-      console.log("Login successful", result);
-      // olah data redirect dst.
-      // herer....
+      toast.success("Login berhasil!");
+      // timeout sebentar sebelum redirect
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       route.push("/dashboard");
-      console.log("Redirecting to dashboard...");
-    } catch (error) {
-      console.error("Login failed", error);
+    } catch (error: any) {
+      toast.error("Login Gagal", {
+        description: error?.message || "Login gagal. Silakan coba lagi.",
+        icon: "❌",
+      });
     }
   };
 

@@ -16,6 +16,10 @@ const dataPath = [
             {
                 path: '/dashboard/master-data/products',
                 name: 'Produk',
+            },
+            {
+                path: '/dashboard/master-data/units',
+                name: 'Satuan',
             }
         ],
     },

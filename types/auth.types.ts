@@ -12,3 +12,14 @@ export interface LoginResponse {
         type: string;
     };
 }
+
+export interface UserInfo {
+    success: boolean;
+    message: string;
+    data: {
+        id: string;
+        name: string;
+        email: string;
+        role: string;
+    };
+}
