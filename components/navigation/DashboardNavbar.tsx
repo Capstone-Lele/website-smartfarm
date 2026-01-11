@@ -13,11 +13,12 @@ import { Label } from "../ui/label";
 import { FiUser } from "react-icons/fi";
 import { MdOutlineLogout } from "react-icons/md";
 import useToggleSidebar from "@/lib/hooks/useToggleSidebar";
-import { useLogout } from "@/lib/hooks/services/useAuth";
+import { useLogout, useUserInfo } from "@/lib/api/service/auth/useAuth";
 import { usePathname, useRouter } from "next/navigation";
 import { getCookieDecryptedSession } from "@/lib/session";
 import BreadCrumbPath from "../breadcrumb";
 import dataPath from "@/lib/constants/path";
+import SkeletonNavbarProfile from "../sekeleton/navbar-profile";
 
 const DashboardNavbar = () => {
   const pathname = usePathname();
@@ -72,8 +73,8 @@ export default DashboardNavbar;
 
 const UserProfile = () => {
   const logoutMutation = useLogout();
+  const userinfo = useUserInfo();
   const route = useRouter();
-  const [dataSession, setDataSession] = useState<any>(null);
 
   const onLogout = async () => {
     try {
@@ -86,30 +87,38 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getCookieDecryptedSession();
-      console.log("User Session:", session);
-      setDataSession(session);
-    };
-    fetchSession();
-  }, []);
+    if (userinfo.data) {
+      console.log("User Data:", userinfo.data);
+    }
+    if (userinfo.error) {
+      console.error("Error fetching user info:", userinfo.error);
+    }
+  }, [userinfo.data, userinfo.error]);
 
   return (
     <Popover>
       <PopoverTrigger className="flex items-center cursor-pointer">
-        <div className="mr-3 text-right ">
-          <p className="font-medium text-gray-800">{dataSession?.name || ""}</p>
-          <p className="text-sm text-gray-500">{dataSession?.role || ""}</p>
-        </div>
-        <div>
-          <Image
-            src="/images/default.jpg"
-            alt="User Profile"
-            width={40}
-            height={40}
-            className=" rounded-full border border-primary"
-          />
-        </div>
+        {userinfo.isLoading ? (
+          <SkeletonNavbarProfile />
+        ) : (
+          <>
+            <div className="mr-3 text-right ">
+              <p className="font-medium text-gray-800">
+                {userinfo.data?.data.email || ""}
+              </p>
+              <p className="text-sm text-gray-500">{userinfo.data?.data.role || ""}</p>
+            </div>
+            <div>
+              <Image
+                src="/images/default.jpg"
+                alt="User Profile"
+                width={40}
+                height={40}
+                className=" rounded-full border border-primary"
+              />
+            </div>
+          </>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 text-sm ">
         <Label className="block px-2 py-1 font-medium text-black">

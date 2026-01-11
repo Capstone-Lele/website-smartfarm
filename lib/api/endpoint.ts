@@ -1,6 +1,24 @@
 export const API_ENDPOINTS = {
     AUTH:{
-        LOGIN: '/login',
+        LOGIN: '/auth/login',
         LOGOUT: '/logout',
+        INFO: '/app/user-info',
+    },
+    MASTER_DATA: {
+        KATEGORI: {
+            GET_ALL: '/master-data/categories',
+        },
+        UNIT: {
+            GET_ALL: '/master-data/units',
+            DELETE: (id: string) => `/master-data/units/${id}`,
+            CREATE: '/master-data/units',
+            UPDATE: (id: string) => `/master-data/units/${id}`,
+        },
+        PRODUCT: {
+            GET_ALL: '/master-data/products',
+            CREATE: '/master-data/products',
+            DELETE: (id: string) => `/master-data/product/${id}`,
+            UPDATE: (id: string) => `/master-data/product/${id}`,
+        },
     },
 } as const;

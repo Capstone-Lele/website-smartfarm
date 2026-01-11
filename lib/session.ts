@@ -28,6 +28,21 @@ export async function decrypt(session: string | undefined = "") {
   }
 }
 
+export async function getCookiesToken() {
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(process.env.COOKIE_NAME as string)?.value;
+
+  if (!cookieValue) {
+    return null;
+  }
+  const token = await decrypt(cookieValue);
+
+  if (!token) {
+    return null;
+  }
+  return token;
+}
+
 export async function getCookieDecryptedSession() {
   const cookieStore = await cookies();
   const cookieValue = cookieStore.get(process.env.COOKIE_NAME as string)?.value;
