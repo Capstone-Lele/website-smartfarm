@@ -21,4 +21,10 @@ export const API_ENDPOINTS = {
             UPDATE: (id: string) => `/master-data/product/${id}`,
         },
     },
+    USERS:{
+        GET_ALL: '/users',
+        CREATE: '/users',
+        DELETE: (id: string) => `/users/${id}`,
+        UPDATE: (id: string) => `/users/${id}`,
+    }
 } as const;
