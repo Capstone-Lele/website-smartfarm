@@ -4,8 +4,8 @@ export type User = {
   email: string;
   role: string;
   image: string; 
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type UserRequest = {
@@ -27,7 +27,6 @@ export type UserFormInput = {
 export type UserEditInput = {
   name: string;
   email: string;
-  role: string;
   image?: File | null; 
   password?: string; 
 };

@@ -35,11 +35,17 @@ axiosInstance.interceptors.request.use(
     if (token?.token) {
       config.headers.Authorization = `Bearer ${token.token}`;
     }
+
+    // Remove Content-Type for FormData and set by browser
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+
     return config;
   },
   (error: AxiosError) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response Interceptor
@@ -50,13 +56,10 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response) {
-      // handle shometing here i am lazy rn
       console.log("❌ API Error Response:", error.response.data);
-      // throw new ApiError(error.response.status, error.response.data);
-      // return Promise.reject(new ApiError(error.response.status, error.response.data));
       return Promise.reject(error.response.data);
     }
-  }
+  },
 );
 
 export const apiClient = {

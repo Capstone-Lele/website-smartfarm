@@ -27,9 +27,15 @@ import { DataTableViewOptions } from "./data-table-column-view";
 import { DataTableFacetedFilter } from "./faceted-filter";
 import { ExportOptions } from "./exports/exports";
 import { useMemo, useState } from "react";
-import { LuFilter } from "react-icons/lu";
+import { LuFilter, LuSearch } from "react-icons/lu";
 import { Button } from "../ui/button";
 import FloatingMenuSelectedRow from "./floating-menu-selected-row";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
+import { Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -92,17 +98,24 @@ export function DataTable<TData, TValue>({
         <FloatingMenuSelectedRow table={table} />
       )}
 
-      <div className="w-full">
+      <div className="">
         {children && <div className="">{children}</div>}
         <div className="flex items-center justify-between py-4 gap-2">
           <div className="flex flex-1 items-center gap-2">
             {/* Search */}
-            <Input
-              placeholder="Search all columns..."
-              value={globalFilter ?? ""}
-              onChange={(event) => setGlobalFilter(event.target.value)}
-              className="max-w-60"
-            />
+            <div>
+              <InputGroup>
+                <InputGroupInput
+                  placeholder="Search all columns..."
+                  value={globalFilter ?? ""}
+                  onChange={(event) => setGlobalFilter(event.target.value)}
+                  className="max-w-60"
+                />
+                <InputGroupAddon>
+                  <Search />
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
             {/* Filter kolom */}
             {facetedFilter &&
               facetedFilter?.map(
@@ -114,7 +127,7 @@ export function DataTable<TData, TValue>({
                       title={filter.column}
                       options={filter.option}
                     />
-                  )
+                  ),
               )}
           </div>
           <div className="flex items-center gap-2">
@@ -126,7 +139,7 @@ export function DataTable<TData, TValue>({
                   (col: any) =>
                     col.id !== "actions" &&
                     col.id !== "select" &&
-                    col.id !== "No"
+                    col.id !== "No",
                 )
                 .map((col: any) => ({
                   key: col.columnDef.accessorKey || col.id,
@@ -153,7 +166,7 @@ export function DataTable<TData, TValue>({
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                       </TableHead>
                     );
@@ -170,10 +183,30 @@ export function DataTable<TData, TValue>({
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {(() => {
+                          const rawValue = cell.getValue();
+
+                          if (
+                            rawValue === null ||
+                            rawValue === ""
+                          ) {
+                            return (
+                              <div className="text-gray-400 italic">-</div>
+                            );
+                          }
+                          
+                          if (cell.column.columnDef.cell) {
+                            const content = flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            );
+                            return content;
+                          }
+
+
+                          // Render nilai biasa
+                          return String(rawValue);
+                        })()}
                       </TableCell>
                     ))}
                   </TableRow>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -43,6 +43,12 @@ import { Unit } from "@/types/master-data/unit.types";
 import { TYPE_PRODUCT } from "@/lib/constants/type-product";
 import { ROLE_LABEL } from "@/lib/constants/role";
 import { useCreateUser } from "@/lib/api/service/users/useUser";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama pengguna wajib diisi" }),
@@ -53,15 +59,16 @@ const formSchema = z.object({
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
       {
         message: "Format file harus JPG atau PNG",
-      }
-    )
-    .optional(),
+      },
+    ),
+  password: z.string().min(6, { message: "Password minimal 6 karakter" }),
   email: z.string().email({ message: "Email tidak valid" }),
   role: z.string().min(1, { message: "Role pengguna wajib diisi" }),
 });
 
 const PostUserModal = () => {
   const userMutation = useCreateUser();
+  const [seePassword, setSeePassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,24 +76,25 @@ const PostUserModal = () => {
       name: "",
       email: "",
       role: "",
+      password: "",
       image: undefined,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Submitting form with data:", data);
-    // try {
-    //   console.log("Submitting form with data:", data);
-    //   const res = await productMutation.mutateAsync(data);
-    //   form.reset();
-    //   console.log("Product created:", res);
-    //   toast.success("Produk berhasil ditambahkan");
-    // } catch (error: any) {
-    //   console.error("Error submitting form:", error);
-    //   toast.error("Gagal menambahkan produk", {
-    //     description: error?.message || "Silakan coba lagi.",
-    //   });
-    // }
+    try {
+      console.log("Submitting form with data:", data);
+      const res = await userMutation.mutateAsync(data);
+      form.reset();
+      console.log("User created:", res);
+      toast.success("Pengguna berhasil ditambahkan");
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      toast.error("Gagal menambahkan pengguna", {
+        description: error?.message || "Silakan coba lagi.",
+      });
+    }
   };
 
   return (
@@ -152,6 +160,38 @@ const PostUserModal = () => {
                   )}
                 />
                 <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="password">Password Baru</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          id="password"
+                          placeholder="Masukkan password anda"
+                          type={seePassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <InputGroupAddon
+                          align={"inline-end"}
+                          className=" cursor-pointer"
+                          onClick={() => setSeePassword(!seePassword)}
+                        >
+                          {seePassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan password baru. Kosongkan jika tidak ingin
+                          mengubah.
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
                   name="role"
                   control={form.control}
                   render={({ field, fieldState }) => (
@@ -202,11 +242,13 @@ const PostUserModal = () => {
                       )}
                       {/* Preview image */}
                       {value && (
-                        <img
-                          src={URL.createObjectURL(value)}
-                          alt="Preview"
-                          className="mt-2 max-h-40 rounded-md object-cover"
-                        />
+                        <div className="border p-2 rounded-md">
+                          <img
+                            src={URL.createObjectURL(value)}
+                            alt="Preview"
+                            className="mt-2 max-h-40 rounded-md object-cover"
+                          />
+                        </div>
                       )}
                     </Field>
                   )}

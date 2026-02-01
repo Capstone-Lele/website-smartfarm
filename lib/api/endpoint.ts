@@ -22,13 +22,15 @@ export const API_ENDPOINTS = {
     },
   },
   USERS: {
-    GET_ALL: "/users",
-    CREATE: "/users",
-    DELETE: (id: string) => `/users/${id}`,
-    UPDATE: (id: string) => `/users/${id}`,
+    GET_ALL: "/user",
+    GET_BY_ID: (id: string) => `/user/${id}`,
+    CREATE: "/user",
+    DELETE: (id: string) => `/user/${id}`,
+    UPDATE: (id: string) => `/user/${id}`,
   },
-  KOLAM: {
+  POOLS: {
     GET_ALL: "/pool",
+    GET_BY_ID: (id: string) => `/pool/${id}`,
     CREATE: "/pool",
     DELETE: (id: string) => `/pool/${id}`,
     UPDATE: (id: string) => `/pool/${id}`,

@@ -6,6 +6,12 @@ const dataPath = [
         name: 'Beranda',
     },
     {
+        path: '/dashboard/pools',
+        name: 'Daftar Kolam',
+    },
+    {
+    },
+    {
         path: '/dashboard/master-data',
         name: 'Master Data',
         sub_paths: [

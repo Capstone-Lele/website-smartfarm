@@ -1,10 +1,15 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { LuExternalLink } from "react-icons/lu";
 
 const notFound = () => {
+  const route = useRouter();
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center  px-4 py-16 dark:bg-neutral-900">
       <div className="relative flex h-[50rem] w-[80%] items-center justify-center bg-white dark:bg-black ">
@@ -20,13 +25,12 @@ const notFound = () => {
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_1%,black)] dark:bg-black"></div>
         {/* Content */}
         <div className="relative z-20 flex flex-col items-center justify-center space-y-6 px-4 text-center">
-          <div className="text-6xl font-medium text-red-500 [text-shadow:0_0_20px_rgba(239,68,68,0.2),0_0_40px_rgba(239,68,68,0.2),0_0_60px_rgba(239,68,68,0.4)] sm:text-7xl md:text-8xl">
-            404
-          </div>
-
-          <h1 className="bg-gradient-to-b from-neutral-900 to-neutral-600 bg-clip-text text-4xl font-semibold text-transparent dark:from-neutral-200 dark:to-neutral-500 sm:text-6xl md:text-7xl">
-            Halaman Tidak Ditemukan :(
-          </h1>
+          <Image 
+            src={'/images/not-found.png'}
+            alt="Not Found"
+            width={400}
+            height={300}
+          />
 
           <p className="max-w-2xl text-base text-neutral-600 dark:text-neutral-400 sm:text-lg">
             Maaf, kami tidak dapat menemukan halaman yang Anda cari. Halaman
@@ -45,12 +49,12 @@ const notFound = () => {
               asChild
               variant="outline"
               size="lg"
-              className="min-w-[140px]"
+              className="min-w-[140px] cursor-pointer hover:shadow-lg"
             >
-              <Link href="/contact">
-                Laporkan Masalah
+              <div onClick={() => route.back()}>
+                Ke Halaman Sebelumnya
                 <LuExternalLink className="ml-2 h-4 w-4" />
-              </Link>
+              </div>
             </Button>
           </div>
         </div>

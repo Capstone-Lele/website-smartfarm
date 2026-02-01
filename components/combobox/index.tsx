@@ -51,7 +51,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className={`w-full justify-between ${value ? "" : "text-muted-foreground"}`}
         >
           {value
             ? data.find((framework) => framework.value === value)?.label
@@ -65,7 +65,9 @@ export function Combobox({
         style={{ width: "var(--radix-popover-trigger-width)" }}
       >
         <Command>
-          <CommandInput placeholder={`Search ${name || ""}...`} />
+          <CommandInput
+            placeholder={`Search ${name || ""}...`}
+          />
           <CommandList>
             <CommandEmpty>No Data found.</CommandEmpty>
             <CommandGroup>
@@ -81,7 +83,7 @@ export function Combobox({
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === item.value ? "opacity-100" : "opacity-0"
+                      value === item.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {item.label}

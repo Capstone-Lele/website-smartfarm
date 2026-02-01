@@ -1,8 +1,19 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { LuCloudDownload } from "react-icons/lu";
 
 interface ImagePopupProps {
   imageUrl: string;
@@ -17,6 +28,23 @@ export function ImagePopup({
 }: ImagePopupProps) {
   const [open, setOpen] = useState(false);
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `image-${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download image:", error);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -30,26 +58,30 @@ export function ImagePopup({
           />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-7xl w-[95vw] p-0 overflow-hidden border-none bg-transparent">
-        <div className="relative w-full h-[90vh] flex items-center justify-center">
-          {/* Image Container */}
-          <div className="relative w-full h-full flex items-center justify-center bg-black/90 rounded-lg">
+      <DialogContent
+        aria-describedby={undefined}
+        className=" bg-white/95 backdrop-blur-xl shadow-2xl p-0 max-w-3xl"
+      >
+        <DialogHeader className="px-4 py-4 border-b">
+          <DialogTitle>Detail Image</DialogTitle>
+        </DialogHeader>
+        <div className="px-4 w-full h-fit max-h-[80vh] pb-4 space-y-4">
+          <div className="flex h-full w-full items-center justify-center ">
             <Image
               src={imageUrl}
               alt={alt}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
-              priority
+              height={400}
+              width={600}
+              className="object-cover rounded-md max-h-120 max-w-full h-full"
             />
           </div>
-
-          {/* Optional Title */}
-          {title && (
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-4 text-center">
-              <p className="text-sm font-medium">{title}</p>
-            </div>
-          )}
+          <Button
+            onClick={handleDownload}
+            className="w-full flex items-center cursor-pointer"
+          >
+            <LuCloudDownload className="mr-2" />
+            Download Image
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

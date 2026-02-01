@@ -40,6 +40,8 @@ import { useUnit } from "@/lib/api/service/master-data/unit/useUnit";
 import { useCategory } from "@/lib/api/service/master-data/category/useCategory";
 import { Combobox } from "@/components/combobox";
 import { TYPE_PRODUCT } from "@/lib/constants/type-product";
+import ButtonEditColumn from "@/components/button-column/button-edit-column";
+import { getDirtyValues } from "@/lib/utils/get-dirty-value";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama product wajib diisi" }),
@@ -62,6 +64,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
       type: product.type,
     },
   });
+  const { isDirty, dirtyFields } = form.formState;
 
   useEffect(() => {
     form.reset({
@@ -73,8 +76,14 @@ const EditProductModal = ({ product }: { product: Product }) => {
   }, [product, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const dirtyData = getDirtyValues(dirtyFields, data) as z.infer<
+      typeof formSchema
+    >;
     try {
-      const res = await productMutation.mutateAsync({ id: product.id, data });
+      const res = await productMutation.mutateAsync({
+        id: product.id,
+        data: dirtyData,
+      });
       form.reset();
       toast.success(res.message || "Produk berhasil diubah");
     } catch (error: any) {
@@ -86,8 +95,8 @@ const EditProductModal = ({ product }: { product: Product }) => {
 
   return (
     <Sheet>
-      <SheetTrigger className="h-8 w-8 p-0 cursor-pointer hover:bg-primary-surface text-black flex items-center justify-center rounded-md">
-        <TbPencilMinus />
+      <SheetTrigger>
+        <ButtonEditColumn />
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader className="border-b">
@@ -215,6 +224,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
                   ) : (
                     <Button
                       type="submit"
+                      disabled={!isDirty}
                       className=" cursor-pointer mr-1 flex items-center"
                     >
                       <LuSave />

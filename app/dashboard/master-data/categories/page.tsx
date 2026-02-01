@@ -5,6 +5,7 @@ import { useCategory } from "@/lib/api/service/master-data/category/useCategory"
 import React, { useEffect } from "react";
 import { columnsCategory } from "./column";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
+import DefaultCard from "@/components/card/default-card";
 
 const page = () => {
   const exampleFilter = [
@@ -29,7 +30,7 @@ const page = () => {
   }, [data, error]);
 
   return (
-    <div className="w-full p-4">
+    <DefaultCard>
       <div className="w-full">
         {isLoading ? (
           <TableSkeleton columns={6} rows={8} />
@@ -41,7 +42,7 @@ const page = () => {
           />
         )}
       </div>
-    </div>
+    </DefaultCard>
   );
 };
 

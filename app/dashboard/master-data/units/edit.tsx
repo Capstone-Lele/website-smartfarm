@@ -35,6 +35,8 @@ import { TbPencilMinus } from "react-icons/tb";
 import { Unit } from "@/types/master-data/unit.types";
 import { toast } from "sonner";
 import { useUpdateUnit } from "@/lib/api/service/master-data/unit/useUnit";
+import ButtonEditColumn from "@/components/button-column/button-edit-column";
+import { getDirtyValues } from "@/lib/utils/get-dirty-value";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama satuan wajib diisi" }),
@@ -49,6 +51,7 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
       name: unit.name,
     },
   });
+  const { isDirty, dirtyFields } = form.formState;
 
   useEffect(() => {
     form.reset({
@@ -57,10 +60,16 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
   }, [unit, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const dirtyData = getDirtyValues(dirtyFields, data) as z.infer<
+      typeof formSchema
+    >;
     try {
-      const res = await unitMutation.mutateAsync({ id: unit.id, data });
+      const res = await unitMutation.mutateAsync({
+        id: unit.id,
+        data: dirtyData,
+      });
       form.reset();
-      toast.success(res.message ||"Satuan berhasil diubah");
+      toast.success(res.message || "Satuan berhasil diubah");
     } catch (error: any) {
       toast.error("Gagal mengedit satuan", {
         description: error?.message || "Silakan coba lagi.",
@@ -70,8 +79,8 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
 
   return (
     <Sheet>
-      <SheetTrigger className="h-8 w-8 p-0 cursor-pointer hover:bg-primary-surface text-black flex items-center justify-center rounded-md">
-        <TbPencilMinus />
+      <SheetTrigger>
+        <ButtonEditColumn />
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader className="border-b">
@@ -118,6 +127,7 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
                   ) : (
                     <Button
                       type="submit"
+                      disabled={!isDirty}
                       className=" cursor-pointer mr-1 flex items-center"
                     >
                       <LuSave />

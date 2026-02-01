@@ -81,7 +81,7 @@ const DashboardSidebar = () => {
       <main
         className={`border-r h-full w-full p-4 ${
           isOpen ? "max-w-64" : "max-w-19"
-        } duration-300 ease-in-out overflow-hidden`}
+        } duration-300 ease-in-out overflow-y-auto`}
       >
         {/* Logo */}
         <div className="flex items-center gap-4 my-2">
@@ -97,7 +97,7 @@ const DashboardSidebar = () => {
               !isOpen ? "opacity-0 hidden" : "opacity-100"
             }`}
           >
-            LELEKU
+            Dashboard
           </h1>
         </div>
         <nav className=" flex flex-col">

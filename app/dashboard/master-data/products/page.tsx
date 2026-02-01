@@ -7,6 +7,7 @@ import PostUnitModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct";
 import PostProductModal from "./post";
+import DefaultCard from "@/components/card/default-card";
 
 const page = () => {
   const { data, isLoading, error } = useGetProducts();
@@ -21,7 +22,7 @@ const page = () => {
   }, [data, error]);
 
   return (
-    <div className="w-full p-4">
+    <DefaultCard>
       <div className="w-full">
         {isLoading ? (
           <TableSkeleton columns={6} rows={8} />
@@ -38,7 +39,7 @@ const page = () => {
           </div>
         )}
       </div>
-    </div>
+    </DefaultCard>
   );
 };
 

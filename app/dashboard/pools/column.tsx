@@ -8,6 +8,7 @@ import PopupConfirmation from "@/components/popup-confimation";
 import EditKolamModal from "./edit";
 import { useDeleteKolam } from "@/lib/api/service/kolam/useKolam";
 import { toast } from "sonner";
+import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 
 type Kolam = {
   id: string;
@@ -120,9 +121,7 @@ export const columnsKolam: ColumnDef<Kolam>[] = [
             onConfirm={() => handleDeleteKolam(row.original.id)}
             isLoading={deleteKolamMutation.isPending}
           >
-            <div className="h-8 w-8 p-0 cursor-pointer flex items-center justify-center text-red-600 hover:bg-red-100 rounded-md">
-              <LuTrash />
-            </div>
+            <ButtonDeleteColumn/>
           </PopupConfirmation>
         </div>
       );

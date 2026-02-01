@@ -7,10 +7,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <main className="flex w-full h-screen">
         <DashboardSidebar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col overflow-hidden">
           <DashboardNavbar />
-          <div className="flex flex-1 p-4 bg-slate-50">
-            <div className="border p-4 rounded-md w-full bg-white">{children}</div>
+          <div className="flex flex-col flex-1 p-4 bg-slate-50 overflow-auto">
+            {children}
           </div>
         </div>
       </main>

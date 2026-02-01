@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -37,6 +37,15 @@ import { Combobox } from "@/components/combobox";
 import { ROLE_LABEL } from "@/lib/constants/role";
 import { User } from "@/types/user.types";
 import { useUpdateUser } from "@/lib/api/service/users/useUser";
+import ButtonEditColumn from "@/components/button-column/button-edit-column";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { IoLockClosedOutline } from "react-icons/io5";
+import { getDirtyValues } from "@/lib/utils/get-dirty-value";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama pengguna wajib diisi" }),
@@ -47,54 +56,65 @@ const formSchema = z.object({
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
       {
         message: "Format file harus JPG atau PNG",
-      }
+      },
     )
     .optional(),
+  password: z.string().optional(),
   email: z.string().email({ message: "Email tidak valid" }),
-  role: z.string().min(1, { message: "Role pengguna wajib diisi" }),
 });
 
 const EditUserModal = ({ user }: { user: User }) => {
   const userMutation = useUpdateUser();
+  const [seePassword, setSeePassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user.name,
       email: user.email,
-      role: user.role,
+      password: "",
       image: undefined,
     },
   });
+  const { isDirty, dirtyFields } = form.formState;
 
   useEffect(() => {
     form.reset({
       name: user.name,
       email: user.email,
-      role: user.role,
+      password: "",
       image: undefined,
     });
   }, [user, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Submitting form with data:", data);
-    // try {
-    //   const res = await userMutation.mutateAsync({ id: user.id, data });
-    //   form.reset();
-    //   toast.success(res.message || "Pengguna berhasil diubah");
-    // } catch (error: any) {
-    //   toast.error("Gagal mengedit pengguna", {
-    //     description: error?.message || "Silakan coba lagi.",
-    //   });
-    // }
+    const dirtyData = getDirtyValues(dirtyFields, data) as z.infer<
+      typeof formSchema
+    >;
+    // console.log("Dirty Data:", dirtyData);
+    try {
+      const res = await userMutation.mutateAsync({
+        id: user.id,
+        data: dirtyData,
+      });
+      form.reset();
+      toast.success(res.message || "Pengguna berhasil diubah");
+    } catch (error: any) {
+      toast.error("Gagal mengedit pengguna", {
+        description: error?.message || "Silakan coba lagi.",
+      });
+    }
   };
 
   return (
     <Sheet>
-      <SheetTrigger className="h-8 w-8 p-0 cursor-pointer hover:bg-primary-surface text-black flex items-center justify-center rounded-md">
-        <TbPencilMinus />
+      <SheetTrigger className="">
+        <ButtonEditColumn />
       </SheetTrigger>
-      <SheetContent className="h-screen overflow-auto" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <SheetContent
+        className="h-screen overflow-auto"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <SheetHeader className="border-b">
           <SheetTitle>Edit Pengguna</SheetTitle>
           <SheetDescription>
@@ -128,6 +148,38 @@ const EditUserModal = ({ user }: { user: User }) => {
                   )}
                 />
                 <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="password">Password Baru</FieldLabel>
+                      <InputGroup>
+                        <InputGroupInput
+                          id="password"
+                          placeholder="Masukkan password anda"
+                          type={seePassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <InputGroupAddon
+                          align={"inline-end"}
+                          className=" cursor-pointer"
+                          onClick={() => setSeePassword(!seePassword)}
+                        >
+                          {seePassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                        </InputGroupAddon>
+                      </InputGroup>
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan password baru. Kosongkan jika tidak ingin
+                          mengubah.
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
                   name="email"
                   control={form.control}
                   render={({ field, fieldState }) => (
@@ -145,29 +197,6 @@ const EditUserModal = ({ user }: { user: User }) => {
                       ) : (
                         <FieldDescription>
                           Masukkan email pengguna.
-                        </FieldDescription>
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="role"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel htmlFor="role">Role Pengguna</FieldLabel>
-                      <Combobox
-                        data={ROLE_LABEL}
-                        onValueChange={field.onChange}
-                        isLoading={userMutation.isPending}
-                        name="Role"
-                        selectedValue={field.value}
-                      />
-                      {fieldState.invalid ? (
-                        <FieldError errors={[fieldState.error]} />
-                      ) : (
-                        <FieldDescription>
-                          Masukkan role pengguna.
                         </FieldDescription>
                       )}
                     </Field>
@@ -197,23 +226,26 @@ const EditUserModal = ({ user }: { user: User }) => {
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan image pengguna (Format: JPG, PNG). Kosongkan jika tidak ingin mengubah.
+                          Masukkan image pengguna (Format: JPG, PNG). Kosongkan
+                          jika tidak ingin mengubah.
                         </FieldDescription>
                       )}
                       {/* Preview image - prioritas untuk file baru, fallback ke image lama */}
-                      {value ? (
-                        <img
-                          src={URL.createObjectURL(value)}
-                          alt="Preview"
-                          className="mt-2 max-h-40 rounded-md object-cover"
-                        />
-                      ) : user.image ? (
-                        <img
-                          src={user.image}
-                          alt="Current Image"
-                          className="mt-2 max-h-40 rounded-md object-cover"
-                        />
-                      ) : null}
+                      <div className="border p-2 rounded-md">
+                        {value ? (
+                          <img
+                            src={URL.createObjectURL(value)}
+                            alt="Preview"
+                            className="mt-2 max-h-40 rounded-md object-cover"
+                          />
+                        ) : user.image ? (
+                          <img
+                            src={user.image}
+                            alt="Current Image"
+                            className="mt-2 max-h-40 rounded-md object-cover"
+                          />
+                        ) : null}
+                      </div>
                     </Field>
                   )}
                 />
@@ -229,6 +261,7 @@ const EditUserModal = ({ user }: { user: User }) => {
                   ) : (
                     <Button
                       type="submit"
+                      disabled={!isDirty}
                       className=" cursor-pointer mr-1 flex items-center"
                     >
                       <LuSave />

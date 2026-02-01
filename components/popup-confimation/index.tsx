@@ -35,7 +35,7 @@ const PopupConfirmation = ({
     warning: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
     info: "bg-blue-100 text-blue-800 hover:bg-blue-200",
     success: "bg-green-100 text-green-800 hover:bg-green-200",
-    error: "bg-red-100 text-red-800 hover:bg-red-200",
+    error: "bg-red-100 text-red-800 hover:bg-red-200 border border-red-200 hover:border-none",
   };
 
   return (
@@ -45,7 +45,7 @@ const PopupConfirmation = ({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{message}</DialogDescription>
-          <div className="mt-10 flex items-center gap-2 border-t pt-4">
+          <div className="mt-10 flex items-center gap-2 border-t pt-4 -mx-6 px-6">
             <DialogClose asChild>
               <Button
                 className="w-1/2 hover:bg-primary-surface cursor-pointer border hover:border-none"
@@ -65,7 +65,7 @@ const PopupConfirmation = ({
               </Button>
             ) : (
               <Button
-                className={`w-1/2 cursor-pointer  ${typeStyles[type]}`}
+                className={`w-1/2 cursor-pointer ${typeStyles[type]}`}
                 variant={"ghost"}
                 onClick={onConfirm}
               >

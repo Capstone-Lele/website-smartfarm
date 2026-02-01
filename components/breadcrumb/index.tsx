@@ -69,7 +69,7 @@ const BreadCrumbPath = () => {
                     <>
                       {crumb.sub_paths ? (
                         <DropdownMenu>
-                          <DropdownMenuTrigger className="flex items-center gap-1">
+                          <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
                             <BreadcrumbEllipsis className="size-4" />
                             <span className="sr-only">Toggle menu</span>
                           </DropdownMenuTrigger>

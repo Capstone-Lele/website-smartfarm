@@ -12,6 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { ROLE_LABEL } from "@/lib/constants/role";
 import EditUserModal from "./edit";
 import { useDeleteUser } from "@/lib/api/service/users/useUser";
+import { formatDate } from "@/lib/utils/format-date";
+import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 
 export const columnsUser: ColumnDef<User>[] = [
   {
@@ -43,9 +45,7 @@ export const columnsUser: ColumnDef<User>[] = [
     accessorKey: "image",
     cell: ({ row }) => {
       return (
-        <>
-          <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
-        </>
+        <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
       );
     },
   },
@@ -67,21 +67,31 @@ export const columnsUser: ColumnDef<User>[] = [
       <DataTableColumnHeader className="" column={column} title="ROLE" />
     ),
     cell: ({ row }) => {
-      const role = ROLE_LABEL.find(r => r.value === row.original.role);
-      return <Badge className="px-2" variant={"outline"}>{role?.label || row.original.role}</Badge>;
-    }
+      const role = ROLE_LABEL.find((r) => r.value === row.original.role);
+      return (
+        <Badge className="px-2" variant={"outline"}>
+          {role?.label || row.original.role}
+        </Badge>
+      );
+    },
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI BUAT" />
     ),
+    cell: ({ row }) => {
+      return formatDate(row.original.createdAt);
+    },
   },
   {
-    accessorKey: "updated_at",
+    accessorKey: "updatedAt",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI UBAH" />
     ),
+    cell: ({ row }) => {
+      return formatDate(row.original.updatedAt);
+    },
   },
   {
     id: "actions",
@@ -111,9 +121,7 @@ export const columnsUser: ColumnDef<User>[] = [
             onConfirm={() => handleDeleteUser(row.original.id)}
             isLoading={deleteUserMutation.isPending}
           >
-            <div className="h-8 w-8 p-0 cursor-pointer flex items-center justify-center text-red-600 hover:bg-red-100 rounded-md">
-              <LuTrash />
-            </div>
+            <ButtonDeleteColumn />
           </PopupConfirmation>
         </div>
       );

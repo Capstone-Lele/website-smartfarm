@@ -35,6 +35,7 @@ import { TbPencilMinus } from "react-icons/tb";
 import { Kolam } from "@/types/kolam.types";
 import { toast } from "sonner";
 import { useUpdateKolam } from "@/lib/api/service/kolam/useKolam";
+import ButtonEditColumn from "@/components/button-column/button-edit-column";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama kolam wajib diisi" }),
@@ -94,8 +95,8 @@ const EditKolamModal = ({ kolam }: { kolam: Kolam }) => {
 
   return (
     <Sheet>
-      <SheetTrigger className="h-8 w-8 p-0 cursor-pointer hover:bg-primary-surface text-black flex items-center justify-center rounded-md">
-        <TbPencilMinus />
+      <SheetTrigger>
+        <ButtonEditColumn />
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader className="border-b">

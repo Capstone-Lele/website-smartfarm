@@ -1,12 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "./user.service";
+import { UserEditInput, UserFormInput } from "@/types/user.types";
 
 export const useGetUsers = () => {
     const query = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const response = await userService.getAll();
-            return response;
+            const { data } = response;
+            const responseWithoutAdmin = data.filter((user) => user.role !== 'admin');
+            const newResponse = {
+                ...response,
+                data: responseWithoutAdmin
+            }
+            return newResponse;
         }
     });
     return query;
@@ -16,7 +23,7 @@ export const useCreateUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationKey: ['createUser'],
-        mutationFn: async (data: { name: string; email: string; role: string; image: File | null; password: string }) => {
+        mutationFn: async (data: UserFormInput) => {
             const response = await userService.create(data);
             return response;
         },
@@ -44,7 +51,7 @@ export const useUpdateUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationKey: ['updateUser'],
-        mutationFn: async ({ id, data }: { id: string; data: { name: string; email: string; role: string; image: File | null; password: string } }) => {
+        mutationFn: async ({ id, data }: { id: string; data: UserEditInput }) => {
             const response = await userService.update(id, data);
             return response;
         },

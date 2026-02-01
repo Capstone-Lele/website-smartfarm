@@ -16,7 +16,17 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        hostname: "localhost",
+        protocol: "http",
+        port: "9000",
+        pathname: "/smartfarm-storage/**",
+      },
     ],
+    unoptimized: process.env.NODE_ENV === "development",
+  },
+  experimental: {
+    mcpServer: true,
   },
 };
 

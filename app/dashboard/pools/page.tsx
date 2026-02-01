@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { columnsKolam } from "./column";
 import PostKolamModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
+import DefaultCard from "@/components/card/default-card";
 
 const page = () => {
   const { data, isLoading, error } = useKolam();
@@ -19,7 +20,7 @@ const page = () => {
   }, [data, error]);
 
   return (
-    <div className="w-full p-4">
+    <DefaultCard>
       <div className="w-full">
         {isLoading ? (
           <TableSkeleton columns={6} rows={8} />
@@ -36,7 +37,7 @@ const page = () => {
           </div>
         )}
       </div>
-    </div>
+    </DefaultCard>
   );
 };
 

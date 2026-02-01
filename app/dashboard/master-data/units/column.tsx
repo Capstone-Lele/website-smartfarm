@@ -8,6 +8,7 @@ import PopupConfirmation from "@/components/popup-confimation";
 import EditUnitModal from "./edit";
 import { useDeleteUnit } from "@/lib/api/service/master-data/unit/useUnit";
 import { toast } from "sonner";
+import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 
 type Unit = {
   id: string;
@@ -76,9 +77,7 @@ export const columnsUnit: ColumnDef<Unit>[] = [
             onConfirm={() => handleDeleteUnit(row.original.id)}
             isLoading={deleteUnitMutation.isPending}
           >
-            <div className="h-8 w-8 p-0 cursor-pointer flex items-center justify-center text-red-600 hover:bg-red-100 rounded-md">
-              <LuTrash />
-            </div>
+            <ButtonDeleteColumn/>
           </PopupConfirmation>
         </div>
       );

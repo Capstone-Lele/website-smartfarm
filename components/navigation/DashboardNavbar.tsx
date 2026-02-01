@@ -19,6 +19,7 @@ import { getCookieDecryptedSession } from "@/lib/session";
 import BreadCrumbPath from "../breadcrumb";
 import dataPath from "@/lib/constants/path";
 import SkeletonNavbarProfile from "../sekeleton/navbar-profile";
+import { HiOutlineChevronDown } from "react-icons/hi2";
 
 const DashboardNavbar = () => {
   const pathname = usePathname();
@@ -75,6 +76,7 @@ const UserProfile = () => {
   const logoutMutation = useLogout();
   const userinfo = useUserInfo();
   const route = useRouter();
+  const [chevronOpen, setChevronOpen] = useState(false);
 
   const onLogout = async () => {
     try {
@@ -97,17 +99,11 @@ const UserProfile = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="flex items-center cursor-pointer">
+      <PopoverTrigger className="flex items-center cursor-pointer" onClick={() => setChevronOpen(!chevronOpen)}>
         {userinfo.isLoading ? (
           <SkeletonNavbarProfile />
         ) : (
-          <>
-            <div className="mr-3 text-right ">
-              <p className="font-medium text-gray-800">
-                {userinfo.data?.data.email || ""}
-              </p>
-              <p className="text-sm text-gray-500">{userinfo.data?.data.role || ""}</p>
-            </div>
+          <div className="flex items-center gap-3">
             <div>
               <Image
                 src="/images/default.jpg"
@@ -117,7 +113,14 @@ const UserProfile = () => {
                 className=" rounded-full border border-primary"
               />
             </div>
-          </>
+            <div className="text-left">
+              <p className="font-medium text-gray-800 truncate w-28">
+                {userinfo.data?.data.name || ""}
+              </p>
+              <p className="text-sm text-gray-500">{userinfo.data?.data.role || ""}</p>
+            </div>
+            <HiOutlineChevronDown className={chevronOpen ? "rotate-180" : ""} />
+          </div>
         )}
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 text-sm ">
@@ -134,7 +137,7 @@ const UserProfile = () => {
         </Link>
         <div
           onClick={onLogout}
-          className="flex items-center cursor-pointer gap-2 px-2 py-1 hover:text-primary hover:bg-primary-surface rounded"
+          className="flex items-center cursor-pointer gap-2 px-2 py-1 hover:text-red-600 hover:bg-red-100 rounded"
         >
           <MdOutlineLogout className="text-lg" />
           Logout
