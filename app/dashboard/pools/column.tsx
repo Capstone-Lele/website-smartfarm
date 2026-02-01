@@ -3,12 +3,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { LuTrash } from "react-icons/lu";
+import { LuEye, LuTrash } from "react-icons/lu";
 import PopupConfirmation from "@/components/popup-confimation";
 import EditKolamModal from "./edit";
 import { useDeleteKolam } from "@/lib/api/service/kolam/useKolam";
 import { toast } from "sonner";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
+import Link from "next/link";
 
 type Kolam = {
   id: string;
@@ -112,6 +113,10 @@ export const columnsKolam: ColumnDef<Kolam>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
+          <Link href={''}>
+            <LuEye />
+          </Link>
+          <Separator orientation="vertical" className="h-6" />
           <EditKolamModal kolam={row.original} />
           <Separator orientation="vertical" className="h-6" />
           <PopupConfirmation
