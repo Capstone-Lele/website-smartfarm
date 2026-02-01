@@ -92,7 +92,7 @@ const CycleDetailPage = () => {
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar */}
-        <aside className="w-full lg:w-64 shrink-0">
+        <aside className="w-full lg:w-64 shrink-0 bg-white">
           <div className="flex flex-col">
             <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2 px-2">
               KOLAM
