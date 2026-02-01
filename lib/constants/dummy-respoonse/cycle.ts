@@ -1,0 +1,48 @@
+import { Cycle } from "@/types/cycle";
+
+export const cycles: Cycle[] = [
+  {
+    id: "1",
+    mulai: "2024-01-15",
+    selesai: "-",
+    kondisi: "Aktif Budidaya",
+    jumlah_tebar: 2000,
+    jumlah_terkini: 1970,
+    kematian: 20,
+    umur: "20 Hari",
+    pindah_kolam: 10,
+  },
+  {
+    id: "2",
+    mulai: "2023-08-15",
+    selesai: "2024-01-15",
+    kondisi: "Pindah",
+    jumlah_tebar: 2000,
+    jumlah_terkini: 2100,
+    kematian: 0,
+    umur: "60 Hari",
+    pindah_kolam: 0,
+  },
+  {
+    id: "3",
+    mulai: "2023-01-15",
+    selesai: "2024-06-15",
+    kondisi: "Pindah",
+    jumlah_tebar: 2000,
+    jumlah_terkini: 1700,
+    kematian: 200,
+    umur: "60 Hari",
+    pindah_kolam: 100,
+  },
+  {
+    id: "4",
+    mulai: "2022-01-15",
+    selesai: "2022-06-15",
+    kondisi: "Pindah",
+    jumlah_tebar: 2000,
+    jumlah_terkini: 1700,
+    kematian: 200,
+    umur: "60 Hari",
+    pindah_kolam: 100,
+  },
+];
