@@ -34,8 +34,26 @@ const dataPath = [
         name: 'Pengguna',
     },
     {
-        path: '/reports',
-        name: 'Reports',
+        path: '/dashboard/reports',
+        name: 'Laporan',
+        sub_paths: [
+            {
+                path: '/dashboard/reports/daily',
+                name: 'Harian',
+            },
+            {
+                path: '/dashboard/reports/feeding',
+                name: 'Pemberian Pakan',
+            },
+            {
+                path: '/dashboard/reports/vitamin',
+                name: 'Vitamin',
+            },
+            {
+                path: '/dashboard/reports/sick',
+                name: 'Sakit',
+            },
+        ],
     },
 ]
 
