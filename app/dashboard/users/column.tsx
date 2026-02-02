@@ -43,11 +43,10 @@ export const columnsUser: ColumnDef<User>[] = [
   },
   {
     accessorKey: "image",
-    cell: ({ row }) => {
-      return (
-        <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
-      );
-    },
+    header: () => <span>GAMBAR</span>,
+    cell: ({ row }) => (
+      <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
+    ),
   },
   {
     accessorKey: "name",

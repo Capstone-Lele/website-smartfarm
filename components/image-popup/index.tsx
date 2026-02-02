@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { LuCloudDownload } from "react-icons/lu";
+import { LuCloudDownload, LuImageOff } from "react-icons/lu";
 
 interface ImagePopupProps {
   imageUrl: string;
@@ -27,6 +27,7 @@ export function ImagePopup({
   title,
 }: ImagePopupProps) {
   const [open, setOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleDownload = async () => {
     try {
@@ -55,6 +56,7 @@ export function ImagePopup({
             width={50}
             height={50}
             className="object-cover rounded-md"
+            onError={() => setImageError(true)}
           />
         </div>
       </DialogTrigger>
@@ -67,13 +69,20 @@ export function ImagePopup({
         </DialogHeader>
         <div className="px-4 w-full h-fit max-h-[80vh] pb-4 space-y-4">
           <div className="flex h-full w-full items-center justify-center ">
-            <Image
-              src={imageUrl}
-              alt={alt}
-              height={400}
-              width={600}
-              className="object-cover rounded-md max-h-120 max-w-full h-full"
-            />
+            {imageError ? (
+              <div className="flex flex-col items-center justify-center text-slate-400">
+                <LuImageOff size={80} />
+                <p className="mt-4 text-sm">Gambar tidak dapat dimuat</p>
+              </div>
+            ) : (
+              <Image
+                src={imageUrl}
+                alt={alt}
+                height={400}
+                width={600}
+                className="object-cover rounded-md max-h-120 max-w-full h-full"
+              />
+            )}
           </div>
           <Button
             onClick={handleDownload}
