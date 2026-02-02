@@ -39,19 +39,19 @@ const dataPath = [
         sub_paths: [
             {
                 path: '/dashboard/reports/daily',
-                name: 'Harian',
+                name: 'Laporan Harian',
             },
             {
                 path: '/dashboard/reports/feeding',
-                name: 'Pemberian Pakan',
+                name: 'Laporan Pemberian Pakan',
             },
             {
                 path: '/dashboard/reports/vitamin',
-                name: 'Vitamin',
+                name: 'Laporan Vitamin',
             },
             {
                 path: '/dashboard/reports/sick',
-                name: 'Sakit',
+                name: 'Laporan Sakit',
             },
         ],
     },

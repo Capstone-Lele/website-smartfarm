@@ -54,7 +54,6 @@ const BreadCrumbPath = () => {
   };
 
   const breadcrumbs = getBreadcrumbs();
-  console.log("Breadcrumbs:", breadcrumbs);
   return (
     <Breadcrumb>
       <BreadcrumbList className="">

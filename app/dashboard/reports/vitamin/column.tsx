@@ -3,12 +3,14 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import Image from "next/image";
+import { ImagePopup } from "@/components/image-popup";
 
 export type VitaminReport = {
   id: string;
   image: string;
   age: number;
   vitaminType: string;
+  feedWeight: number;
   actor: string;
   date: string;
 };
@@ -16,17 +18,10 @@ export type VitaminReport = {
 export const columns: ColumnDef<VitaminReport>[] = [
   {
     accessorKey: "image",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="GAMBAR" />
+    header: () => <span>GAMBAR</span>,
+    cell: ({ row }) => (
+      <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
     ),
-    cell: ({ row }) => {
-      const image = row.original.image;
-      return (
-        <div className="relative h-16 w-16 overflow-hidden rounded-md">
-          <Image src={image} alt="Feeding" fill className="object-cover" />
-        </div>
-      );
-    },
   },
   {
     accessorKey: "age",
@@ -34,6 +29,13 @@ export const columns: ColumnDef<VitaminReport>[] = [
       <DataTableColumnHeader className="" column={column} title="UMUR" />
     ),
     cell: ({ row }) => <span>{row.original.age} Hari</span>,
+  },
+  {
+    accessorKey: "feedWeight",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="BERAT PAKAN" />
+    ),
+    cell: ({ row }) => <span>{row.original.feedWeight} kg</span>,
   },
   {
     accessorKey: "vitaminType",
@@ -48,7 +50,7 @@ export const columns: ColumnDef<VitaminReport>[] = [
   {
     accessorKey: "actor",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="AKTOR" />
+      <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
   },
   {

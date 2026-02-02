@@ -120,8 +120,9 @@ const DashboardSidebar = () => {
                 subMenuList={item.subMenuList!}
                 isOpen={isOpen}
                 toggle={toggle}
+                href={item.href!}
               />
-            ) : null
+            ) : null,
           )}
         </nav>
       </main>
@@ -156,14 +157,17 @@ const MenuItem = ({
   href: string;
   isOpen: boolean;
 }) => {
-
   const pathName = usePathname();
+  const isActive =
+    href === "/dashboard"
+      ? pathName === "/dashboard"
+      : pathName === href || pathName.startsWith(href + "/");
 
   return (
     <Link
       href={href}
       className={`flex h-10 items-center gap-3 mt-1 cursor-pointer px-3 py-2 rounded-xs hover:bg-primary-surface hover:text-primary ${
-        pathName === href ? "bg-primary-surface text-primary" : ""
+        isActive ? "bg-primary-surface text-primary" : ""
       }`}
     >
       <span className="text-xl">{icon}</span>
@@ -184,14 +188,20 @@ const DropdownMenuItem = ({
   subMenuList,
   isOpen,
   toggle,
+  href,
 }: {
   name: string | undefined;
   icon: React.ReactNode;
   subMenuList: Array<{ name: string; href: string }>;
   isOpen: boolean;
   toggle: () => void;
+  href: string;
 }) => {
   const pathName = usePathname();
+  const isActive =
+    href === "/dashboard"
+      ? pathName === "/dashboard"
+      : pathName === href || pathName.startsWith(href + "/");
 
   return (
     <div
@@ -203,7 +213,9 @@ const DropdownMenuItem = ({
       }}
     >
       <details className="group [&_summary::-webkit-details-marker]:hidden">
-        <summary className="flex items-center h-10 justify-between px-3 py-2 rounded-xs cursor-pointer hover:bg-primary-surface hover:text-primary">
+        <summary
+          className={`flex items-center h-10 justify-between px-3 py-2 rounded-xs cursor-pointer hover:bg-primary-surface hover:text-primary ${isActive ? "bg-primary-surface text-primary" : ""}`}
+        >
           <div className="flex items-center gap-3">
             <span className="text-xl">{icon}</span>
             <span
@@ -232,7 +244,9 @@ const DropdownMenuItem = ({
               key={index}
               href={subMenu.href}
               className={`p-2 rounded-xs font-medium hover:bg-primary-surface hover:text-primary ${
-                pathName === subMenu.href ? "bg-primary-surface text-primary" : ""
+                pathName === subMenu.href
+                  ? "bg-primary-surface text-primary"
+                  : ""
               }`}
             >
               {subMenu.name}

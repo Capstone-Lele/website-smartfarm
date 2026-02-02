@@ -4,8 +4,18 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import dataPath from "@/lib/constants/path";
+import { items } from "./DashboardSidebar";
 
-const DashboardSubSidebar = () => {
+type SubSidebarProps = {
+  items: {
+    title: string;
+    href?: string;
+    type: string;
+  }[];
+};
+
+const DashboardSubSidebar = ({ items }: SubSidebarProps) => {
+  console.log("items", items);
   const pathname = usePathname();
 
   // Find the reports section data
@@ -18,28 +28,29 @@ const DashboardSubSidebar = () => {
   }
 
   return (
-    <aside className="w-64 bg-slate-50 border-r border-slate-200 h-full flex flex-col pt-6">
-      <div className="px-6 mb-2">
-        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-          {reportsData.name}
-        </h2>
-      </div>
-      <nav className="flex flex-col">
-        {reportsData.sub_paths.map((item, index) => {
-          const isActive = pathname === item.path;
-          return (
+    <aside className="w-48 bg-white border-r border-slate-200 h-full flex flex-col pt-6">
+      <nav className="flex w-full h-full flex-col">
+        {items.map((item, index) => {
+          const isActive = pathname === item.href;
+          return item.type === "title" ? (
+            <div key={index} className="pl-4 mb-2">
+              <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                {item.title}
+              </h2>
+            </div>
+          ) : item.type === "menu" ? (
             <Link
               key={index}
-              href={item.path}
-              className={`px-6 py-2 text-sm font-medium transition-colors ${
+              href={item.href || "#"}
+              className={`pl-8 w-full py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-blue-50 text-slate-900 border-r-2 border-blue-500"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "bg-primary-surface text-slate-900 border-r-2 border-primary"
+                  : "text-slate-600 hover:bg-primary-surface hover:text-slate-900"
               }`}
             >
-              {item.name}
+              {item.title}
             </Link>
-          );
+          ) : null;
         })}
       </nav>
     </aside>
