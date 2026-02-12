@@ -11,9 +11,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { LuCloudDownload, LuImageOff } from "react-icons/lu";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+
 
 interface ImagePopupProps {
   imageUrl: string;
@@ -28,6 +30,11 @@ export function ImagePopup({
 }: ImagePopupProps) {
   const [open, setOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  // Reset error ketika imageUrl berubah
+  useEffect(() => {
+    setImageError(false);
+  }, [imageUrl]);
 
   const handleDownload = async () => {
     try {
@@ -47,17 +54,37 @@ export function ImagePopup({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        // Reset error ketika dialog dibuka
+        if (isOpen) {
+          setImageError(false);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <div onClick={() => setOpen(true)} className="cursor-pointer">
-          <Image
-            src={imageUrl}
-            alt={alt}
-            width={50}
-            height={50}
-            className="object-cover rounded-md"
-            onError={() => setImageError(true)}
-          />
+          {imageError ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="h-12 w-12 p-0 cursor-pointer flex items-center justify-center text-slate-400 hover:bg-slate-100 rounded-md">
+                  <LuImageOff size={20} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Gambar tidak dapat dimuat</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Image
+              src={imageUrl}
+              alt={alt}
+              width={50}
+              height={50}
+              className="object-cover rounded-md"
+              onError={() => setImageError(true)}
+            />
+          )}
         </div>
       </DialogTrigger>
       <DialogContent
@@ -76,17 +103,20 @@ export function ImagePopup({
               </div>
             ) : (
               <Image
+                key={imageUrl}
                 src={imageUrl}
                 alt={alt}
                 height={400}
                 width={600}
                 className="object-cover rounded-md max-h-120 max-w-full h-full"
+                onError={() => setImageError(true)}
               />
             )}
           </div>
           <Button
             onClick={handleDownload}
             className="w-full flex items-center cursor-pointer"
+            disabled={imageError}
           >
             <LuCloudDownload className="mr-2" />
             Download Image

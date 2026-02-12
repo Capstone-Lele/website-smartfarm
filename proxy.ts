@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { decrypt } from "@/lib/session";
+import { decrypt, getCookieDecryptedSession } from "@/lib/session";
 
 export async function proxy(request: NextRequest) {
   const cookies = request.cookies.get("session_token");
   const isLoginPage = request.nextUrl.pathname === "/login";
 
-  if (!cookies && !isLoginPage) {
+  if (!cookies && !isLoginPage) { // jika tidak ada cookie dan bukan halaman login
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
 
   if (!isAuthenticated) {
     request.cookies.delete("session_token");
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login?message=expired", request.url));
   }
   if (request.nextUrl.pathname.startsWith("/login")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

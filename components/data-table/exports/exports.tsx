@@ -16,14 +16,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LuDownload } from "react-icons/lu";
 import { ExportCsv } from "./export-csv";
+import { ChevronDown } from "lucide-react";
 
 export function ExportOptions({ columns, data }: { columns: any; data: any }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="cursor-pointer">
-          <LuDownload className="mr-2" />
+          <LuDownload className="" />
           Export
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-50" align="end" side="bottom">
@@ -36,10 +38,10 @@ export function ExportOptions({ columns, data }: { columns: any; data: any }) {
               ExportCsv({ columns, data });
             }}
           >
-            Export All as Csv
+            Export ke CSV
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer">
-            Export All as Pdf
+            Export ke PDF
           </DropdownMenuItem>
 
           {/* <DropdownMenuItem className="cursor-pointer">Export Selected as Pdf</DropdownMenuItem>

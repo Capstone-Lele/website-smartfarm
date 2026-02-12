@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         port: "9000",
         pathname: "/smartfarm-storage/**",
       },
+      {
+        hostname: "ui-avatars.com",
+        protocol: "https",
+        port: "",
+        pathname: "/**",
+      }
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },

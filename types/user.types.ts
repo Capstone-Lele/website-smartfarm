@@ -36,3 +36,9 @@ export type UserResponse = {
   message: string;
   data: User[];
 };
+
+export type UserOnlyResponse = {
+  success: boolean;
+  message: string;
+  data: User;
+};

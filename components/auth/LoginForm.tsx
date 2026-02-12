@@ -58,7 +58,6 @@ const LoginForm = () => {
     } catch (error: any) {
       toast.error("Login Gagal", {
         description: error?.message || "Login gagal. Silakan coba lagi.",
-        icon: "❌",
       });
     }
   };

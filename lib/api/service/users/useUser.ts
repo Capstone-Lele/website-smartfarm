@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "./user.service";
 import { UserEditInput, UserFormInput } from "@/types/user.types";
+import { Variable } from "lucide-react";
 
 export const useGetUsers = () => {
     const query = useQuery({
@@ -19,6 +20,16 @@ export const useGetUsers = () => {
     return query;
 };
 
+export const useGetUserById = (id: string) => {
+    return useQuery({
+        queryKey: ['user', id],
+        queryFn: async () => {
+            const response = await userService.getById(id);
+            return response;
+        },
+    });
+};
+
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -31,7 +42,7 @@ export const useCreateUser = () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
         }
     });
-}
+};
 
 export const useDeleteUser = () => {
     const queryClient = useQueryClient();
@@ -45,7 +56,7 @@ export const useDeleteUser = () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
         }
     });
-}
+};
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
@@ -55,8 +66,10 @@ export const useUpdateUser = () => {
             const response = await userService.update(id, data);
             return response;
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] });
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['users' ] });
+            queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+            queryClient.invalidateQueries({ queryKey: ['user', variables.id] });
         }
     });
 };

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Provider from "@/provider";
-import { Toaster } from "@/components/ui/sonner"
-
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -33,8 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className={`antialiased`}>
-        <Provider>{children}</Provider>
-        <Toaster  />
+        <Provider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Provider>
+        <Toaster />
       </body>
     </html>
   );

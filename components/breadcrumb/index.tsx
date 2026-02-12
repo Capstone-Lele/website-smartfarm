@@ -40,6 +40,11 @@ const BreadCrumbPath = () => {
       if (item.sub_paths) {
         for (const subItem of item.sub_paths) {
           if (pathName === subItem.path) {
+            if (item.sub_paths.length === 1) {
+              breadcrumbs.push({ name: item.name, href: item.path });
+              breadcrumbs.push({ name: subItem.name, href: subItem.path });
+              return breadcrumbs;
+            }
             breadcrumbs.push({
               name: item.name,
               href: item.path,

@@ -24,7 +24,7 @@ export default function CardStatistic({
 }) {
   return (
     <>
-      <Card className="w-full rounded-md max-w-sm shadow-none py-4">
+      <Card className="w-full rounded-md shadow-none py-4">
         {(!value)  ? (
           <CardStatisticSkeleton />
         ) : (

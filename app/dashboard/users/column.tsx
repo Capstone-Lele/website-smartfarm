@@ -37,11 +37,6 @@ export const columnsUser: ColumnDef<User>[] = [
     ),
   },
   {
-    id: "No",
-    accessorKey: "No",
-    header: () => <span className="">NO</span>,
-  },
-  {
     accessorKey: "image",
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (

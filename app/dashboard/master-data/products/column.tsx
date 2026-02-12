@@ -33,11 +33,6 @@ export const columnsUnit: ColumnDef<Product>[] = [
     ),
   },
   {
-    id: "No",
-    accessorKey: "No",
-    header: () => <span className="">NO</span>,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />

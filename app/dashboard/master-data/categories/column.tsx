@@ -9,11 +9,6 @@ type Category = {
 
 export const columnsCategory: ColumnDef<Category>[] = [
   {
-    id: "No",
-    accessorKey: "No",
-    header: () => <span className="">NO</span>,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />

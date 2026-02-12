@@ -6,7 +6,7 @@ import { columnsUser } from "./column";
 import PostUnitModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct";
-import PostProductModal from "./post";
+import PostUserModal from "./post";
 import { useGetUsers } from "@/lib/api/service/users/useUser";
 import CardStatistic from "@/components/card/card-statistic";
 import DefaultCard from "@/components/card/default-card";
@@ -43,15 +43,16 @@ const page = () => {
   {
     title: "Staff",
     value: data?.data.filter((user) => user.role === "staff").length.toString(),
-    icon: <LuUserRound />}
+    icon: <LuUserRound />
+  },
 ];
 
   useEffect(() => {
     if (data) {
-      console.log("Category Data:", data);
+      console.log("User Data:", data);
     }
     if (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching users:", error);
     }
   }, [data, error]);
 
@@ -74,7 +75,7 @@ const page = () => {
           ) : (
             <div>
               <div className="flex justify-end">
-                <PostProductModal />
+                <PostUserModal />
               </div>
               <DataTable
                 columns={columnsUser}

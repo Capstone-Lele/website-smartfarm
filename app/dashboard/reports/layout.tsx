@@ -30,9 +30,11 @@ const items = [
 
 const ReportLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex h-full w-full -mt-4 -ml-4 -mr-4 border-b">
+    <div className="flex h-[calc(100%+2rem)] w-full -m-4 border-b">
       <DashboardSubSidebar items={items} />
-      <div className="flex-1 h-full overflow-auto bg-slate-50 p-4 -mr-8">{children}</div>
+      <div className="flex-1 h-full overflow-auto bg-slate-50 p-4 -mr-8">
+        {children}
+      </div>
     </div>
   );
 };

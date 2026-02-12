@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { CheckIcon, ChevronDown, ChevronsUpDownIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,12 +25,14 @@ export function Combobox({
   isLoading,
   name,
   selectedValue,
+  disable,
 }: {
   data: { value: string; label: string }[];
   onValueChange: (value: string) => void;
   isLoading?: boolean;
   name?: string;
   selectedValue?: string;
+  disable?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(selectedValue || "");
@@ -51,12 +53,13 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between ${value ? "" : "text-muted-foreground"}`}
+          className={`w-full justify-between ${value ? "" : "text-muted-foreground "}`}
         >
           {value
             ? data.find((framework) => framework.value === value)?.label
-            : `Select ${name || ""}...`}
-          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            : `Pilih ${name || ""}...`}
+          {/* <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
+            <ChevronDown className={`ml-2 h-4 w-4 shrink-0 opacity-50 ${open ? "rotate-180" : ""}`} />
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -66,7 +69,8 @@ export function Combobox({
       >
         <Command>
           <CommandInput
-            placeholder={`Search ${name || ""}...`}
+            placeholder={`Cari ${name || ""}...`}
+            disabled={disable}
           />
           <CommandList>
             <CommandEmpty>No Data found.</CommandEmpty>
