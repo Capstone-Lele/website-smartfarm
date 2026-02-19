@@ -119,7 +119,7 @@ export function ImagePopup({
             disabled={imageError}
           >
             <LuCloudDownload className="mr-2" />
-            Download Image
+            Unduh Gambar
           </Button>
         </div>
       </DialogContent>
