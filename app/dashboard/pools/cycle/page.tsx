@@ -4,8 +4,10 @@ import React from "react";
 import { columnsCycle } from "./column";
 import DefaultCard from "@/components/card/default-card";
 import { cycles } from "@/lib/constants/dummy-respoonse/cycle";
+import { useSearchParams } from "next/navigation";
 
 const page = () => {
+const poolId = useSearchParams().get("id");
   return (
     <>
       <DefaultCard>

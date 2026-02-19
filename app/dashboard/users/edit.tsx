@@ -66,6 +66,7 @@ const formSchema = z.object({
 const EditUserModal = ({ user }: { user: User }) => {
   const userMutation = useUpdateUser();
   const [seePassword, setSeePassword] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -99,6 +100,7 @@ const EditUserModal = ({ user }: { user: User }) => {
       });
       form.reset();
       toast.success(res.message || "Pengguna berhasil diubah");
+      setIsOpen(false);
     } catch (error: any) {
       toast.error("Gagal mengedit pengguna", {
         description: error?.message || "Silakan coba lagi.",
@@ -107,7 +109,7 @@ const EditUserModal = ({ user }: { user: User }) => {
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger className="">
         <ButtonEditColumn />
       </SheetTrigger>

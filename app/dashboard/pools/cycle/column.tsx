@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { LuEye } from "react-icons/lu";
 import { Cycle } from "@/types/cycle";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
+
+
 
 export const columnsCycle: ColumnDef<Cycle>[] = [
   {
@@ -25,7 +28,7 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
     cell: ({ row }) => {
-      const kondisi = row.original.kondisi;
+      const kondisi = row.original.condition;
       return (
         <Badge
           className={`${

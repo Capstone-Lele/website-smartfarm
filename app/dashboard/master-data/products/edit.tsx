@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -54,6 +54,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
   const productMutation = useUpdateProduct();
   const getUnitData = useUnit();
   const getCategoryData = useCategory();
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -86,6 +87,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
       });
       form.reset();
       toast.success(res.message || "Produk berhasil diubah");
+      setIsOpen(false);
     } catch (error: any) {
       toast.error("Gagal mengedit produk", {
         description: error?.message || "Silakan coba lagi.",
@@ -94,7 +96,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen} >
       <SheetTrigger>
         <ButtonEditColumn />
       </SheetTrigger>

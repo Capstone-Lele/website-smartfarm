@@ -15,13 +15,15 @@ import { MdOutlineLogout } from "react-icons/md";
 import useToggleSidebar from "@/lib/hooks/useToggleSidebar";
 import { useLogout, useUserInfo } from "@/lib/api/service/auth/useAuth";
 import { usePathname, useRouter } from "next/navigation";
-import { getCookieDecryptedSession } from "@/lib/session";
 import BreadCrumbPath from "../breadcrumb";
 import dataPath from "@/lib/constants/path";
 import SkeletonNavbarProfile from "../sekeleton/navbar-profile";
 import { HiOutlineChevronDown } from "react-icons/hi2";
+import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
+import { getAvatarUrl } from "@/lib/utils/avatar";
 
 const DashboardNavbar = () => {
+  const { tabComponent } = useSubNavbarTab();
   const pathname = usePathname();
   const { isOpen, toggle } = useToggleSidebar();
 
@@ -61,10 +63,11 @@ const DashboardNavbar = () => {
           <UserProfile />
         </div>
       </nav>
-      <nav className="border-b h-12 flex items-center px-4">
+      <nav className="border-b h-12 bg-white flex items-center px-4 justify-between">
         <div>
           <BreadCrumbPath />
         </div>
+        {tabComponent && <div>{tabComponent}</div>}
       </nav>
     </main>
   );
@@ -99,14 +102,18 @@ const UserProfile = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="flex items-center cursor-pointer" onClick={() => setChevronOpen(!chevronOpen)}>
+      <PopoverTrigger
+        className="flex items-center cursor-pointer"
+        onClick={() => setChevronOpen(!chevronOpen)}
+      >
         {userinfo.isLoading ? (
           <SkeletonNavbarProfile />
         ) : (
           <div className="flex items-center gap-3">
             <div>
               <Image
-                src="/images/default.jpg"
+                // src={userinfo.data?.data.image || getAvatarUrl(userinfo.data?.data.name || "User")}
+                src={getAvatarUrl(userinfo.data?.data.name || "User")}
                 alt="User Profile"
                 width={40}
                 height={40}
@@ -117,7 +124,9 @@ const UserProfile = () => {
               <p className="font-medium text-gray-800 truncate w-28">
                 {userinfo.data?.data.name || ""}
               </p>
-              <p className="text-sm text-gray-500">{userinfo.data?.data.role || ""}</p>
+              <p className="text-sm text-gray-500">
+                {userinfo.data?.data.role || ""}
+              </p>
             </div>
             <HiOutlineChevronDown className={chevronOpen ? "rotate-180" : ""} />
           </div>
@@ -129,7 +138,7 @@ const UserProfile = () => {
         </Label>
         <Separator className="my-2" />
         <Link
-          href="/settings"
+          href="/dashboard/profile-setting"
           className="flex items-center gap-2 px-2 py-1 hover:text-primary hover:bg-primary-surface rounded"
         >
           <FiUser className="text-lg" />

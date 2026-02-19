@@ -44,6 +44,7 @@ const formSchema = z.object({
 
 const EditUnitModal = ({ unit }: { unit: Unit }) => {
   const unitMutation = useUpdateUnit();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,6 +71,7 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
       });
       form.reset();
       toast.success(res.message || "Satuan berhasil diubah");
+      setIsOpen(false);
     } catch (error: any) {
       toast.error("Gagal mengedit satuan", {
         description: error?.message || "Silakan coba lagi.",
@@ -78,7 +80,7 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>
         <ButtonEditColumn />
       </SheetTrigger>

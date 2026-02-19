@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -40,6 +40,7 @@ const formSchema = z.object({
 
 const PostUnitModal = () => {
   const unitMutation = useCreateUnit();
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,6 +56,7 @@ const PostUnitModal = () => {
       form.reset();
       console.log("Unit created:", res);
       toast.success("Satuan berhasil ditambahkan");
+      setIsOpen(false);
     } catch (error: any) {
       console.error("Error submitting form:", error);
       toast.error("Gagal menambahkan satuan", {
@@ -64,7 +66,7 @@ const PostUnitModal = () => {
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger className="cursor-pointer inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <FiPlusCircle />
         Tambah Satuan

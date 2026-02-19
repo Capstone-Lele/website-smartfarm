@@ -35,4 +35,20 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/pool/${id}`,
     UPDATE: (id: string) => `/pool/${id}`,
   },
+  CYCLES: {
+    GET_ALL_BY_ID: (id: string) => `/cycle/${id}`,
+    GET_DETAIL_BY_ID: (id: string) => `/cycle/detail/${id}`,
+  },
+  FEED_NOTES: {
+    GET_ALL: "/note/feed",
+    GET_BY_ID: (id: string) => `/note/feed/${id}`,
+  },
+  SICK_NOTES: {
+    GET_ALL: "/note/sick",
+    GET_BY_ID: (id: string) => `/note/sick/${id}`,
+  },
+  VITAMIN_NOTES: {
+    GET_ALL: "/note/vitamin",
+    GET_BY_ID: (id: string) => `/note/vitamin/${id}`,
+  },
 } as const;

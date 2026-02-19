@@ -1,4 +1,4 @@
-import { UserEditInput, UserFormInput, UserResponse } from "@/types/user.types";
+import { UserEditInput, UserFormInput, UserOnlyResponse, UserResponse } from "@/types/user.types";
 import { apiClient } from "../../client";
 import { API_ENDPOINTS } from "../../endpoint";
 import { DUMMY_USER_RESPONSE as response } from "@/lib/constants/dummy-respoonse/user";
@@ -11,6 +11,13 @@ export const userService = {
   getAll: async (): Promise<UserResponse> => {
     const response = await apiClient.get<UserResponse>(
       API_ENDPOINTS.USERS.GET_ALL,
+    );
+    return response;
+  },
+
+  getById: async (id: string): Promise<UserOnlyResponse> => {
+    const response = await apiClient.get<UserOnlyResponse>(
+      API_ENDPOINTS.USERS.GET_BY_ID(id),
     );
     return response;
   },
@@ -32,9 +39,7 @@ export const userService = {
   },
 
   update: async (id: string, data: UserEditInput): Promise<UserResponse> => {
-    console.log("Data yang diterima:", data);
     const payload = buildPayloadEdit(data);
-    console.log("Payload Update User:", payload);
     const response = await apiClient.put<UserResponse>(
       API_ENDPOINTS.USERS.UPDATE(id),
       payload,

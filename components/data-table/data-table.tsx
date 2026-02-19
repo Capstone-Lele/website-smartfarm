@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
             <div>
               <InputGroup>
                 <InputGroupInput
-                  placeholder="Search all columns..."
+                  placeholder="Cari di semua kolom..."
                   value={globalFilter ?? ""}
                   onChange={(event) => setGlobalFilter(event.target.value)}
                   className="max-w-60"
@@ -217,7 +217,7 @@ export function DataTable<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    Tidak ada data.
                   </TableCell>
                 </TableRow>
               )}

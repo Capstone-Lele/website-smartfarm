@@ -5,26 +5,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { LuEye, LuTrash } from "react-icons/lu";
 import PopupConfirmation from "@/components/popup-confimation";
-import EditKolamModal from "./edit";
-import { useDeleteKolam } from "@/lib/api/service/kolam/useKolam";
+import EditPoolModal from "./edit";
+import { useDeletePool } from "@/lib/api/service/pools/usePool";
 import { toast } from "sonner";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 import Link from "next/link";
+import { Pool } from "@/types/pool.types";
+import { POOLS_CATEGORY } from "@/lib/constants/category";
+import { Badge } from "@/components/ui/badge";
+import ButtonDetailColumn from "@/components/button-column/button-detail-column";
+import Image from "next/image";
+import { getAvatarUrl } from "@/lib/utils/avatar";
+import AssignPoolModal from "./assign";
+import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 
-type Kolam = {
-  id: string;
-  name: string;
-  kategori: string;
-  ukuran: string;
-  kondisi: string;
-  siklus: string;
-  ikan: number;
-  kematian: number;
-  umur: string;
-  status_air: string;
-};
-
-export const columnsKolam: ColumnDef<Kolam>[] = [
+export const columnsPool: ColumnDef<Pool>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -46,31 +41,121 @@ export const columnsKolam: ColumnDef<Kolam>[] = [
     ),
   },
   {
-    id: "No",
-    accessorKey: "No",
-    header: () => <span className="">NO</span>,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA KOLAM" />
     ),
+    cell: ({ row }) => {
+      const { diameter } = row.original;
+      return (
+        <div>
+          <h3 className="font-medium">{row.original.name}</h3>
+          <span className="text-xs">
+            {diameter ? "Kolam Bundar" : "Kolam Persegi"}
+          </span>
+        </div>
+      );
+    },
   },
+
   {
-    accessorKey: "kategori",
+    accessorKey: "category",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
+    cell: ({ row }) => {
+      return (
+        <Badge className="px-2" variant={"outline"}>
+          {translateCategoryPool(row.original.category)}
+        </Badge>
+      );
+    },
   },
   {
-    accessorKey: "ukuran",
-    header: () => <span className="">UKURAN</span>,
-  },
-  {
-    accessorKey: "kondisi",
+    accessorKey: "condition",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
+  },
+  {
+    accessorKey: "petugas",
+    cell: ({ row }) => {
+      const staff = [
+        {
+          name: "John Doe",
+        },
+        { name: "Jane Smith" },
+        { name: "Jane Smith" },
+        { name: "Jane Smith" },
+      ];
+      return (
+        <div className="flex flex-row items-center">
+          {staff.length > 0 &&
+            staff.map((member, index) => {
+              if (index < 2) {
+                return (
+                  <Image
+                    src={getAvatarUrl(member.name)}
+                    alt={member.name}
+                    width={30}
+                    height={30}
+                    key={index}
+                    className={"rounded-full border border-primary"}
+                    style={
+                      index === 0
+                        ? { position: "relative", zIndex: staff.length }
+                        : { marginLeft: "-8px", zIndex: staff.length - index }
+                    }
+                  />
+                );
+              } else if (index < 3) {
+                return (
+                  <div
+                    key={index}
+                    className="rounded-full h-7.5 w-7.5 border bg-gray-200 flex items-center justify-center"
+                    style={{ marginLeft: "-8px", zIndex: staff.length - index }}
+                  >
+                    +{staff.length - 2}
+                  </div>
+                );
+              }
+            })}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "size",
+    header: () => <span className="">UKURAN (m)</span>,
+    cell: ({ row }) => {
+      const { length, width, height, diameter } = row.original;
+      const nF = (value: any) => {
+        return Number(value);
+      };
+      if (diameter) {
+        const volumeCylinder = (
+          Math.PI *
+          Math.pow(nF(diameter) / 2, 2) *
+          nF(height)
+        ).toFixed(2);
+        return (
+          <div className="flex flex-col">
+            <span>{`${nF(diameter)} x ${nF(height)}`}</span>
+            <span>{nF(volumeCylinder)} m³</span>
+          </div>
+        );
+      } else {
+        const volumeRectangular = (nF(length) * nF(width) * nF(height)).toFixed(
+          2,
+        );
+        return (
+          <div className="flex flex-col">
+            <span>{`${nF(length)} x ${nF(width)} x ${nF(height)}`}</span>
+            <span>{nF(volumeRectangular)} m³</span>
+          </div>
+        );
+      }
+    },
   },
   {
     accessorKey: "siklus",
@@ -98,11 +183,11 @@ export const columnsKolam: ColumnDef<Kolam>[] = [
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
-      const deleteKolamMutation = useDeleteKolam();
+      const deletePoolMutation = useDeletePool();
 
-      const handleDeleteKolam = async (id: string) => {
+      const handleDeletePool = async (id: string) => {
         try {
-          const res = await deleteKolamMutation.mutateAsync(id);
+          const res = await deletePoolMutation.mutateAsync(id);
           toast.success(res.message || "Kolam berhasil dihapus");
         } catch (error: any) {
           toast.error("Gagal menghapus kolam", {
@@ -113,20 +198,20 @@ export const columnsKolam: ColumnDef<Kolam>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <Link href={''}>
-            <LuEye />
-          </Link>
+          <ButtonDetailColumn href={`/dashboard/pools?id=${row.original.id}`} />
           <Separator orientation="vertical" className="h-6" />
-          <EditKolamModal kolam={row.original} />
+          <AssignPoolModal pool={row.original} />
+          <Separator orientation="vertical" className="h-6" />
+          <EditPoolModal pool={row.original} />
           <Separator orientation="vertical" className="h-6" />
           <PopupConfirmation
             title="Hapus Kolam"
             message={`Apakah anda yakin menghapus kolam ( ${row.original.name} ) ini?`}
             type="error"
-            onConfirm={() => handleDeleteKolam(row.original.id)}
-            isLoading={deleteKolamMutation.isPending}
+            onConfirm={() => handleDeletePool(row.original.id)}
+            isLoading={deletePoolMutation.isPending}
           >
-            <ButtonDeleteColumn/>
+            <ButtonDeleteColumn />
           </PopupConfirmation>
         </div>
       );

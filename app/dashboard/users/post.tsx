@@ -69,6 +69,7 @@ const formSchema = z.object({
 const PostUserModal = () => {
   const userMutation = useCreateUser();
   const [seePassword, setSeePassword] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,13 +83,11 @@ const PostUserModal = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Submitting form with data:", data);
     try {
-      console.log("Submitting form with data:", data);
       const res = await userMutation.mutateAsync(data);
       form.reset();
-      console.log("User created:", res);
       toast.success("Pengguna berhasil ditambahkan");
+      setIsOpen(false);
     } catch (error: any) {
       console.error("Error submitting form:", error);
       toast.error("Gagal menambahkan pengguna", {
@@ -98,7 +97,7 @@ const PostUserModal = () => {
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger className="cursor-pointer inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <FiPlusCircle />
         Tambah Pengguna
@@ -200,7 +199,6 @@ const PostUserModal = () => {
                       <Combobox
                         data={ROLE_LABEL}
                         onValueChange={field.onChange}
-                        isLoading={userMutation.isPending}
                         name="Role"
                       />
                       {fieldState.invalid ? (

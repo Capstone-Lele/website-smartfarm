@@ -4,17 +4,17 @@ import React from "react";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
-      <main className="flex w-full h-screen">
+    <div className="fixed inset-0 w-full overflow-hidden bg-slate-50">
+      <main className="flex w-full h-full">
         <DashboardSidebar />
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex flex-1 flex-col h-full overflow-hidden">
           <DashboardNavbar />
-          <div className="flex flex-col flex-1 p-4 bg-slate-50 overflow-auto h-full">
+          <div className="flex flex-col flex-1 p-4 overflow-y-auto overscroll-none">
             {children}
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 };
 

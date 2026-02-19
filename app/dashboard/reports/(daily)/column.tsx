@@ -15,6 +15,12 @@ export type DailyReport = {
 
 export const columns: ColumnDef<DailyReport>[] = [
   {
+    accessorKey: "date",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
+    ),
+  },
+  {
     accessorKey: "image",
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => <span>{row.original.image ? "Ada" : "-"}</span>,
@@ -42,12 +48,6 @@ export const columns: ColumnDef<DailyReport>[] = [
     accessorKey: "actor",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
-    ),
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
   },
 ];

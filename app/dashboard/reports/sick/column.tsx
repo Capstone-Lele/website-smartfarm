@@ -3,20 +3,80 @@ import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { ImagePopup } from "@/components/image-popup";
+import { Sick } from "@/types/notes/sick.types";
+import { formatDate } from "@/lib/utils/format-date";
+import { useGetUserById } from "@/lib/api/service/users/useUser";
+import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 
-export type SickReport = {
-  id: string;
-  cycle: string;
-  sourcePool: string;
-  amount: number;
-  date: string;
-  actor: string;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-};
+export const columns: ColumnDef<Sick>[] = [
+  {
+    accessorKey: "date",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.reportDate);
+    },
+  },
+  {
+    accessorKey: "originPoolName",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="KOLAM ASAL" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-col">
+          <span className="font-semibold">{row.original.originPoolName}</span>
+          <span className="text-xs">{translateCategoryPool(row.original.originCategory)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "startDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="SIKLUS KOLAM ASAL"
+      />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.startDate);
+    },
+  },
+  {
+    accessorKey: "destinationPoolName",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="KOLAM TUJUAN"
+      />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-col">
+          <span className="font-semibold">
+            {row.original.destinationPoolName}
+          </span>
+          <span className="text-xs">{translateCategoryPool(row.original.destinationCategory)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "quantity",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="JUMLAH (ekor)"
+      />
+    ),
+    cell: ({ row }) => <span>{row.original.quantity}</span>,
+  },
 
-export const columns: ColumnDef<SickReport>[] = [
   {
     accessorKey: "image",
     header: () => <span>GAMBAR</span>,
@@ -24,36 +84,10 @@ export const columns: ColumnDef<SickReport>[] = [
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
     ),
   },
-
   {
-    accessorKey: "cycle",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
-    ),
-  },
-  {
-    accessorKey: "sourcePool",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="KOLAM ASAL" />
-    ),
-  },
-  {
-    accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="JUMLAH" />
-    ),
-    cell: ({ row }) => <span>{row.original.amount} Ekor</span>,
-  },
-  {
-    accessorKey: "actor",
+    accessorKey: "user",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
-    ),
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
   },
 ];

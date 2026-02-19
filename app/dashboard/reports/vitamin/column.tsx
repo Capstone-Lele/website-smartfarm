@@ -4,59 +4,74 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import Image from "next/image";
 import { ImagePopup } from "@/components/image-popup";
+import { Vitamin } from "@/types/notes/vitamin.types";
+import { formatDate } from "@/lib/utils/format-date";
+import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 
-export type VitaminReport = {
-  id: string;
-  image: string;
-  age: number;
-  vitaminType: string;
-  feedWeight: number;
-  actor: string;
-  date: string;
-};
 
-export const columns: ColumnDef<VitaminReport>[] = [
+export const columns: ColumnDef<Vitamin>[] = [
   {
-    accessorKey: "image",
-    header: () => <span>GAMBAR</span>,
-    cell: ({ row }) => (
-      <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
-    ),
-  },
-  {
-    accessorKey: "age",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="UMUR" />
-    ),
-    cell: ({ row }) => <span>{row.original.age} Hari</span>,
-  },
-  {
-    accessorKey: "feedWeight",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="BERAT PAKAN" />
-    ),
-    cell: ({ row }) => <span>{row.original.feedWeight} kg</span>,
-  },
-  {
-    accessorKey: "vitaminType",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className=""
-        column={column}
-        title="JENIS VITAMIN"
-      />
-    ),
-  },
-  {
-    accessorKey: "actor",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="PETUGAS" />
-    ),
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
-    ),
-  },
+     accessorKey: "reportDate",
+     header: ({ column }) => (
+       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
+     ),
+     cell: ({ row }) => {
+       return formatDate(row.original.reportDate);
+     },
+   },
+   {
+     accessorKey: "poolName",
+     header: ({ column }) => (
+       <DataTableColumnHeader className="" column={column} title="KOLAM" />
+     ),
+     cell: ({ row }) => {
+       return (
+         <div className="flex flex-col">
+           <span className="font-semibold">{row.original.poolName}</span>
+           <span className="text-xs">
+             {translateCategoryPool(row.original.poolCategory)}
+           </span>
+         </div>
+       );
+     },
+   },
+   {
+     accessorKey: "startDate",
+     header: ({ column }) => (
+       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+     ),
+     cell: ({ row }) => {
+       return formatDate(row.original.startDate);
+     },
+   },
+   {
+     accessorKey: "vitaminName",
+     header: ({ column }) => (
+       <DataTableColumnHeader className="" column={column} title="PAKAN" />
+     ),
+   },
+   {
+     accessorKey: "quantity",
+     header: ({ column }) => (
+       <DataTableColumnHeader
+         className=""
+         column={column}
+         title="JUMLAH PAKAN"
+       />
+     ),
+   },
+   {
+     accessorKey: "image",
+     header: () => <span>GAMBAR</span>,
+     cell: ({ row }) => (
+       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
+     ),
+   },
+ 
+   {
+     accessorKey: "user",
+     header: ({ column }) => (
+       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
+     ),
+   },
 ];

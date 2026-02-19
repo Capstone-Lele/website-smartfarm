@@ -56,7 +56,7 @@ export const items = [
   {
     name: "Komoditas",
     icon: <MdOutlineStoreMallDirectory />,
-    href: "/dashboard/commodities",
+    href: "/dashboard/commodity",
     type: "menu",
   },
   {
@@ -79,7 +79,7 @@ const DashboardSidebar = () => {
   return (
     <>
       <main
-        className={`border-r h-full w-full p-4 ${
+        className={`border-r bg-white w-full p-4 ${
           isOpen ? "max-w-64" : "max-w-19"
         } duration-300 ease-in-out overflow-y-auto`}
       >
