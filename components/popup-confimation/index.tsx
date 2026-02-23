@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -31,6 +31,8 @@ const PopupConfirmation = ({
   isLoading,
   children,
 }: PopupConfirmationProps) => {
+  const [open, setOpen] = useState(false);
+
   const typeStyles = {
     warning: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
     info: "bg-blue-100 text-blue-800 hover:bg-blue-200",
@@ -38,8 +40,15 @@ const PopupConfirmation = ({
     error: "bg-red-100 text-red-800 hover:bg-red-200 border border-red-200 hover:border-none",
   };
 
+  const handleConfirm = async () => {
+    if (onConfirm) {
+      await onConfirm();
+    }
+    setOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -50,7 +59,10 @@ const PopupConfirmation = ({
               <Button
                 className="w-1/2 hover:bg-primary-surface cursor-pointer border hover:border-none"
                 variant={"ghost"}
-                onClick={onCancel}
+                onClick={() => {
+                  onCancel && onCancel();
+                  setOpen(false);
+                }}
               >
                 Cancel
               </Button>
@@ -67,7 +79,7 @@ const PopupConfirmation = ({
               <Button
                 className={`w-1/2 cursor-pointer ${typeStyles[type]}`}
                 variant={"ghost"}
-                onClick={onConfirm}
+                onClick={handleConfirm}
               >
                 Confirm
               </Button>
