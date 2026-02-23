@@ -31,11 +31,11 @@ import { getDirtyValues } from "@/lib/utils/get-dirty-value";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { RiResetRightLine } from "react-icons/ri";
-import { useGetUserById, useUpdateUser } from "@/lib/api/service/users/useUser";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import ProfileSettingSkeleton from "@/components/sekeleton/profile-setting-skeleton";
 import { toast } from "sonner";
 import { getCookieDecryptedSession } from "@/lib/session";
+import { useGetProfile, useUpdateProfile } from "@/lib/api/service/profile/useProfile";
 
 const formSchema = z
   .object({
@@ -66,13 +66,13 @@ const formSchema = z
 
 const page = () => {
   //   const { data, isLoading } = useUserInfo();
-  const [idUser, setIdUser] = useState<string | null>(null);
-  const { data, isLoading } = useGetUserById(idUser || "");
-  const userMutation = useUpdateUser();
+  // const [idUser, setIdUser] = useState<string | null>(null);
+  const { data, isLoading } = useGetProfile();
+  const profileMutation = useUpdateProfile();
   const [tempImageValue, setTempImageValue] = useState<File | null>(null);
   const [seePassword, setSeePassword] = useState(false);
   const [seeConfirmPassword, setSeeConfirmPassword] = useState(false);
-  const userData = data?.data;
+  const userData = data?.data[0];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -87,30 +87,17 @@ const page = () => {
   });
   const { isDirty, dirtyFields } = form.formState;
 
-  useEffect(() => {
-    const getIdUser = async () => {
-      const idUser = await getCookieDecryptedSession();
-      console.log("User ID:", idUser?.id);
-      setIdUser(idUser?.id || null);
-    };
-
-    getIdUser();
-  }, []);
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const dirtyData = getDirtyValues(dirtyFields, values) as z.infer<
       typeof formSchema
     >;
 
     try {
-      const res = await userMutation.mutateAsync({
-        id: userData?.id || "",
-        data: dirtyData,
-      });
+      const res = await profileMutation.mutateAsync(dirtyData);
       form.reset();
-      toast.success(res.message || "Pengguna berhasil diubah");
+      toast.success(res.message || "Profil berhasil diubah");
     } catch (error: any) {
-      toast.error("Gagal mengedit pengguna", {
+      toast.error("Gagal mengedit profil", {
         description: error?.message || "Silakan coba lagi.",
       });
     }
@@ -371,7 +358,7 @@ const page = () => {
                         <RiResetRightLine />
                         Reset
                       </Button>
-                      {userMutation.isPending ? (
+                      {profileMutation.isPending ? (
                         <Button
                           disabled
                           className=" cursor-not-allowed mr-1 flex items-center w-fit"

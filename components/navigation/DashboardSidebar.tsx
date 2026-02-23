@@ -67,7 +67,7 @@ export const items = [
     subMenuList: [
       { name: "Kategori", href: "/dashboard/master-data/categories" },
       { name: "Produk", href: "/dashboard/master-data/products" },
-      { name: "Pembeli", href: "/dashboard/master-data/suppliers" },
+      { name: "Pembeli", href: "/dashboard/master-data/buyers" },
       { name: "Satuan", href: "/dashboard/master-data/units" },
     ],
   },

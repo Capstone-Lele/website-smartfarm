@@ -5,7 +5,6 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { ImagePopup } from "@/components/image-popup";
 import { Sick } from "@/types/notes/sick.types";
 import { formatDate } from "@/lib/utils/format-date";
-import { useGetUserById } from "@/lib/api/service/users/useUser";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 
 export const columns: ColumnDef<Sick>[] = [

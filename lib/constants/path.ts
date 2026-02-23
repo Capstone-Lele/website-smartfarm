@@ -34,6 +34,10 @@ const dataPath = [
         path: "/dashboard/master-data/units",
         name: "Satuan",
       },
+      {
+        path: "/dashboard/master-data/buyers",
+        name: "Pembeli",
+      }
     ],
   },
   {
@@ -69,7 +73,7 @@ const dataPath = [
   {
     path: "/dashboard/finance",
     name: "Keuangan",
-  }
+  },
 ];
 
 export default dataPath;
