@@ -9,14 +9,14 @@ export const API_ENDPOINTS = {
       GET_ALL: "/master-data/categories",
     },
     UNIT: {
-      GET_ALL: "/master-data/units",
-      DELETE: (id: string) => `/master-data/units/${id}`,
-      CREATE: "/master-data/units",
-      UPDATE: (id: string) => `/master-data/units/${id}`,
+      GET_ALL: "/master-data/unit",
+      DELETE: (id: string) => `/master-data/unit/${id}`,
+      CREATE: "/master-data/unit",
+      UPDATE: (id: string) => `/master-data/unit/${id}`,
     },
     PRODUCT: {
-      GET_ALL: "/master-data/products",
-      CREATE: "/master-data/products",
+      GET_ALL: "/master-data/product",
+      CREATE: "/master-data/product",
       DELETE: (id: string) => `/master-data/product/${id}`,
       UPDATE: (id: string) => `/master-data/product/${id}`,
     },
@@ -51,4 +51,15 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/vitamin",
     GET_BY_ID: (id: string) => `/note/vitamin/${id}`,
   },
+  PROFILE:{
+    GET_PROFILE: "/app/user",
+    UPDATE: "/app/user",
+  },
+  BUYER:{
+    GET_ALL: "/master-data/buyer",
+    GET_BY_ID: (id: string) => `/master-data/buyer/${id}`,
+    CREATE: "/master-data/buyer",
+    DELETE: (id: string) => `/master-data/buyer/${id}`,
+    UPDATE: (id: string) => `/master-data/buyer/${id}`,
+  }
 } as const;
