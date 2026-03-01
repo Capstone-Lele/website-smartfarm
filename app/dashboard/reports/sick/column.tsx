@@ -75,7 +75,6 @@ export const columns: ColumnDef<Sick>[] = [
     ),
     cell: ({ row }) => <span>{row.original.quantity}</span>,
   },
-
   {
     accessorKey: "image",
     header: () => <span>GAMBAR</span>,

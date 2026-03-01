@@ -64,6 +64,10 @@ const dataPath = [
         path: "/dashboard/reports/sick",
         name: "Laporan Sakit",
       },
+      {
+        path: "/dashboard/reports/sampling",
+        name: "Laporan Sampling",
+      }
     ],
   },
   {
