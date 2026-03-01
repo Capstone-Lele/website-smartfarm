@@ -66,4 +66,8 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/master-data/buyer/${id}`,
     UPDATE: (id: string) => `/master-data/buyer/${id}`,
   },
+  CLEANING_NOTES: {
+    GET_ALL: "/note/cleanings",
+    GET_BY_ID: (id: string) => `/note/cleaning/${id}`,
+  },
 } as const;
