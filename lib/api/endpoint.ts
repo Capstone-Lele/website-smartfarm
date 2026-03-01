@@ -70,4 +70,8 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/cleanings",
     GET_BY_ID: (id: string) => `/note/cleaning/${id}`,
   },
+  MOVE_NOTES: {
+    GET_ALL: "/note/moves",
+    GET_BY_ID: (id: string) => `/note/move/${id}`,
+  },
 } as const;

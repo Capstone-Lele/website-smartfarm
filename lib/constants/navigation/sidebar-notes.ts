@@ -32,5 +32,10 @@ export const REPORT_SIDEBAR_ITEMS = [
     title: "Pembersihan Kolam",
     href: "/dashboard/reports/cleaning",
     type: "menu",
-  }
+  },
+  {
+    title: "Pindah Kolam",
+    href: "/dashboard/reports/move",
+    type: "menu",
+  },
 ];
