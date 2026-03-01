@@ -51,15 +51,19 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/vitamin",
     GET_BY_ID: (id: string) => `/note/vitamin/${id}`,
   },
-  PROFILE:{
+  SAMPLING_NOTES: {
+    GET_ALL: "/note/samplings",
+    GET_BY_ID: (id: string) => `/note/sampling/${id}`,
+  },
+  PROFILE: {
     GET_PROFILE: "/app/user",
     UPDATE: "/app/user",
   },
-  BUYER:{
+  BUYER: {
     GET_ALL: "/master-data/buyer",
     GET_BY_ID: (id: string) => `/master-data/buyer/${id}`,
     CREATE: "/master-data/buyer",
     DELETE: (id: string) => `/master-data/buyer/${id}`,
     UPDATE: (id: string) => `/master-data/buyer/${id}`,
-  }
+  },
 } as const;

@@ -26,6 +26,11 @@ const items = [
     href: "/dashboard/reports/sick",
     type: "menu",
   },
+  {
+    title: "Sampling",
+    href: "/dashboard/reports/sampling",
+    type: "menu",
+  }
 ];
 
 const ReportLayout = ({ children }: { children: React.ReactNode }) => {
