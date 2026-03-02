@@ -1,4 +1,3 @@
-
 const dataPath = [
   {
     path: "/dashboard",
@@ -37,12 +36,31 @@ const dataPath = [
       {
         path: "/dashboard/master-data/buyers",
         name: "Pembeli",
-      }
+      },
     ],
   },
   {
     path: "/dashboard/users",
     name: "Pengguna",
+  },
+  {
+    path: "/dashboard/inventory",
+    name: "Inventaris",
+    sub_paths: [
+      {
+        path: "/dashboard/inventory/[id]",
+        name: "Detail Inventaris",
+        isDynamic: true,
+        dynamicName: (params: any) => {
+          // Menampilkan nilai ID dari URL
+          return `Produk #${params.id}`;
+        },
+      },
+    ],
+  },
+  {
+    path: "/dashboard/inventory-submission",
+    name: "Pengajuan Inventaris",
   },
   {
     path: "/dashboard/reports",
@@ -75,7 +93,7 @@ const dataPath = [
       {
         path: "/dashboard/reports/move",
         name: "Laporan Pindah Kolam",
-      }
+      },
     ],
   },
   {

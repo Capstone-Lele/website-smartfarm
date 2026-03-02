@@ -20,11 +20,13 @@ export function DatePickerWithRange({
   label,
   placeholder,
   resetValues,
+  hideLabel,
 }: {
   onValueChange?: (startDate?: Date | null, endDate?: Date | null) => void;
   label?: string;
   placeholder?: string;
   resetValues?: number;
+  hideLabel?: boolean;
 }) {
   const [date, setDate] = useState<DateRange | undefined>();
 
@@ -62,9 +64,11 @@ export function DatePickerWithRange({
 
   return (
     <Field className="w-full ">
-      <FieldLabel htmlFor="date-picker-range" className="mt-[-2]">
-        {label ?? "Date Picker Range"}
-      </FieldLabel>
+      {!hideLabel && (
+        <FieldLabel htmlFor="date-picker-range" className="mt-[-2]">
+          {label ?? "Date Picker Range"}
+        </FieldLabel>
+      )}
       <Popover>
         <PopoverTrigger asChild>
           <Button

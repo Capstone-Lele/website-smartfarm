@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api/client";
+import { API_CLIENT } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoint";
 import { ResponseDefault } from "@/types/response";
 import {
@@ -8,7 +8,7 @@ import {
 
 export const productService = {
   getAll: async (): Promise<ResponseDefault> => {
-    const response = await apiClient.get<ResponseDefault>(
+    const response = await API_CLIENT.get<ResponseDefault>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.GET_ALL,
     );
     return response;
@@ -16,7 +16,7 @@ export const productService = {
 
   create: async (data: any): Promise<ResponseDefault> => {
     const payload = buildPayloadCreate(data);
-    const response = await apiClient.post<ResponseDefault>(
+    const response = await API_CLIENT.post<ResponseDefault>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.CREATE,
       payload,
     );
@@ -24,14 +24,14 @@ export const productService = {
   },
 
   delete: async (id: string): Promise<ResponseDefault> => {
-    const response = await apiClient.delete<ResponseDefault>(
+    const response = await API_CLIENT.delete<ResponseDefault>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.DELETE(id),
     );
     return response;
   },
   update: async (id: string, data: any): Promise<ResponseDefault> => {
     const payload = buildPayloadEdit(data);
-    const response = await apiClient.put<ResponseDefault>(
+    const response = await API_CLIENT.put<ResponseDefault>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.UPDATE(id),
       payload,
     );

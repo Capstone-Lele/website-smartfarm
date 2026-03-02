@@ -1,54 +1,70 @@
+"use client";
+
 import { Separator } from "@radix-ui/react-separator";
-import React, { useRef } from "react";
+import { useRef, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { Button } from "../ui/button";
-import { LuTrash } from "react-icons/lu";
 import { LuDownload } from "react-icons/lu";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import Draggable from "react-draggable";
+import { ExportPreviewModal } from "./exports/export-preview-modal";
 
 const FloatingMenuSelectedRow = ({ table }: { table: any }) => {
   const nodeRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const selectedRows = table.getSelectedRowModel().rows;
 
   return (
-    <Draggable handle=".drag-handle" nodeRef={nodeRef}>
-      <div
-        ref={nodeRef}
-        className="fixed border bottom-4 z-50 flex items-center bg-white  shadow-lg rounded-md left-1/2 transform -translate-x-1/2"
-      >
-        <div className="flex items-center gap-4 px-4 py-2">
-          <div className="font-medium flex items-center gap-1">
-            <span>{table.getSelectedRowModel().rows.length}</span>
-            <span>selected</span>
-          </div>
-          <Separator orientation="vertical" className="h-6 w-0.5 bg-gray-200" />
-          <div>
-            <Button variant="outline" className="cursor-pointer">
+    <>
+      <Draggable handle=".drag-handle" nodeRef={nodeRef}>
+        <div
+          ref={nodeRef}
+          className="fixed border bottom-4 z-50 flex items-center bg-white shadow-lg rounded-md left-1/2 -translate-x-1/2"
+        >
+          <div className="flex items-center gap-4 px-4 py-2">
+            <div className="font-medium flex items-center gap-1 text-sm">
+              <span>{selectedRows.length}</span>
+              <span>selected</span>
+            </div>
+            <Separator
+              orientation="vertical"
+              className="h-6 w-0.5 bg-gray-200"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+              onClick={() => table.resetRowSelection()}
+            >
               <CgClose className="mr-1" />
               Deselect
             </Button>
-          </div>
-          <div>
-            <Button variant="outline" className="cursor-pointer">
-              <LuDownload className="mr-1" />
-              Export
-            </Button>
-          </div>
-          <div>
             <Button
               variant="outline"
-              className="cursor-pointer bg-red-100 text-red-600 border-red-600 hover:bg-red-200 hover:text-red-700"
+              size="sm"
+              className="cursor-pointer"
+              onClick={() => setOpen(true)}
             >
-              <LuTrash className="mr-1" />
-              Delete
+              <LuDownload className="mr-1" />
+              Export PDF
             </Button>
           </div>
+          <div className="drag-handle cursor-move flex items-center px-2 py-3 border-l bg-gray-50">
+            <MdOutlineDragIndicator className="text-2xl text-gray-500" />
+          </div>
         </div>
-        <div className="drag-handle cursor-move flex items-center gap-1 px-2 py-3 border-l bg-gray-50">
-          <MdOutlineDragIndicator className="text-2xl text-gray-500" />
-        </div>
-      </div>
-    </Draggable>
+      </Draggable>
+
+      {/* Modal preview — hanya render baris yang dipilih */}
+      <ExportPreviewModal
+        open={open}
+        onClose={() => setOpen(false)}
+        table={table}
+        rows={selectedRows}
+        title="Data Terpilih"
+      />
+    </>
   );
 };
 

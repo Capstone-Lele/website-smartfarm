@@ -15,3 +15,18 @@ export type CycleResponse = {
   message: string;
   data: Cycle[];
 };
+
+export type CycleDetail = {
+  age: number| string;
+  startDate: string;
+  user: string;
+  endDate: string;
+  initialQuantity: number;
+  currentQuantity: number;
+};
+
+export type CycleDetailResponse = {
+  success: boolean;
+  message: string;
+  data: CycleDetail[];
+};

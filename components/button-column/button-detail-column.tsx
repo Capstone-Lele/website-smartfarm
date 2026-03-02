@@ -3,7 +3,7 @@ import React from "react";
 import { LuEye } from "react-icons/lu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const ButtonDetailColumn = (href: any) => {
+const ButtonDetailColumn = ({href}: {href: string}) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
