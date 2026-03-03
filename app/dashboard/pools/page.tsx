@@ -49,37 +49,6 @@ const page = () => {
         .length.toString(),
       icon: <LuUserRound />,
     },
-    // {
-    //   title: "Total Ikan Seluruh Kolam",
-    //   value: data?.data
-    //     .reduce((acc, pool) => acc + (pool.fishCount || 0), 0)
-    //     .toString(),
-    //   icon: <LuUsersRound />,
-    // },
-    // {
-    //   title: "Total Ikan Kolam Pembesaran",
-    //   value: data?.data
-    //     .filter((pool) => pool.category === "growing")
-    //     .reduce((acc, pool) => acc + (pool.fishCount || 0), 0)
-    //     .toString(),
-    //   icon: <LuUsersRound />,
-    // },
-    // {
-    //   title: "Total Ikan Kolam Pembibitan",
-    //   value: data?.data
-    //     .filter((pool) => pool.category === "breeding")
-    //     .reduce((acc, pool) => acc + (pool.fishCount || 0), 0)
-    //     .toString(),
-    //   icon: <LuUsersRound />,
-    // },
-    // {
-    //   title: "Total Ikan Kolam Karantina",
-    //   value: data?.data
-    //     .filter((pool) => pool.category === "quarantine")
-    //     .reduce((acc, pool) => acc + (pool.fishCount || 0), 0)
-    //     .toString(),
-    //   icon: <LuUsersRound />,
-    // },
   ];
 
   useEffect(() => {

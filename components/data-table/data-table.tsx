@@ -26,7 +26,9 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-column-view";
 import { DataTableFacetedFilter } from "./faceted-filter";
 import { ExportOptions } from "./exports/exports";
+import { DataTableDateFilter } from "./data-table-date-filter";
 import { useMemo, useState } from "react";
+import { FilterFn } from "@tanstack/react-table";
 import { LuFilter, LuSearch } from "react-icons/lu";
 import { Button } from "../ui/button";
 import FloatingMenuSelectedRow from "./floating-menu-selected-row";
@@ -47,6 +49,12 @@ interface DataTableProps<TData, TValue> {
       value: string;
     }[];
   }[];
+  dateFilter?: {
+    /** accessorKey dari kolom yang berisi nilai tanggal (ISO string / Date) */
+    column: string;
+    /** Label yang ditampilkan di tombol filter */
+    label: string;
+  }[];
   exportOptions?: {
     pdf: boolean;
     csv: boolean;
@@ -54,10 +62,33 @@ interface DataTableProps<TData, TValue> {
   children?: React.ReactNode;
 }
 
+/**
+ * Custom filterFn untuk rentang tanggal.
+ * filterValue: [fromISO: string, toISO: string]
+ * Nilai kolom bisa berupa ISO string atau Date.
+ */
+const dateRangeFilter: FilterFn<unknown> = (row, columnId, filterValue) => {
+  const [from, to] = filterValue as [string, string];
+  const rawValue = row.getValue(columnId);
+  if (!rawValue) return false;
+
+  // Normalise ke yyyy-mm-dd string
+  const cellDate =
+    rawValue instanceof Date
+      ? rawValue.toISOString().slice(0, 10)
+      : String(rawValue).slice(0, 10);
+
+  if (from && cellDate < from) return false;
+  if (to && cellDate > to) return false;
+  return true;
+};
+dateRangeFilter.autoRemove = (val) => !val || (!val[0] && !val[1]);
+
 export function DataTable<TData, TValue>({
   columns,
   data,
   facetedFilter,
+  dateFilter,
   children,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -83,6 +114,9 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     globalFilterFn: "includesString",
+    filterFns: {
+      dateRange: dateRangeFilter as FilterFn<TData>,
+    },
     state: {
       sorting,
       columnFilters,
@@ -126,6 +160,18 @@ export function DataTable<TData, TValue>({
                       column={table.getColumn(filter.column)}
                       title={filter.column}
                       options={filter.option}
+                    />
+                  ),
+              )}
+            {/* Date range filter */}
+            {dateFilter &&
+              dateFilter.map(
+                (df) =>
+                  table.getColumn(df.column) && (
+                    <DataTableDateFilter
+                      key={df.column}
+                      column={table.getColumn(df.column)}
+                      label={df.label}
                     />
                   ),
               )}

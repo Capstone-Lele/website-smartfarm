@@ -36,16 +36,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useParams } from "next/navigation";
-
-const TYPE_OPTIONS = [
-  { value: "in", label: "Masuk (In)" },
-  { value: "out", label: "Keluar (Out)" },
-];
-
-const TRANSACTION_TYPE_OPTIONS = [
-  { value: "grant", label: "Hibah (Grant)" },
-  { value: "non-grant", label: "Dana Desa (Non-Grant)" },
-];
+import { INVENTORY_TRANSACTION_TYPE_OPTIONS, INVENTORY_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 
 const formSchema = z.object({
   reportDate: z.string().min(1, { message: "Tanggal laporan wajib diisi" }),
@@ -248,7 +239,7 @@ const PostStockInOut = () => {
                       <Field>
                         <FieldLabel htmlFor="type">Tipe Transaksi</FieldLabel>
                         <Combobox
-                          data={TYPE_OPTIONS}
+                          data={INVENTORY_TYPE_OPTIONS}
                           onValueChange={field.onChange}
                           name="type"
                           selectedValue={field.value}
@@ -273,7 +264,7 @@ const PostStockInOut = () => {
                           Sumber Dana
                         </FieldLabel>
                         <Combobox
-                          data={TRANSACTION_TYPE_OPTIONS}
+                          data={INVENTORY_TRANSACTION_TYPE_OPTIONS}
                           onValueChange={field.onChange}
                           name="transactionType"
                           selectedValue={field.value}
