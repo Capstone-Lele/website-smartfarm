@@ -12,7 +12,6 @@ export type Inventory = {
   deletedAt?: string | null;
 };
 
-
 export type InventoryResponse = {
   success: boolean;
   message: string;
@@ -26,6 +25,34 @@ export type InventoryDetail = {
   from: string;
   unit: string;
   quantity: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+};
+
+export type InventorySubmissionResponse = {
+  success: boolean;
+  message: string;
+  data: InventorySubmission[];
+};
+
+export type InventorySubmissionDetailResponse = {
+  success: boolean;
+  message: string;
+  data: InventorySubmission;
+};
+
+export type InventorySubmission = {
+  id: string;
+  userId: string;
+  user: string;
+  inventoryId: string;
+  product: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  status: string;
+  notes?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;

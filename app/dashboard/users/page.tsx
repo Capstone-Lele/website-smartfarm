@@ -13,9 +13,6 @@ import DefaultCard from "@/components/card/default-card";
 import { LuUserRound, LuUsersRound } from "react-icons/lu";
 import { TableFacetedFilter } from "@/types/table-faceted-filter";
 
-
-
-
 const tableFilter:TableFacetedFilter=[
   {
     column: "role",
