@@ -11,10 +11,10 @@ export const inventoryService = {
     return response;
   },
   create: async (data: any): Promise<InventoryResponse> => {
-        const payload = buildPayloadCreate(data);
+    const payload = buildPayloadCreate(data);
     const response = await API_CLIENT.post<InventoryResponse>(
       API_ENDPOINTS.INVENTORY.CREATE,
-        payload,
+      payload,
     );
     return response;
   },
@@ -24,4 +24,14 @@ export const inventoryService = {
     );
     return response;
   },
+  // stockInOut: async (
+  //   id: string,
+  //   data: FormData,
+  // ): Promise<InventoryResponse> => {
+  //   const response = await API_CLIENT.post<InventoryResponse>(
+  //     API_ENDPOINTS.INVENTORY.STOCK_IN_OUT(id),
+  //     data,
+  //   );
+  //   return response;
+  // },
 };

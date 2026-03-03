@@ -9,6 +9,7 @@ import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { DataTable } from "@/components/data-table/data-table";
 import InventoryNavTabs from "../_components/inventory-nav-tabs";
 import { columns } from "../column";
+import PostStockInOut from "./post";
 
 const Page = () => {
   const { setTabComponent } = useSubNavbarTab();
@@ -60,7 +61,7 @@ const Page = () => {
           ) : ( */}
           <div>
             <div className="flex justify-end">
-              {/* <PostInventoryModal /> */}
+              <PostStockInOut />
             </div>
             <DataTable columns={columns} data={[]} />
           </div>

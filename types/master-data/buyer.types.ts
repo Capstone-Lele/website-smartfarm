@@ -19,7 +19,7 @@ export type BuyerResponse = {
 export type BuyerFormInput = {
   name?: string;
   type?: string;
-  phoneNumber?: string;
+  phone?: string;
   email?: string;
   address?: string;
 };

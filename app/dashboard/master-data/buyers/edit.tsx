@@ -45,7 +45,7 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama pembeli wajib diisi" }),
   type: z.string().min(1, { error: "Jenis pembeli wajib diisi" }),
-  phoneNumber: z
+  phone: z
     .string()
     .max(15, { error: "Nomor telepon maksimal 15 karakter" })
     .optional(),
@@ -62,7 +62,7 @@ const EditBuyerModal = ({ buyer }: { buyer: any }) => {
     defaultValues: {
       name: buyer.name || "",
       type: buyer.type || "",
-      phoneNumber: buyer.phoneNumber || "",
+      phone: buyer.phone || "",
       email: buyer.email || "",
       address: buyer.address || "",
     },
@@ -73,7 +73,7 @@ const EditBuyerModal = ({ buyer }: { buyer: any }) => {
     form.reset({
       name: buyer.name || "",
       type: buyer.type || "",
-      phoneNumber: buyer.phoneNumber || "",
+      phone: buyer.phone || "",
       email: buyer.email || "",
       address: buyer.address || "",
     });
@@ -160,13 +160,13 @@ const EditBuyerModal = ({ buyer }: { buyer: any }) => {
                   )}
                 />
                 <Controller
-                  name="phoneNumber"
+                  name="phone"
                   control={form.control}
                     render={({ field, fieldState }) => (
                         <Field>
-                            <FieldLabel htmlFor="phoneNumber">Nomor Telepon</FieldLabel>
+                            <FieldLabel htmlFor="phone">Nomor Telepon</FieldLabel>
                             <Input
-                                id="phoneNumber"
+                                id="phone"
                                 autoComplete="off"
                                 placeholder="Contoh: 081234567890"
                                 type="number"

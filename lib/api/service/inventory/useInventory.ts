@@ -13,17 +13,17 @@ export const useInventory = () => {
 };
 
 export const useCreateInventory = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationKey: ["createInventory"],
-        mutationFn: async (data: any) => {
-            const response = await inventoryService.create(data);
-            return response;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["getInventory"] });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["createInventory"],
+    mutationFn: async (data: any) => {
+      const response = await inventoryService.create(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getInventory"] });
+    },
+  });
 };
 
 export const useDeleteInventory = () => {
@@ -39,3 +39,17 @@ export const useDeleteInventory = () => {
     },
   });
 };
+
+// export const useStockInOut = (inventoryId: string) => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationKey: ["stockInOut", inventoryId],
+//     mutationFn: async (data: FormData) => {
+//       const response = await inventoryService.stockInOut(inventoryId, data);
+//       return response;
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["getInventory"] });
+//     },
+//   });
+// };
