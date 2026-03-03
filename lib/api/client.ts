@@ -62,7 +62,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export const apiClient = {
+export const API_CLIENT = {
   get: <T>(url: string, config?: any) =>
     axiosInstance.get<T>(url, config).then((res) => res.data),
 

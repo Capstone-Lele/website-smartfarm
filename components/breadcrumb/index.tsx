@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import dataPath from "@/lib/constants/path";
 import {
   DropdownMenu,
@@ -20,8 +20,22 @@ import {
 
 const BreadCrumbPath = () => {
   const pathName = usePathname();
+  const params = useParams();
 
   console.log("Current Pathname:", pathName);
+  console.log("Params:", params);
+
+  // Helper function untuk match dynamic routes
+  const matchDynamicPath = (pattern: string, path: string) => {
+    const patternParts = pattern.split("/");
+    const pathParts = path.split("/");
+
+    if (patternParts.length !== pathParts.length) return false;
+
+    return patternParts.every((part, i) =>
+      part.startsWith("[") && part.endsWith("]") ? true : part === pathParts[i],
+    );
+  };
 
   const getBreadcrumbs = () => {
     const breadcrumbs: {
@@ -33,12 +47,24 @@ const BreadCrumbPath = () => {
     breadcrumbs.push({ name: "Beranda", href: "/dashboard" });
 
     for (const item of dataPath) {
+      // Exact match untuk path static
       if (pathName === item.path) {
         breadcrumbs.push({ name: item.name, href: item.path });
         return breadcrumbs;
       }
+
+      // Check dynamic path
+      if ((item as any).isDynamic && matchDynamicPath(item.path, pathName)) {
+        const displayName = (item as any).dynamicName
+          ? (item as any).dynamicName(params)
+          : item.name;
+        breadcrumbs.push({ name: displayName, href: pathName });
+        return breadcrumbs;
+      }
+
       if (item.sub_paths) {
         for (const subItem of item.sub_paths) {
+          // Exact match untuk sub path static
           if (pathName === subItem.path) {
             if (item.sub_paths.length === 1) {
               breadcrumbs.push({ name: item.name, href: item.path });
@@ -51,6 +77,19 @@ const BreadCrumbPath = () => {
               sub_paths: item.sub_paths,
             });
             breadcrumbs.push({ name: subItem.name, href: subItem.path });
+            return breadcrumbs;
+          }
+
+          // Check dynamic sub path
+          if (
+            (subItem as any).isDynamic &&
+            matchDynamicPath(subItem.path, pathName)
+          ) {
+            breadcrumbs.push({ name: item.name, href: item.path });
+            const displayName = (subItem as any).dynamicName
+              ? (subItem as any).dynamicName(params)
+              : subItem.name;
+            breadcrumbs.push({ name: displayName, href: pathName });
             return breadcrumbs;
           }
         }

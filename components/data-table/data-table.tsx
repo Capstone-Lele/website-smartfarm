@@ -132,24 +132,7 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex items-center gap-2">
             {/* Export options */}
-            <ExportOptions
-              columns={table
-                .getAllColumns()
-                .filter(
-                  (col: any) =>
-                    col.id !== "actions" &&
-                    col.id !== "select" &&
-                    col.id !== "No",
-                )
-                .map((col: any) => ({
-                  key: col.columnDef.accessorKey || col.id,
-                  displayLabel: col.id
-                    .split(/(?=[A-Z])/)
-                    .join(" ")
-                    .toUpperCase(),
-                }))}
-              data={table.getRowModel().rows.map((row) => row.original)}
-            />
+            <ExportOptions table={table} />
             {/* Column view options */}
             <DataTableViewOptions table={table} />
           </div>
@@ -161,7 +144,7 @@ export function DataTable<TData, TValue>({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead key={header.id} className="pl-4">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -182,19 +165,16 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id} className="pl-4">
                         {(() => {
                           const rawValue = cell.getValue();
 
-                          if (
-                            rawValue === null ||
-                            rawValue === ""
-                          ) {
+                          if (rawValue === null || rawValue === "") {
                             return (
                               <div className="text-gray-400 italic">-</div>
                             );
                           }
-                          
+
                           if (cell.column.columnDef.cell) {
                             const content = flexRender(
                               cell.column.columnDef.cell,
@@ -202,7 +182,6 @@ export function DataTable<TData, TValue>({
                             );
                             return content;
                           }
-
 
                           // Render nilai biasa
                           return String(rawValue);

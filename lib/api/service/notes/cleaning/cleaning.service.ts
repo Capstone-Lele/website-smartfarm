@@ -1,10 +1,10 @@
-import { apiClient } from "@/lib/api/client";
+import { API_CLIENT } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoint";
 import { CleaningResponse } from "@/types/notes/cleaning";
 
 export const cleaningService = {
   getAll: async (): Promise<CleaningResponse> => {
-    const response = await apiClient.get<CleaningResponse>(
+    const response = await API_CLIENT.get<CleaningResponse>(
       API_ENDPOINTS.CLEANING_NOTES.GET_ALL,
     );
     // return response;
@@ -31,7 +31,7 @@ export const cleaningService = {
   },
 
   getById: async (id: string): Promise<CleaningResponse> => {
-    const response = await apiClient.get<CleaningResponse>(
+    const response = await API_CLIENT.get<CleaningResponse>(
       API_ENDPOINTS.CLEANING_NOTES.GET_BY_ID(id),
     );
     return response;

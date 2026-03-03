@@ -16,3 +16,14 @@ export const useListCycle = (id: string) => {
     enabled: !!id,
   });
 }
+
+export const useDetailCycle = (id: string) => {
+  return useQuery({
+    queryKey: ["getCycleDetail", id],
+    queryFn: async () => {
+      const response = await cycleService.getDetailById(id);
+      return response;
+    },
+    enabled: !!id,
+  });
+}

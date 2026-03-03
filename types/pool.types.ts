@@ -1,10 +1,19 @@
 export type Pool = {
-  id: string;
-  name: string;
+  acidityMax?: string | null;
+  acidityMin?: string | null;
   category: string;
-  diameter?: string | null;
+  createdAt?: string | null;
+  cycle?: null | string;
+  cycleId: string;
+  deletedAt?: null | string;
+  diameter?: null | string;
   height?: string | null;
+  id: string;
   length?: string | null;
+  name: string;
+  temperatureMax?: string | null;
+  temperatureMin?: string | null;
+  updatedAt?: string | null;
   width?: string | null;
 };
 

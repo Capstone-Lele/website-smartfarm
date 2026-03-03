@@ -28,13 +28,40 @@ const DashboardNavbar = () => {
   const { isOpen, toggle } = useToggleSidebar();
 
   const checkPathname = () => {
+    // Helper function untuk match dynamic routes
+    const matchDynamicPath = (pattern: string, path: string) => {
+      const patternParts = pattern.split("/");
+      const pathParts = path.split("/");
+
+      if (patternParts.length !== pathParts.length) return false;
+
+      return patternParts.every((part, i) =>
+        part.startsWith("[") && part.endsWith("]")
+          ? true
+          : part === pathParts[i],
+      );
+    };
+
     for (const item of dataPath) {
+      // Exact match
       if (pathname === item.path) {
+        return item.name;
+      }
+      // Dynamic path match - gunakan name (bukan dynamicName)
+      if ((item as any).isDynamic && matchDynamicPath(item.path, pathname)) {
         return item.name;
       }
       if (item.sub_paths) {
         for (const subItem of item.sub_paths) {
+          // Exact match untuk sub path
           if (pathname === subItem.path) {
+            return subItem.name;
+          }
+          // Dynamic sub path match - gunakan name (bukan dynamicName)
+          if (
+            (subItem as any).isDynamic &&
+            matchDynamicPath(subItem.path, pathname)
+          ) {
             return subItem.name;
           }
         }

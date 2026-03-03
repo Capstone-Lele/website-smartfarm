@@ -1,5 +1,10 @@
-import { UserEditInput, UserFormInput, UserOnlyResponse, UserResponse } from "@/types/user.types";
-import { apiClient } from "../../client";
+import {
+  UserEditInput,
+  UserFormInput,
+  UserOnlyResponse,
+  UserResponse,
+} from "@/types/user.types";
+import { API_CLIENT } from "../../client";
 import { API_ENDPOINTS } from "../../endpoint";
 import { DUMMY_USER_RESPONSE as response } from "@/lib/constants/dummy-respoonse/user";
 import {
@@ -9,14 +14,14 @@ import {
 
 export const userService = {
   getAll: async (): Promise<UserResponse> => {
-    const response = await apiClient.get<UserResponse>(
+    const response = await API_CLIENT.get<UserResponse>(
       API_ENDPOINTS.USERS.GET_ALL,
     );
     return response;
   },
 
   getById: async (id: string): Promise<UserOnlyResponse> => {
-    const response = await apiClient.get<UserOnlyResponse>(
+    const response = await API_CLIENT.get<UserOnlyResponse>(
       API_ENDPOINTS.USERS.GET_BY_ID(id),
     );
     return response;
@@ -24,7 +29,7 @@ export const userService = {
 
   create: async (data: UserFormInput): Promise<UserResponse> => {
     const payload = buildPayloadCreate(data);
-    const response = await apiClient.post<UserResponse>(
+    const response = await API_CLIENT.post<UserResponse>(
       API_ENDPOINTS.USERS.CREATE,
       payload,
     );
@@ -32,7 +37,7 @@ export const userService = {
   },
 
   delete: async (id: string): Promise<UserResponse> => {
-    const response = await apiClient.delete<UserResponse>(
+    const response = await API_CLIENT.delete<UserResponse>(
       API_ENDPOINTS.USERS.DELETE(id),
     );
     return response;
@@ -40,7 +45,7 @@ export const userService = {
 
   update: async (id: string, data: UserEditInput): Promise<UserResponse> => {
     const payload = buildPayloadEdit(data);
-    const response = await apiClient.put<UserResponse>(
+    const response = await API_CLIENT.put<UserResponse>(
       API_ENDPOINTS.USERS.UPDATE(id),
       payload,
     );

@@ -74,4 +74,10 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/moves",
     GET_BY_ID: (id: string) => `/note/move/${id}`,
   },
+  INVENTORY: {
+    GET_ALL: "/inventory",
+    CREATE: "/inventory",
+    DELETE: (id: string) => `/inventory/${id}`,
+    STOCK_IN_OUT: (id: string) => `/inventory/${id}/stock`,
+  },
 } as const;
