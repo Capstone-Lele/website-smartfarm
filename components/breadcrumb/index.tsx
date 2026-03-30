@@ -17,13 +17,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
 
 const BreadCrumbPath = () => {
   const pathName = usePathname();
   const params = useParams();
-
-  console.log("Current Pathname:", pathName);
-  console.log("Params:", params);
+  const { labels } = useBreadcrumbStore();
+  const meta = labels;
 
   // Helper function untuk match dynamic routes
   const matchDynamicPath = (pattern: string, path: string) => {
@@ -56,7 +56,7 @@ const BreadCrumbPath = () => {
       // Check dynamic path
       if ((item as any).isDynamic && matchDynamicPath(item.path, pathName)) {
         const displayName = (item as any).dynamicName
-          ? (item as any).dynamicName(params)
+          ? (item as any).dynamicName(params, meta)
           : item.name;
         breadcrumbs.push({ name: displayName, href: pathName });
         return breadcrumbs;
@@ -86,8 +86,42 @@ const BreadCrumbPath = () => {
             matchDynamicPath(subItem.path, pathName)
           ) {
             breadcrumbs.push({ name: item.name, href: item.path });
+
+            // Cek apakah ada sub-path intermediate (parent dynamic segment)
+            // Contoh: subItem.path = "/dashboard/pools/[poolId]/[cycleId]"
+            // Kita cari sub-path lain yang merupakan prefix dinamis dari subItem.path
+            const subItemParts = subItem.path.split("/");
+            const pathParts = pathName.split("/");
+            const parentSubItem = item.sub_paths?.find((s: any) => {
+              if (s === subItem || !s.isDynamic) return false;
+              const sParts = s.path.split("/");
+              if (sParts.length >= subItemParts.length) return false;
+              // Cek apakah s.path adalah prefix dari subItem.path
+              return sParts.every((part: string, i: number) =>
+                part.startsWith("[") && part.endsWith("]")
+                  ? true
+                  : part === subItemParts[i]
+              );
+            });
+
+            if (parentSubItem) {
+              // Bangun href nyata untuk intermediate breadcrumb
+              const parentParts = (parentSubItem as any).path.split("/");
+              const realParentHref = parentParts
+                .map((part: string, i: number) =>
+                  part.startsWith("[") && part.endsWith("]")
+                    ? pathParts[i]
+                    : part
+                )
+                .join("/");
+              const parentDisplayName = (parentSubItem as any).dynamicName
+                ? (parentSubItem as any).dynamicName(params, meta)
+                : (parentSubItem as any).name;
+              breadcrumbs.push({ name: parentDisplayName, href: realParentHref });
+            }
+
             const displayName = (subItem as any).dynamicName
-              ? (subItem as any).dynamicName(params)
+              ? (subItem as any).dynamicName(params, meta)
               : subItem.name;
             breadcrumbs.push({ name: displayName, href: pathName });
             return breadcrumbs;

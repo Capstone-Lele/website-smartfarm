@@ -55,10 +55,7 @@ interface DataTableProps<TData, TValue> {
     /** Label yang ditampilkan di tombol filter */
     label: string;
   }[];
-  exportOptions?: {
-    pdf: boolean;
-    csv: boolean;
-  }[];
+  exportOptions?: boolean;
   children?: React.ReactNode;
 }
 
@@ -90,6 +87,7 @@ export function DataTable<TData, TValue>({
   facetedFilter,
   dateFilter,
   children,
+  exportOptions = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -178,7 +176,7 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex items-center gap-2">
             {/* Export options */}
-            <ExportOptions table={table} />
+            {exportOptions && <ExportOptions table={table} />}
             {/* Column view options */}
             <DataTableViewOptions table={table} />
           </div>

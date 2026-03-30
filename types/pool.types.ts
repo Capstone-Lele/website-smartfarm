@@ -35,5 +35,5 @@ export type PoolResponse = {
 export type ByIdPoolResponse = {
   success: boolean;
   message: string;
-  data: Pool;
+  data: Pool[];
 };

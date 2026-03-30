@@ -5,7 +5,7 @@ export const INVENTORY_TYPE_OPTIONS = [
 
 export const INVENTORY_TRANSACTION_TYPE_OPTIONS = [
   { value: "grant", label: "Hibah (Grant)" },
-  { value: "non-grant", label: "Dana Desa (Non-Grant)" },
+  { value: "non-grant", label: "Dana Utama (Non-Grant)" },
 ];
 
 export const INVENTORY_SUBMISSION_STATUS = [

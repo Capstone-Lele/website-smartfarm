@@ -12,6 +12,18 @@ export const useListSampling = () => {
   return query;
 };
 
+export const useListSamplingWithParams = (params: Record<string, string>) => {
+  const query = useQuery({
+    queryKey: ["samplingNotes", params],
+    queryFn: async () => {
+      const response = await samplingService.getAllWithParams(params);
+      return response;
+    },
+    enabled: Object.keys(params).length > 0, // Hanya jalankan query jika params tidak kosong
+  });
+  return query;
+}
+
 export const useSamplingById = (id: string) => {
   return useQuery({
     queryKey: ["samplingNote", id],

@@ -53,6 +53,10 @@ export const API_ENDPOINTS = {
   },
   SAMPLING_NOTES: {
     GET_ALL: "/note/samplings",
+    GET_ALL_WITH_PARAMS: (params: Record<string, string>) => {
+      const query = new URLSearchParams(params).toString();
+      return `/note/samplings?${query}`;
+    },
     GET_BY_ID: (id: string) => `/note/sampling/${id}`,
   },
   PROFILE: {
@@ -85,3 +89,4 @@ export const API_ENDPOINTS = {
     GET_BY_ID: (id: string) => `/inventory/submission/${id}`,
   },
 } as const;
+

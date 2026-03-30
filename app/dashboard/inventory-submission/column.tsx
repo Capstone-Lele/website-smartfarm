@@ -38,7 +38,8 @@ export const columns: ColumnDef<InventorySubmission>[] = [
       const colorClass =
         colorMap[status?.toLowerCase()] ?? "bg-gray-200 text-gray-700";
       return (
-        <span className={`${colorClass} px-2 py-0.5 rounded-xs font-medium`}>
+        <span className={`${colorClass} px-2 py-0.5 rounded-xs font-medium flex items-center w-fit capitalize`}>
+          <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
           {status}
         </span>
       );
@@ -80,7 +81,11 @@ export const columns: ColumnDef<InventorySubmission>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <EditSubmissionModal submission={row.original} />
+          {row.original.status === "pending" ? (
+            <EditSubmissionModal submission={row.original} />
+          ):(
+            "-"
+          )}
         </div>
       );
     },

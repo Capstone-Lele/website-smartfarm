@@ -14,6 +14,9 @@ import { Separator } from "@/components/ui/separator";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 import { Pool } from "@/types/pool.types";
 import { columnsPoolQuarantine } from "./_quarantine/column";
+import { FaFish, FaWater  } from "react-icons/fa";
+import { IoFish } from "react-icons/io5";
+import { FiShield } from "react-icons/fi";
 
 const page = () => {
   const { data, isLoading, error } = usePool();
@@ -26,28 +29,28 @@ const page = () => {
     {
       title: "Total Kolam",
       value: data?.data.length.toString(),
-      icon: <LuUsersRound />,
+      icon: <FaWater />,
     },
     {
       title: "Kolam Pembesaran",
       value: data?.data
         .filter((user) => user.category === "growing")
         .length.toString(),
-      icon: <LuUserRound />,
+      icon: <IoFish />,
     },
     {
       title: "Kolam Pembibitan",
       value: data?.data
         .filter((user) => user.category === "breeding")
         .length.toString(),
-      icon: <LuUserRound />,
+      icon: <FaFish />,
     },
     {
       title: "Kolam Karantina",
       value: data?.data
         .filter((user) => user.category === "quarantine")
         .length.toString(),
-      icon: <LuUserRound />,
+      icon: <FiShield />,
     },
   ];
 
@@ -148,7 +151,7 @@ const page = () => {
           </DefaultCard>
         </>
       ) : (
-        <DefaultCard>
+        <DefaultCard className="">
           <div>
             <h1 className=" font-medium text-lg">
               Informasi Alur Kolam Budidaya

@@ -22,7 +22,7 @@ export const usePoolById = (id: string) => {
     queryKey: ["getPoolById", id],
     queryFn: async () => {
       const response = await poolService.getById(id);
-      return response.data;
+      return response.data[0];
     },
     enabled: !!id,
   });
