@@ -78,6 +78,14 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/move-pool",
     GET_BY_ID: (id: string) => `/note/move-pool/${id}`,
   },
+  MORTALITY_NOTES: {
+    GET_ALL: "/note/mortality",
+    GET_BY_ID: (id: string) => `/note/mortality/${id}`,
+    GET_ALL_WITH_PARAMS: (params: Record<string, string>) => {
+      const query = new URLSearchParams(params).toString();
+      return `/note/mortality?${query}`;
+    }
+  },
   INVENTORY: {
     GET_ALL: "/inventory",
     CREATE: "/inventory",
