@@ -90,6 +90,10 @@ export const API_ENDPOINTS = {
     GET_ALL: "/note/harvest",
     GET_BY_ID: (id: string) => `/note/harvest/${id}`,
   },
+  SEED_NOTES: {
+    GET_ALL: "/note/seed",
+    GET_BY_ID: (id: string) => `/note/seed/${id}`,
+  },
   INVENTORY: {
     GET_ALL: "/inventory",
     CREATE: "/inventory",
