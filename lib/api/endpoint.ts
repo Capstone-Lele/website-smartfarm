@@ -86,6 +86,10 @@ export const API_ENDPOINTS = {
       return `/note/mortality?${query}`;
     }
   },
+  HARVEST_NOTES: {
+    GET_ALL: "/note/harvest",
+    GET_BY_ID: (id: string) => `/note/harvest/${id}`,
+  },
   INVENTORY: {
     GET_ALL: "/inventory",
     CREATE: "/inventory",
