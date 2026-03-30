@@ -89,3 +89,4 @@ export const API_ENDPOINTS = {
     GET_BY_ID: (id: string) => `/inventory/submission/${id}`,
   },
 } as const;
+
