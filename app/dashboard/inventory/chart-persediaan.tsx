@@ -43,7 +43,7 @@ export function ChartBarStacked({
   isLoading?: boolean;
 }) {
   return (
-    <DefaultCard className="h-96 flex flex-col w-full">
+    <DefaultCard className="flex flex-col w-full">
       <div className="flex items-center gap-2 mb-4">
         <h1 className="font-semibold">Bar Chart - Persediaan Stok</h1>
       </div>
@@ -51,8 +51,11 @@ export function ChartBarStacked({
         {isLoading ? (
           <ChartSkeleton />
         ) : (
-          <ChartContainer config={chartConfig} className="h-full w-full">
-            <BarChart accessibilityLayer data={data}>
+          <ChartContainer
+            config={chartConfig}
+            className=" md:min-h-[200px] lg:min-h-[300px] max-h-[260px] w-full "
+          >
+            <BarChart accessibilityLayer data={data} margin={{ bottom: 20 }}>
               <CartesianGrid vertical={false} />
               <YAxis width={24} domain={[0, "auto"]} />
               <XAxis
@@ -61,7 +64,7 @@ export function ChartBarStacked({
                 tickMargin={10}
                 axisLine={false}
                 // tickFormatter={(value) => value.slice(0, 3)}
-                height={60}
+                height={40}
                 angle={-45}
                 textAnchor="end"
                 interval={0}

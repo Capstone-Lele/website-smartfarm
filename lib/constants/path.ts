@@ -1,3 +1,4 @@
+
 const dataPath = [
   {
     path: "/dashboard",
@@ -14,6 +15,22 @@ const dataPath = [
       {
         path: "/dashboard/pools/cycle",
         name: "Siklus Kolam",
+      },
+      {
+        path: "/dashboard/pools/[poolId]",
+        name: "Detail Kolam",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["pool"] ?? `Kolam #${params.poolId}`;
+        },
+      },
+      {
+        path: "/dashboard/pools/[poolId]/[cycleId]",
+        name: "Detail Siklus",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["cycle"] ?? `Siklus #${params.cycleId}`;
+        },
       },
     ],
   },

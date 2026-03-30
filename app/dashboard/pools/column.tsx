@@ -198,7 +198,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn href={`/dashboard/pools/cycle/${row.original.id}`} />
+          <ButtonDetailColumn href={`/dashboard/pools/${row.original.id}/${row.original.cycleId}`} />
           <Separator orientation="vertical" className="h-6" />
           <AssignPoolModal pool={row.original} />
           <Separator orientation="vertical" className="h-6" />

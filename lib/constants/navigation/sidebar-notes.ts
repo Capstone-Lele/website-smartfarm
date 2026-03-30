@@ -38,4 +38,19 @@ export const REPORT_SIDEBAR_ITEMS = [
     href: "/dashboard/reports/move",
     type: "menu",
   },
+  {
+    title: "Kematian",
+    href: "/dashboard/reports/mortality",
+    type: "menu",
+  },
+  {
+    title: "Tebar Benih",
+    href: "/dashboard/reports/seeding",
+    type: "menu",
+  },
+  {
+    title: "Panen",
+    href: "/dashboard/reports/harvest",
+    type: "menu",
+  },
 ];
