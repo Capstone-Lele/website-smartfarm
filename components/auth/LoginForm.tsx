@@ -27,6 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useLogin } from "@/lib/api/service/auth/useAuth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email tidak valid" }),
@@ -155,13 +156,15 @@ const LoginForm = () => {
                   Sign In
                 </Button>
               )}
-              <Button
-                className="w-full cursor-pointer"
-                variant="outline"
-                type="button"
-              >
-                Kembali Ke Beranda
-              </Button>
+              <Link href="/" className="w-full">
+                <Button
+                  className="w-full cursor-pointer"
+                  variant="outline"
+                  type="button"
+                >
+                  Kembali Ke Beranda
+                </Button>
+              </Link>
             </Field>
           </FieldGroup>
         </form>

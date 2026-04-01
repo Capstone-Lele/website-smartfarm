@@ -1,6 +1,6 @@
 "use client";
 import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
-import React, { useEffect } from "react";
+import React, { useEffect, use } from "react";
 import CardStatistic from "@/components/card/card-statistic";
 import DefaultCard from "@/components/card/default-card";
 import { LuUserRound, LuUsersRound } from "react-icons/lu";
@@ -8,16 +8,27 @@ import { useInventory } from "@/lib/api/service/inventory/useInventory";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { DataTable } from "@/components/data-table/data-table";
 import InventoryNavTabs from "../_components/inventory-nav-tabs";
-import { columns } from "../column";
+import { columns } from "./column";
 import PostStockInOut from "./post";
+import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
+import { dummyInventoryDetails } from "@/lib/constants/dummy-respoonse/inventaris";
 
-const Page = () => {
+const Page = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
   const { setTabComponent } = useSubNavbarTab();
+  const { setLabel, removeLabel } = useBreadcrumbStore();
+  const { data: inventoryData } = useInventory();
 
   useEffect(() => {
-    setTabComponent(<InventoryNavTabs />);
-    return () => setTabComponent(null);
-  }, [setTabComponent]);
+    if (inventoryData?.data) {
+      const inventory = inventoryData.data.find((item) => item.productId === id);
+      if (inventory?.product) {
+        setLabel("inventory", inventory.product);
+      }
+    }
+    return () => removeLabel("inventory");
+  }, [inventoryData?.data, id, setLabel, removeLabel]);
+
 
   const cardData = [
     {
@@ -63,7 +74,7 @@ const Page = () => {
             <div className="flex justify-end">
               <PostStockInOut />
             </div>
-            <DataTable columns={columns} data={[]} />
+            <DataTable columns={columns} data={dummyInventoryDetails} />
           </div>
           {/* )} */}
         </div>

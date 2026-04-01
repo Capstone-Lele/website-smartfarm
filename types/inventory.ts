@@ -21,10 +21,11 @@ export type InventoryResponse = {
 export type InventoryDetail = {
   id: string;
   notes: string;
+  type: string;
   category: string;
-  from: string;
   unit: string;
   quantity: string;
+  transactionType: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;

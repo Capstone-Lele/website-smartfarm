@@ -68,9 +68,8 @@ const dataPath = [
         path: "/dashboard/inventory/[id]",
         name: "Detail Inventaris",
         isDynamic: true,
-        dynamicName: (params: any) => {
-          // Menampilkan nilai ID dari URL
-          return `Produk #${params.id}`;
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["inventory"] ?? `Produk #${params.id}`;
         },
       },
     ],

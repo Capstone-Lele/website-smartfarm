@@ -1,44 +1,60 @@
-'use client';
+import CardStatistic from "@/components/card/card-statistic";
 import DefaultCard from "@/components/card/default-card";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import { Search } from "lucide-react";
 import React from "react";
-import PostFinanceModal from "./post";
-import { Separator } from "@/components/ui/separator";
-import { BookCard } from "@/components/book-card";
+import { FaFish, FaWater } from "react-icons/fa";
+import { FiShield } from "react-icons/fi";
+import { IoFish } from "react-icons/io5";
+import { columns } from "./column";
+import { DataTable } from "@/components/data-table/data-table";
+import { FINANCE_DUMMY_DATA } from "@/lib/constants/dummy-respoonse/finance";
+import PostFinance from "./post";
+
 
 const page = () => {
+  const cardData = [
+    {
+      title: "Total Pendapatan",
+      value: "1000",
+      icon: <FaWater />,
+    },
+    {
+      title: "Total Pengeluaran",
+      value: "1000",
+      icon: <IoFish />,
+    },
+    {
+      title: "Net Profit",
+      value: "1000",
+      icon: <FaFish />,
+    },
+    {
+      title: "Modal",
+      value: "1000",
+      icon: <FiShield />,
+    },
+  ];
+
   return (
-    <>
-      <DefaultCard>
-        <div className="flex justify-between items-center">
-          <div>
-            <InputGroup>
-              <InputGroupInput
-                placeholder="Cari buku..."
-                // value={globalFilter ?? ""}
-                // onChange={(event) => setGlobalFilter(event.target.value)}
-                className="max-w-60"
-              />
-              <InputGroupAddon>
-                <Search />
-              </InputGroupAddon>
-            </InputGroup>
+    <div className="">
+      <>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4 w-full">
+          {cardData.map((card, index) => (
+            <CardStatistic
+              key={index}
+              icon={card.icon}
+              title={card.title}
+              value={card.value}
+            />
+          ))}
+        </div>
+        <DefaultCard>
+          <div className="flex justify-end mb-4">
+            <PostFinance />
           </div>
-          <PostFinanceModal />
-        </div>
-        <Separator  className="my-4" />
-        {/* Table content goes here */}
-        <div className="grid grid-cols-3">
-<BookCard
- />
-        </div>
-      </DefaultCard>
-    </>
+          <DataTable columns={columns} data={FINANCE_DUMMY_DATA} />
+        </DefaultCard>
+      </>
+    </div>
   );
 };
 

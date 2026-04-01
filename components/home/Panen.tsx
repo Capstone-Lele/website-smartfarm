@@ -23,7 +23,7 @@ const HomePanen = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">
-                  Panen Terakhir
+                  10 Panen Terakhir
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
                   Riwayat terbaru dari kolam
