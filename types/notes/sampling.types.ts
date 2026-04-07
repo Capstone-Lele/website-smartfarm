@@ -10,6 +10,7 @@ export type Sampling = {
   quantity: number;
   averageWeight: string;
   image: string;
+  cycle: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;

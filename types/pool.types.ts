@@ -11,6 +11,7 @@ export type Pool = {
   id: string;
   length?: string | null;
   name: string;
+  currentQuantity?: number | null;
   temperatureMax?: string | null;
   temperatureMin?: string | null;
   updatedAt?: string | null;

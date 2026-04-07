@@ -18,6 +18,7 @@ import Image from "next/image";
 import { getAvatarUrl } from "@/lib/utils/avatar";
 import AssignPoolModal from "./assign";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
 export const columnsPool: ColumnDef<Pool>[] = [
   {
@@ -72,10 +73,23 @@ export const columnsPool: ColumnDef<Pool>[] = [
     },
   },
   {
-    accessorKey: "condition",
+    accessorKey: "cycle",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
+    cell: ({ row }) => {
+       const condition = ALL_CYCLE_CONDITIONS.find(
+        (cond) => cond.value === row.original.cycle
+      );
+      return condition ? (
+        <Badge className="px-2" variant={'outline'}>
+          {condition.label}
+        </Badge>
+      ) : (
+        <span>-</span>
+      );
+    },
+
   },
   {
     accessorKey: "petugas",
@@ -162,16 +176,16 @@ export const columnsPool: ColumnDef<Pool>[] = [
     header: () => <span className="">SIKLUS</span>,
   },
   {
-    accessorKey: "ikan",
-    header: () => <span className="">JUMLAH IKAN</span>,
+    accessorKey: "currentQuantity",
+    header: ({column}) => <DataTableColumnHeader column={column} title="JUMLAH IKAN" />,
   },
   {
     accessorKey: "kematian",
-    header: () => <span className="">KEMATIAN</span>,
+    header: ({column}) => <DataTableColumnHeader column={column} title="KEMATIAN" />,
   },
   {
     accessorKey: "umur",
-    header: () => <span className="">UMUR</span>,
+    header: ({column}) => <DataTableColumnHeader column={column} title="UMUR" />,
   },
   {
     accessorKey: "status_air",

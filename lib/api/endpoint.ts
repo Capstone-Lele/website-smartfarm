@@ -41,6 +41,10 @@ export const API_ENDPOINTS = {
   },
   FEED_NOTES: {
     GET_ALL: "/note/feed",
+    GET_ALL_WITH_PARAMS: (params: Record<string, string>) => {
+      const query = new URLSearchParams(params).toString();
+      return `/note/feed?${query}`;
+    },
     GET_BY_ID: (id: string) => `/note/feed/${id}`,
   },
   SICK_NOTES: {

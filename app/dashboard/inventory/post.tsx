@@ -35,6 +35,7 @@ import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct
 import { Combobox } from "@/components/combobox";
 import { LuPackage, LuSave } from "react-icons/lu";
 import { Separator } from "@/components/ui/separator";
+import { Product } from "@/types/master-data/product.types";
 
 const formSchema = z
   .object({
@@ -69,7 +70,7 @@ const PostInventoryModal = () => {
   });
 
   const productOptions =
-    productsData?.data?.map((product: any) => ({
+    productsData?.data?.filter((product: Product) => product.type == "inventory").map((product: any) => ({
       label: product.name,
       value: product.id,
     })) || [];

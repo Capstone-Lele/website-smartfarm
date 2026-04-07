@@ -6,8 +6,6 @@ export type Cycle = {
   initialQuantity?: number;
   currentQuantity?: number;
   mortality?: number;
-  age?: number;
-  movePool?: number;
 };
 
 export type CycleResponse = {
@@ -17,12 +15,13 @@ export type CycleResponse = {
 };
 
 export type CycleDetail = {
-  age: number| string;
+  id: string;
   startDate: string;
   user: string;
   endDate: string;
   initialQuantity: number;
   currentQuantity: number;
+  condition: string;
 };
 
 export type CycleDetailResponse = {

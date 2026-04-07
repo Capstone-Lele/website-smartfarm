@@ -34,6 +34,15 @@ export const columns: ColumnDef<Harvest>[] = [
       );
     },
   },
+    {
+      accessorKey: "cycle",
+      header: ({ column }) => (
+        <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+      ),
+      cell: ({ row }) => {
+        return formatDate(row.original.cycle);
+      },
+    },
   {
     accessorKey: "amount",
     header: ({ column }) => (

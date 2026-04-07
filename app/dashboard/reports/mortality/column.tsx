@@ -35,12 +35,21 @@ export const columns: ColumnDef<Mortality>[] = [
     },
   },
   {
+    accessorKey: "cycle",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.cycle);
+    },
+  },
+  {
     accessorKey: "quantity",
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
         column={column}
-        title="JUMLAH MORTALITY"
+        title="JUMLAH MATI (ekor)"
       />
     ),
     cell: ({ row }) => {

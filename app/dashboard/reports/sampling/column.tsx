@@ -23,18 +23,33 @@ export const columns: ColumnDef<Sampling>[] = [
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
     cell: ({ row }) => {
-          return (
-            <div className="flex flex-col">
-              <span className="font-semibold">{row.original.poolName}</span>
-              <span className="text-xs">{translateCategoryPool(row.original.poolCategory)}</span>
-            </div>
-          );
+      return (
+        <div className="flex flex-col">
+          <span className="font-semibold">{row.original.poolName}</span>
+          <span className="text-xs">
+            {translateCategoryPool(row.original.poolCategory)}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "cycle",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.cycle);
     },
   },
   {
     accessorKey: "quantity",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="JUMLAH (ekor)" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="JUMLAH (ekor)"
+      />
     ),
   },
   {

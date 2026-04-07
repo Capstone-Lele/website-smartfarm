@@ -12,6 +12,11 @@ import { useDetailCycle } from "@/lib/api/service/cycles/useCycle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SamplingTable from "./_sampling/table";
 import { SamplingChartLineLabel } from "./_sampling/chart";
+import MortalityTable from "./_mortality/table";
+import { MortalityBarChart } from "./_mortality/chart";
+import FeedingTable from "./_feeding/table";
+import { FeedingLineChart } from "./_feeding/chart";
+import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
 // Dummy data for the view
 const cycleProfile = {
@@ -39,8 +44,21 @@ const CycleDetailPage = () => {
     ? params.poolId[0]
     : params.poolId;
   const { data: poolData } = usePoolById(poolId || "");
-  const { data: cycleDetailData } = useDetailCycle(poolId || "");
+  const { data: cycleDetailData } = useDetailCycle(cycleId || "");
   const { setLabel, removeLabel } = useBreadcrumbStore();
+
+  const cycleData = cycleDetailData?.data?.[0];
+  const startDate = cycleData?.startDate;
+  const endDate = cycleData?.endDate;
+
+  let umur = "-";
+  if (startDate) {
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : new Date();
+    const diffTime = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    umur = `${diffDays >= 0 ? diffDays : 0} Hari`;
+  }
 
   // Sync pool name & cycle name ke breadcrumb store
   useEffect(() => {
@@ -65,51 +83,55 @@ const CycleDetailPage = () => {
           <DefaultCard className="md:col-span-2 px-0">
             <div className="flex flex-row items-center justify-between px-6 pb-4">
               <h3 className="text-base font-bold">Profil Siklus</h3>
-              <span className="text-sm text-gray-500">
-                {cycleProfile.total_hari}
-              </span>
+              <span className="text-sm text-gray-500">{umur} Umur Siklus</span>
             </div>
-            <Separator className="" />
+            <Separator />
             <div className="px-4 pt-4 space-y-2 text-sm">
               <div className="flex justify-between py-1">
-                <span className="text-gray-500">Tipe</span>
+                <span className="text-gray-500">Kondisi</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.tipe}
+                  {ALL_CYCLE_CONDITIONS.find(
+                    (c) =>
+                      c.value === cycleData?.condition ||
+                      c.label === cycleData?.condition,
+                  )?.label ||
+                    cycleData?.condition ||
+                    "-"}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between py-1">
                 <span className="text-gray-500">Tanggal mulai siklus</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.tanggal_mulai}
+                  {startDate ? formatDate(startDate) : "-"}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between py-1">
                 <span className="text-gray-500">Tanggal tutup siklus</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.tanggal_tutup}
+                  {endDate ? formatDate(endDate) : "-"}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between py-1">
                 <span className="text-gray-500">Pembuat siklus</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.pembuat}
+                  {cycleData?.user || "-"}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between py-1">
                 <span className="text-gray-500">Jumlah ikan awal</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.jumlah_awal}
+                  {cycleData?.initialQuantity?.toLocaleString("id-ID") || "-"}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between py-1">
-                <span className="text-gray-500">Jumalh ikan saat ini</span>
+                <span className="text-gray-500">Jumlah ikan saat ini</span>
                 <span className="font-medium text-gray-700">
-                  {cycleProfile.jumlah_saat_ini}
+                  {cycleData?.currentQuantity?.toLocaleString("id-ID") || "-"}
                 </span>
               </div>
             </div>
@@ -223,8 +245,8 @@ const CycleDetailPage = () => {
             </div>
             <TabsContent value="grafik" className="mt-0">
               <div className="px-6 pt-6 pb-6">
-                {poolId && cycleId ? (
-                  <SamplingChartLineLabel poolId={poolId} cycleId={cycleId} />
+                {cycleId ? (
+                  <SamplingChartLineLabel cycleId={cycleId} />
                 ) : (
                   <p>Data tidak tersedia</p>
                 )}
@@ -232,11 +254,78 @@ const CycleDetailPage = () => {
             </TabsContent>
             <TabsContent value="tabel" className="mt-0">
               <div className="px-6 pt-6 pb-6">
-                {poolId && cycleId && poolData?.createdAt ? (
+                {cycleId && poolData?.createdAt ? (
                   <SamplingTable
-                    poolId={poolId}
                     cycleId={cycleId}
                     poolCreateDate={poolData?.createdAt}
+                  />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DefaultCard>
+
+        {/* Row 4: Catatan Mortalitas */}
+        <DefaultCard className="px-0">
+          <Tabs defaultValue="grafik" className="gap-0">
+            <div className="border-b px-6 pb-4 flex items-center justify-between">
+              <h3 className="text-base font-bold">Catatan Mortalitas</h3>
+              <TabsList>
+                <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                <TabsTrigger value="tabel">Tabel</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="grafik" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId ? (
+                  <MortalityBarChart cycleId={cycleId} />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="tabel" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId && poolData?.createdAt ? (
+                  <MortalityTable
+                    cycleId={cycleId}
+                    cycleStartDate={cycleDetailData?.data?.[0]?.startDate || poolData.createdAt}
+                  />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DefaultCard>
+
+        {/* Row 5: Catatan Pemberian Pakan */}
+        <DefaultCard className="px-0">
+          <Tabs defaultValue="grafik" className="gap-0">
+            <div className="border-b px-6 pb-4 flex items-center justify-between">
+              <h3 className="text-base font-bold">Catatan Pemberian Pakan</h3>
+              <TabsList>
+                <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                <TabsTrigger value="tabel">Tabel</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="grafik" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId ? (
+                  <FeedingLineChart cycleId={cycleId} />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="tabel" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId && cycleData?.startDate ? (
+                  <FeedingTable
+                    cycleId={cycleId}
+                    cycleStartDate={cycleData.startDate}
                   />
                 ) : (
                   <p>Data tidak tersedia</p>

@@ -45,7 +45,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type SamplingChartLineLabelProps = {
-  poolId: string;
   cycleId: string;
 };
 
@@ -164,10 +163,9 @@ const buildChartData = (
 };
 
 export function SamplingChartLineLabel({
-  poolId,
   cycleId,
 }: SamplingChartLineLabelProps) {
-  const { data, isLoading } = useListSamplingWithParams({ poolId, cycleId });
+  const { data, isLoading } = useListSamplingWithParams({  cycleId });
 
   const { chartData, canPredict, estimatedHarvestDate, predictionPointCount } =
     useMemo(() => buildChartData(data?.data || []), [data]);

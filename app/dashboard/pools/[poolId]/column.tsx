@@ -5,45 +5,57 @@ import { Badge } from "@/components/ui/badge";
 import { LuEye } from "react-icons/lu";
 import { Cycle } from "@/types/cycle";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
-
-
+import { useParams, useSearchParams } from "next/navigation";
+import { formatDate } from "@/lib/utils/format-date";
+import ButtonDetailColumn from "@/components/button-column/button-detail-column";
+import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
 export const columnsCycle: ColumnDef<Cycle>[] = [
   {
-    accessorKey: "mulai",
+    accessorKey: "startDate",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="MULAI" />
     ),
+    cell: ({ row }) => {
+      return formatDate(row.original.startDate);
+    },
   },
   {
-    accessorKey: "selesai",
+    accessorKey: "endDate",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SELESAI" />
     ),
+    cell: ({ row }) => {
+      if (!row.original.endDate) {
+        return <span className="text-gray-500">-</span>;
+      }
+      return formatDate(row.original.endDate);
+    },
   },
   {
-    accessorKey: "kondisi",
+    accessorKey: "condition",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
     cell: ({ row }) => {
-      const kondisi = row.original.condition;
+             const condition = ALL_CYCLE_CONDITIONS.find(
+              (cond) => cond.value === row.original.condition
+            );
       return (
         <Badge
           className={`${
-            kondisi === "Aktif Budidaya"
+            condition?.value === "active_cultivation"
               ? "bg-blue-100 text-blue-600 hover:bg-blue-100"
               : "bg-pink-100 text-pink-600 hover:bg-pink-100"
           } font-normal`}
         >
-          {kondisi}
+          {condition?.label || "Unknown"}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "jumlah_tebar",
+    accessorKey: "initialQuantity",
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -52,11 +64,11 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
       />
     ),
     cell: ({ row }) => (
-      <span>{row.original.jumlah_tebar.toLocaleString("id-ID")}</span>
+      <span>{row.original.initialQuantity?.toLocaleString("id-ID")}</span>
     ),
   },
   {
-    accessorKey: "jumlah_terkini",
+    accessorKey: "currentQuantity",
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -65,46 +77,47 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
       />
     ),
     cell: ({ row }) => (
-      <span>{row.original.jumlah_terkini.toLocaleString("id-ID")}</span>
+      <span>{row.original.currentQuantity?.toLocaleString("id-ID")}</span>
     ),
   },
   {
-    accessorKey: "kematian",
+    accessorKey: "mortality",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KEMATIAN" />
     ),
     cell: ({ row }) => {
-      const kematian = row.original.kematian;
+      const kematian = row.original.mortality ?? 0;
       return (
         <span className={kematian > 0 ? "text-red-500" : ""}>{kematian}</span>
       );
     },
   },
   {
-    accessorKey: "umur",
+    id: "umur",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="UMUR" />
     ),
-  },
-  {
-    accessorKey: "pindah_kolam",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className=""
-        column={column}
-        title="PINDAH KOLAM"
-      />
-    ),
+    cell: ({ row }) => {
+      const { startDate, endDate } = row.original;
+      if (!startDate) return <span>-</span>;
+
+      const start = new Date(startDate);
+      const end = endDate ? new Date(endDate) : new Date();
+
+      const diffTime = end.getTime() - start.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      return <span>{diffDays >= 0 ? diffDays : 0} Hari</span>;
+    },
   },
   {
     id: "actions",
     header: () => <span className=""></span>,
     cell: ({ row }) => {
-      // Placeholder for detail action
+      const params = useParams();
       return (
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <LuEye className="h-4 w-4 text-gray-500" />
-        </Button>
+        <ButtonDetailColumn href={`/dashboard/pools/${params.poolId}/${row.original.id}`} />
+        
       );
     },
   },

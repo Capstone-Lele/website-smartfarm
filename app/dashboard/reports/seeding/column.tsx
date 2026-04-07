@@ -35,6 +35,15 @@ export const columns: ColumnDef<Seed>[] = [
       );
     },
   },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+      ),
+      cell: ({ row }) => {
+        return formatDate(row.original.createdAt);
+      },
+    },
   {
     accessorKey: "initialQuantity",
     header: ({ column }) => (

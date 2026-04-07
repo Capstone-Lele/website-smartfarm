@@ -12,6 +12,18 @@ export const useListFeed = () => {
   return query;
 };
 
+export const useListFeedWithParams = (params: Record<string, string>) => {
+  const query = useQuery({
+    queryKey: ["feedNotes", params],
+    queryFn: async () => {
+      const response = await feedService.getAllWithParams(params);
+      return response;
+    },
+    enabled: Object.keys(params).length > 0,
+  });
+  return query;
+};
+
 export const useFeedById = (id: string) => {
   return useQuery({
     queryKey: ["feedNote", id],

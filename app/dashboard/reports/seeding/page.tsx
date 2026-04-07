@@ -88,7 +88,7 @@ const page = () => {
       const isPoolMatch = !selectedPools || item.poolId === selectedPools;
       if (!isPoolMatch) return false;
 
-      const isCycleMatch = !selectedCycles || item.cycleId === selectedCycles;
+      const isCycleMatch = !selectedCycles || item.id === selectedCycles;
       if (!isCycleMatch) return false;
 
       const isStaffMatch =

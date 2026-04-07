@@ -10,16 +10,13 @@ import { Sampling } from "@/types/notes/sampling.types";
 import { ColumnDef } from "@tanstack/react-table";
 
 const SamplingTable = ({
-  poolId,
   cycleId,
   poolCreateDate,
 }: {
-  poolId: string;
   cycleId: string;
   poolCreateDate: string;
 }) => {
   const { data, isLoading, error } = useListSamplingWithParams({
-    poolId,
     cycleId,
   });
 

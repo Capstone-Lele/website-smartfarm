@@ -39,7 +39,7 @@ const HomeHeader = () => {
       <section>
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 items-center gap-8">
           <div>
-            <h2 className="text-4xl font-semibold mb-2">1+</h2>
+            <h2 className="text-4xl font-semibold mb-2">{new Date().getFullYear() - 2025}+</h2>
             <p className="text-lg text-gray-600">Tahun Pengalaman</p>
           </div>
           <div>
@@ -48,7 +48,7 @@ const HomeHeader = () => {
           </div>
           <div>
             <h2 className="text-4xl font-semibold mb-2">500+</h2>
-            <p className="text-lg text-gray-600">Panen Berhasil</p>
+            <p className="text-lg text-gray-600">Panen</p>
           </div>
           <div>
             <h2 className="text-4xl font-semibold mb-2">10+</h2>

@@ -63,7 +63,7 @@ const page = () => {
   useEffect(() => {
     setSelectedCycles(undefined);
   }, [selectedPools]);
-
+  
   useEffect(() => {
     if (!data?.data) {
       setFilteredData([]);

@@ -24,6 +24,7 @@ export const useListMortalityWithParams = (params: Record<string, string>) => {
   return query;
 };
 
+
 export const useMortalityById = (id: string) => {
   return useQuery({
     queryKey: ["mortalityNote", id],

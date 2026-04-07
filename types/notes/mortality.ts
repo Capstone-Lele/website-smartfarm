@@ -5,6 +5,7 @@ export type Mortality = {
   user: string;
   id: string;
   cycleId: string;
+  cycle: string;
   poolId: string;
   reportDate: string;
   quantity: number;
