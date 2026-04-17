@@ -94,7 +94,7 @@ function SaleItemCard({
                 </p>
               </div>
             </div>
-            <div className="flex items-center justify-between rounded-md bg-primary/5 border border-primary/20 px-3 py-2 mt-1">
+            <div className="flex items-center justify-between bg-primary/5 px-3 py-2 mt-1">
               <span className="text-xs text-muted-foreground">Subtotal</span>
               <span className="font-semibold text-primary">
                 {formatRupiah(item.subTotal)}
@@ -268,9 +268,9 @@ const DetailOut = ({ id }: { id: string }) => {
             </div>
 
             {/* Grand total bar */}
-            <div className="flex items-center justify-between rounded-md border border-secondary/20 px-4 py-3 mt-2">
+            <div className="flex items-center justify-between rounded-md border bg-gray-100 px-4 py-3 mt-2">
               <span className="text-sm font-semibold">Total Keseluruhan</span>
-              <span className="text-base font-bold text-secondary">
+              <span className="text-base font-bold ">
                 {formatRupiah(dataFinance?.[0]?.totalPrice || 0)}
               </span>
             </div>
