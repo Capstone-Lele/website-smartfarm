@@ -77,17 +77,14 @@ const DetailIn = ({ id }: { id: string }) => {
           {
             label: "Total Panen",
             value: `${totalPanen.toLocaleString("id-ID")} ekor`,
-            color: "text-emerald-600",
           },
           {
             label: "Sudah Terjual / Keluar",
             value: `${totalTerjual.toLocaleString("id-ID")} ekor`,
-            color: "text-orange-500",
           },
           {
             label: "Sisa Stok",
             value: `${sisaStok.toLocaleString("id-ID")} ekor`,
-            color: sisaStok > 0 ? "text-primary" : "text-destructive",
           },
           {
             label: "Total Pendapatan",
@@ -97,7 +94,7 @@ const DetailIn = ({ id }: { id: string }) => {
         ].map((card, i) => (
           <DefaultCard key={i} className="p-4">
             <p className="text-xs text-muted-foreground mb-1">{card.label}</p>
-            <p className={`text-lg font-bold ${card.color}`}>{card.value}</p>
+            <p className={`text-lg font-semibold ${card.color}`}>{card.value}</p>
           </DefaultCard>
         ))}
       </div>
@@ -147,6 +144,9 @@ const DetailIn = ({ id }: { id: string }) => {
               <h3 className="font-semibold text-sm">
                 Riwayat Pengurangan Stok
               </h3>
+              <Badge variant={"default"} className="text-xs">
+                Penjualan
+              </Badge>
             </div>
             <Separator />
 
@@ -166,9 +166,6 @@ const DetailIn = ({ id }: { id: string }) => {
                         <span className="text-xs font-semibold text-muted-foreground">
                           #{i + 1}
                         </span>
-                        <Badge variant={"default"} className="text-xs">
-                          Penjualan
-                        </Badge>
                       </div>
                       <span className="text-xs text-muted-foreground">
                         {formatDate(item.orderDate)}
