@@ -14,6 +14,8 @@ import { usePool } from "@/lib/api/service/pools/usePool";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { SelectCombobox } from "@/components/combobox/select";
 import { useGetUsers } from "@/lib/api/service/users/useUser";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SickOverview from "./_components/sick-overview";
 
 const page = () => {
   const { data, isLoading, error } = useListSick();
@@ -166,15 +168,26 @@ const page = () => {
           </div>
         )}
       </DefaultCard>
-      <DefaultCard>
-        <div className="w-full">
-          {isLoading ? (
-            <TableSkeleton />
-          ) : (
-            <DataTable columns={columns} data={filteredData} />
-          )}
-        </div>
-      </DefaultCard>
+      <Tabs defaultValue="ringkasan" className="w-full mt-2">
+        <TabsList className="mb-4">
+          <TabsTrigger value="ringkasan">Ringkasan & Grafik</TabsTrigger>
+          <TabsTrigger value="data">Data Tabel</TabsTrigger>
+        </TabsList>
+        <TabsContent value="ringkasan">
+          <SickOverview data={filteredData} />
+        </TabsContent>
+        <TabsContent value="data">
+          <DefaultCard>
+            <div className="w-full">
+              {isLoading ? (
+                <TableSkeleton />
+              ) : (
+                <DataTable columns={columns} data={filteredData} />
+              )}
+            </div>
+          </DefaultCard>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

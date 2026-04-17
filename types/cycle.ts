@@ -6,6 +6,7 @@ export type Cycle = {
   initialQuantity?: number;
   currentQuantity?: number;
   mortality?: number;
+  movedQuantity?: number;
 };
 
 export type CycleResponse = {

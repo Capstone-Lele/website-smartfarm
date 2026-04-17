@@ -36,12 +36,12 @@ export const columns: ColumnDef<Vitamin>[] = [
      },
    },
    {
-     accessorKey: "startDate",
+     accessorKey: "cycleStartDate",
      header: ({ column }) => (
        <DataTableColumnHeader className="" column={column} title="SIKLUS" />
      ),
      cell: ({ row }) => {
-       return formatDate(row.original.startDate);
+       return formatDate(row.original.cycleStartDate);
      },
    },
    {

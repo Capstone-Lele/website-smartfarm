@@ -85,6 +85,7 @@ export function MortalityBarChart({ cycleId }: MortalityChartProps) {
         <BarChart
           accessibilityLayer
           data={chartData}
+          barSize={38}
           margin={{
             top: 20,
             left: 12,
@@ -112,7 +113,6 @@ export function MortalityBarChart({ cycleId }: MortalityChartProps) {
           <Bar
             dataKey="quantity"
             fill="var(--color-quantity)"
-            radius={[4, 4, 0, 0]}
             name="Jumlah Mati"
           />
         </BarChart>

@@ -17,6 +17,7 @@ import ButtonDetailColumn from "@/components/button-column/button-detail-column"
 import Image from "next/image";
 import { getAvatarUrl } from "@/lib/utils/avatar";
 import AssignPoolModal from "./assign";
+import { useParams } from "next/navigation";
 
 export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   {
@@ -49,7 +50,9 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
       return (
         <div>
           <h3 className="font-medium">{row.original.name}</h3>
-          <span className="text-xs">{diameter ? "Kolam Bundar" : "Kolam Persegi"}</span>
+          <span className="text-xs">
+            {diameter ? "Kolam Bundar" : "Kolam Persegi"}
+          </span>
         </div>
       );
     },
@@ -158,7 +161,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
     },
   },
   {
-    accessorKey: "ikan",
+    accessorKey: "currentQuantity",
     header: () => <span className="">JUMLAH IKAN</span>,
   },
   {
@@ -166,6 +169,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
       const deletePoolMutation = useDeletePool();
+      const params = useParams();
 
       const handleDeletePool = async (id: string) => {
         try {
@@ -180,7 +184,9 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn href={`/dashboard/pools?id=${row.original.id}`} />
+          <ButtonDetailColumn
+            href={`/dashboard/pools/quarantine?poolId=${params.poolId}&cycleId=${row.original.id}`}
+          />
           <Separator orientation="vertical" className="h-6" />
           <AssignPoolModal pool={row.original} />
           <Separator orientation="vertical" className="h-6" />

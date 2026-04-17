@@ -61,13 +61,13 @@ const EditUnitModal = ({ unit }: { unit: Unit }) => {
   }, [unit, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const dirtyData = getDirtyValues(dirtyFields, data) as z.infer<
-      typeof formSchema
-    >;
+    // const dirtyData = getDirtyValues(dirtyFields, data) as z.infer<
+    //   typeof formSchema
+    // >;
     try {
       const res = await unitMutation.mutateAsync({
         id: unit.id,
-        data: dirtyData,
+        data: data,
       });
       form.reset();
       toast.success(res.message || "Satuan berhasil diubah");

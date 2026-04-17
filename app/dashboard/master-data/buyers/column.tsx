@@ -31,7 +31,7 @@ export const columnsBuyer: ColumnDef<Buyer>[] = [
     }
   },
   {
-    accessorKey: "phoneNumber",
+    accessorKey: "phone",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NOMOR TELEPON" />
     ),

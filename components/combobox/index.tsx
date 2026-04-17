@@ -43,9 +43,7 @@ export function Combobox({
     }
   }, [selectedValue]);
 
-  useEffect(() => {
-    onValueChange(value);
-  }, [value, onValueChange]);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -53,6 +51,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disable}
           className={`w-full justify-between ${value ? "" : "text-muted-foreground "}`}
         >
           {value
@@ -80,7 +79,9 @@ export function Combobox({
                   key={item.value}
                   value={item.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    const newValue = currentValue === value ? "" : currentValue;
+                    setValue(newValue);
+                    onValueChange(newValue);
                     setOpen(false);
                   }}
                 >

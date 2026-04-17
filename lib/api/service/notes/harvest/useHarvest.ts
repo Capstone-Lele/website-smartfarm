@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { harvestService } from "./harvest.service";
+import { ByIdHarvestResponse } from "@/types/notes/harvest";
 
 export const useListHarvest = () => {
   const query = useQuery({

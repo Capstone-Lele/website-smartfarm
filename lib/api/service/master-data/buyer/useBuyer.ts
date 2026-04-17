@@ -24,8 +24,9 @@ export const useGetBuyerById = (id: string) => {
     queryFn: async () => {
       const response = await buyerService.getById(id);
       return response;
-    }
-    });
+    },
+    enabled: !!id,
+  });
 };
 
 export const useCreateBuyer = () => {

@@ -6,9 +6,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { productService } from "./product.service";
+import { ProductResponse } from "@/types/master-data/product.types";
 
 export const useGetProducts = () => {
-  return useQuery<ResponseDefault>({
+  return useQuery<ProductResponse>({
     queryKey: ["getProducts"],
     queryFn: async () => {
       const response = await productService.getAll();
@@ -57,3 +58,13 @@ export const useDeleteProduct = () => {
     },
   });
 };
+
+export const useGetProductUsage = () => {
+  return useQuery<ResponseDefault>({
+    queryKey: ["getProductUsage"],
+    queryFn: async () => {
+      const response = await productService.getProductUsage();
+      return response;
+    },
+  });
+}

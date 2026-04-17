@@ -3,6 +3,7 @@ import { DataTable } from "@/components/data-table/data-table";
 import React, { useEffect, useState } from "react";
 import { columns } from "./column";
 import DefaultCard from "@/components/card/default-card";
+import { FeedingOverview } from "./_components/feeding-overview";
 import { useListFeed } from "@/lib/api/service/notes/feed/useFeed";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { usePool } from "@/lib/api/service/pools/usePool";
@@ -14,6 +15,7 @@ import { ResetFilterButton } from "@/components/button/reset-filter";
 import ComboboxMultiple from "@/components/combobox/multibple";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 import { formatDate } from "@/lib/utils/format-date";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const page = () => {
   const { data, isLoading, error } = useListFeed();
@@ -163,15 +165,30 @@ const page = () => {
             </div>
           )}
         </DefaultCard>
-        <DefaultCard>
-          <div className="w-full">
-            {isLoading ? (
-              <TableSkeleton />
-            ) : (
-              <DataTable columns={columns} data={filteredData} />
+        <Tabs defaultValue="visualisasi" className="w-full">
+          <TabsList className="mb-2">
+            <TabsTrigger value="visualisasi">Ringkasan & Grafik</TabsTrigger>
+            <TabsTrigger value="tabel">Data Tabel</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="visualisasi">
+            {!isLoading && !isLoadingPool && !isLoadingUsers && (
+              <FeedingOverview data={filteredData} />
             )}
-          </div>
-        </DefaultCard>
+          </TabsContent>
+          
+          <TabsContent value="tabel">
+            <DefaultCard>
+              <div className="w-full">
+                {isLoading ? (
+                  <TableSkeleton />
+                ) : (
+                  <DataTable columns={columns} data={filteredData} />
+                )}
+              </div>
+            </DefaultCard>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

@@ -92,6 +92,12 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
       );
     },
   },
+    {
+    accessorKey: "movedQuantity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="PINDAH KOLAM" />
+    ),
+  },
   {
     id: "umur",
     header: ({ column }) => (

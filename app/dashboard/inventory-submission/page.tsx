@@ -2,7 +2,7 @@
 import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
 import React, { useEffect } from "react";
 import InventoryNavTabs from "../inventory/_components/inventory-nav-tabs";
-import { LuUserRound, LuUsersRound } from "react-icons/lu";
+import { LuClipboardList, LuClock, LuCircleX, LuCircleCheck } from "react-icons/lu";
 import CardStatistic from "@/components/card/card-statistic";
 import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
@@ -44,7 +44,7 @@ const Page = () => {
     {
       title: "Total Pengajuan",
       value: data?.data.length.toString() || "0",
-      icon: <LuUsersRound />,
+      icon: <LuClipboardList className="text-primary" />,
     },
     {
       title: "Pengajuan Pending",
@@ -52,7 +52,7 @@ const Page = () => {
         data?.data
           .filter((item) => item.status === "pending")
           .length.toString() || "0",
-      icon: <LuUserRound />,
+      icon: <LuClock className="text-amber-500" />,
     },
     {
       title: "Pengajuan Disetujui",
@@ -60,7 +60,7 @@ const Page = () => {
         data?.data
           .filter((item) => item.status === "approved")
           .length.toString() || "0",
-      icon: <LuUserRound />,
+      icon: <LuCircleCheck className="text-emerald-500" />,
     },
     {
       title: "Pengajuan Ditolak",
@@ -68,7 +68,7 @@ const Page = () => {
         data?.data
           .filter((item) => item.status === "rejected")
           .length.toString() || "0",
-      icon: <LuUserRound />,
+      icon: <LuCircleX className="text-red-500" />,
     },
   ];
 

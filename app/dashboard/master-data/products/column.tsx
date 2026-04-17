@@ -10,28 +10,9 @@ import { useDeleteProduct } from "@/lib/api/service/master-data/product/useProdu
 import { toast } from "sonner";
 import { Product } from "@/types/master-data/product.types";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
+import ButtonEditColumn from "@/components/button-column/button-edit-column";
 
 export const columnsUnit: ColumnDef<Product>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -47,7 +28,7 @@ export const columnsUnit: ColumnDef<Product>[] = [
   {
     accessorKey: "unit",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="SATUAN" />
+      <DataTableColumnHeader className="" column={column} title="UNIT" />
     ),
   },
   {
@@ -62,6 +43,11 @@ export const columnsUnit: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const deleteProductMutation = useDeleteProduct();
 
+      const disabledProducts = ["pendanaan desa"];
+      const isDisabled = disabledProducts.includes(
+        row.original.name.toLowerCase(),
+      );
+
       const handleDeleteProduct = async (id: string) => {
         try {
           const res = await deleteProductMutation.mutateAsync(id);
@@ -75,8 +61,12 @@ export const columnsUnit: ColumnDef<Product>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
+          {isDisabled ? (
+            <ButtonEditColumn disabled={true} />
+          ) : (
           <EditProductModal product={row.original} />
-          <Separator orientation="vertical" className="h-6" />
+          )}
+          {/* <Separator orientation="vertical" className="h-6" />
           <PopupConfirmation
             title="Hapus Produk"
             message={`Apakah anda yakin menghapus produk ( ${row.original.name} ) ini?`}
@@ -85,7 +75,7 @@ export const columnsUnit: ColumnDef<Product>[] = [
             isLoading={deleteProductMutation.isPending}
           >
             <ButtonDeleteColumn/>
-          </PopupConfirmation>
+          </PopupConfirmation> */}
         </div>
       );
     },

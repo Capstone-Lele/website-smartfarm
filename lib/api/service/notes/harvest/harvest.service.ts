@@ -1,6 +1,6 @@
 import { API_CLIENT } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoint";
-import { ByIdHarvestResponse, HarvestResponse } from "@/types/notes/harvest";
+import { ByIdHarvestResponse, DetailHarvestResponse, HarvestResponse } from "@/types/notes/harvest";
 
 export const harvestService = {
   getAll: async (): Promise<HarvestResponse> => {
@@ -10,8 +10,8 @@ export const harvestService = {
     return response;
   },
 
-  getById: async (id: string): Promise<ByIdHarvestResponse> => {
-    const response = await API_CLIENT.get<ByIdHarvestResponse>(
+  getById: async (id: string): Promise<DetailHarvestResponse> => {
+    const response = await API_CLIENT.get<DetailHarvestResponse>(
       API_ENDPOINTS.HARVEST_NOTES.GET_BY_ID(id),
     );
     return response;

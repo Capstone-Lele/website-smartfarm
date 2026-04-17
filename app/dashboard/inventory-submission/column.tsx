@@ -3,6 +3,7 @@ import { formatDate } from "@/lib/utils/format-date";
 import { InventorySubmission } from "@/types/inventory";
 import { ColumnDef } from "@tanstack/react-table";
 import EditSubmissionModal from "./edit";
+import { TbPencilMinus } from "react-icons/tb";
 
 export const columns: ColumnDef<InventorySubmission>[] = [
   {
@@ -46,6 +47,18 @@ export const columns: ColumnDef<InventorySubmission>[] = [
     },
   },
   {
+    accessorKey: "reviewedDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="TANGGAL DITINJAU" />
+    ),
+    cell: ({ row }) => {
+      if( row.original.status === "pending") {
+        return <span className="text-muted-foreground">-</span>;
+      }
+      return formatDate(row.original.updatedAt);
+    },
+  },
+  {
     accessorKey: "product",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PRODUK" />
@@ -83,8 +96,18 @@ export const columns: ColumnDef<InventorySubmission>[] = [
         <div className="flex items-center text-primary gap-0.5">
           {row.original.status === "pending" ? (
             <EditSubmissionModal submission={row.original} />
-          ):(
-            "-"
+          ) : (
+            <div className="flex items-center gap-2">
+              <div 
+                className="h-9 w-9 p-0 cursor-not-allowed opacity-50 text-black flex items-center justify-center rounded-md"
+                title={`Tidak bisa diedit (telah ${row.original.status === 'approved' ? 'disetujui' : 'ditolak'})`}
+              >
+                <TbPencilMinus size={20} />
+              </div>
+              <span className="text-xs font-semibold text-muted-foreground">
+                Telah ditinjau
+              </span>
+            </div>
           )}
         </div>
       );

@@ -18,6 +18,10 @@ import {
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { FiPlusCircle } from "react-icons/fi";
+import {
+  useInventory,
+  usePostInventoryTransaction,
+} from "@/lib/api/service/inventory/useInventory";
 import { Input } from "@/components/ui/input";
 import { LuSave, LuUpload } from "react-icons/lu";
 import { RiResetRightLine } from "react-icons/ri";
@@ -103,6 +107,11 @@ const PostStockInOut = () => {
   const inventoryId = params?.id as string;
   const [isOpen, setIsOpen] = useState(false);
 
+  const { data: inventoryData } = useInventory();
+  const unit =
+    inventoryData?.data?.find((item) => item.id === inventoryId)?.unit || "";
+  const postInventoryTransaction = usePostInventoryTransaction();
+
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageTransactionPreview, setImageTransactionPreview] = useState<
     string | null
@@ -134,7 +143,7 @@ const PostStockInOut = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const dataPrep = {
-      transactionDate: data.transactionDate
+      reportDate: data.transactionDate
         ? format(data.transactionDate, "yyyy-MM-dd")
         : undefined,
       quantity: data.quantity,
@@ -143,13 +152,13 @@ const PostStockInOut = () => {
       image: data.image,
       pricePerItem: data.pricePerItem,
       totalPrice: data.totalPrice,
-      ...(isNonGrant && {
-        notesTransaction: data.notesTransaction,
-        imageTransaction: data.imageTransaction,
-      }),
+      transactionNotes: data.notesTransaction,
+      transactionImage: data.imageTransaction,
+      inventoryId: inventoryId,
     };
     try {
       console.log("Submit data:", dataPrep);
+      await postInventoryTransaction.mutateAsync(dataPrep);
       form.reset();
       setImagePreview(null);
       setImageTransactionPreview(null);
@@ -225,18 +234,18 @@ const PostStockInOut = () => {
                     render={({ field, fieldState }) => (
                       <Field>
                         <FieldLabel htmlFor="transactionType">
-                          Sumber Dana
+                          Tipe Transaksi
                         </FieldLabel>
                         <Combobox
                           data={INVENTORY_TRANSACTION_TYPE_OPTIONS}
                           onValueChange={field.onChange}
-                          name="Tipe Sumber Dana"
+                          name="Tipe Tipe Transaksi"
                           selectedValue={field.value}
                         />
                         {fieldState.invalid ? (
                           <FieldError errors={[fieldState.error]} />
                         ) : (
-                          <FieldDescription>Sumber dana.</FieldDescription>
+                          <FieldDescription>Tipe Transaksi.</FieldDescription>
                         )}
                       </Field>
                     )}
@@ -248,15 +257,21 @@ const PostStockInOut = () => {
                     render={({ field, fieldState }) => (
                       <Field>
                         <FieldLabel htmlFor="quantity">Jumlah</FieldLabel>
-                        <Input
-                          id="quantity"
-                          type="number"
-                          min={1}
-                          step={1}
-                          autoComplete="off"
-                          placeholder="Contoh: 10"
-                          {...field}
-                        />
+                        <InputGroup>
+                          <InputGroupInput
+                            id="quantity"
+                            type="number"
+                            min={1}
+                            step={1}
+                            autoComplete="off"
+                            placeholder="Contoh: 10"
+                            {...field}
+                          />
+                          <InputGroupAddon align="inline-end">
+                            <Separator orientation="vertical" className="h-6" />
+                            {unit || "Unit"}
+                          </InputGroupAddon>
+                        </InputGroup>
                         {fieldState.invalid ? (
                           <FieldError errors={[fieldState.error]} />
                         ) : (
@@ -436,7 +451,7 @@ const PostStockInOut = () => {
                       render={({ field, fieldState }) => (
                         <Field>
                           <FieldLabel htmlFor="pricePerItem">
-                            Harga Per Item {isNonGrant ? "" : "(Perkiraan)"}
+                            Harga Per Item/{unit} {isNonGrant ? "" : "(Perkiraan)"}
                           </FieldLabel>
                           <InputGroup>
                             <InputGroupAddon align="inline-start">
@@ -450,7 +465,7 @@ const PostStockInOut = () => {
                               id="pricePerItem"
                               type="number"
                               min={0}
-                              step={100}
+                              step={1}
                               placeholder="Contoh: 50000"
                               {...field}
                             />
@@ -484,7 +499,7 @@ const PostStockInOut = () => {
                               id="totalPrice"
                               type="number"
                               min={0}
-                              step={100}
+                              step={1}
                               placeholder="Dihitung otomatis"
                               {...field}
                               disabled
@@ -501,102 +516,104 @@ const PostStockInOut = () => {
                       )}
                     />
 
-                    {isNonGrant && (
-                      <>
-                        <Controller
-                          name="notesTransaction"
-                          control={form.control}
-                          render={({ field, fieldState }) => (
-                            <Field>
-                              <FieldLabel htmlFor="notesTransaction">
-                                Catatan Transaksi{" "}
-                                <span className="text-muted-foreground font-normal">
-                                  (Opsional)
-                                </span>
-                              </FieldLabel>
-                              <Input
-                                id="notesTransaction"
-                                autoComplete="off"
-                                placeholder="Contoh: Dibeli dari toko ABC, No. faktur 123"
-                                {...field}
-                                className="bg-white"
-                              />
-                              {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                              ) : (
-                                <FieldDescription>
-                                  Catatan detail transaksi pembelian.
-                                </FieldDescription>
-                              )}
-                            </Field>
+                    <Controller
+                      name="notesTransaction"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="notesTransaction">
+                            Catatan Transaksi
+                          </FieldLabel>
+                          <Input
+                            id="notesTransaction"
+                            autoComplete="off"
+                            placeholder={
+                              isNonGrant
+                                ? "Contoh: Dibeli dari toko ABC, No. faktur 123"
+                                : "Contoh: Bantuan dari pemerintah"
+                            }
+                            {...field}
+                            className="bg-white"
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              {isNonGrant
+                                ? "Catatan detail transaksi pembelian."
+                                : "Catatan detail penerimaan bantuan."}
+                            </FieldDescription>
                           )}
-                        />
+                        </Field>
+                      )}
+                    />
 
-                        <Controller
-                          name="imageTransaction"
-                          control={form.control}
-                          render={({
-                            field: { onChange, value, ref: _ref, ...rest },
-                            fieldState,
-                          }) => (
-                            <Field>
-                              <FieldLabel htmlFor="imageTransaction">
-                                Foto Bukti Transaksi / Nota
-                              </FieldLabel>
-                              <div
-                                className="border-2 bg-white border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                                onClick={() =>
-                                  fileInputRefTransaction.current?.click()
-                                }
-                              >
-                                {imageTransactionPreview ? (
-                                  <img
-                                    src={imageTransactionPreview}
-                                    alt="Preview"
-                                    className="max-h-36 rounded object-contain"
-                                  />
-                                ) : (
-                                  <>
-                                    <LuUpload
-                                      size={24}
-                                      className="text-muted-foreground"
-                                    />
-                                    <span className="text-sm text-muted-foreground">
-                                      Klik untuk upload gambar
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                              <input
-                                ref={fileInputRefTransaction}
-                                id="imageTransaction"
-                                type="file"
-                                accept="image/jpeg,image/png,image/jpg"
-                                className="hidden"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    onChange(file);
-                                    setImageTransactionPreview(
-                                      URL.createObjectURL(file),
-                                    );
-                                  }
-                                }}
-                                {...rest}
+                    <Controller
+                      name="imageTransaction"
+                      control={form.control}
+                      render={({
+                        field: { onChange, value, ref: _ref, ...rest },
+                        fieldState,
+                      }) => (
+                        <Field>
+                          <FieldLabel htmlFor="imageTransaction">
+                            {isNonGrant
+                              ? "Foto Bukti Transaksi / Nota"
+                              : "Foto Bukti Serah Terima"}
+                          </FieldLabel>
+                          <div
+                            className="border-2 bg-white border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                            onClick={() =>
+                              fileInputRefTransaction.current?.click()
+                            }
+                          >
+                            {imageTransactionPreview ? (
+                              <img
+                                src={imageTransactionPreview}
+                                alt="Preview"
+                                className="max-h-36 rounded object-contain"
                               />
-                              {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                              ) : (
-                                <FieldDescription>
-                                  Upload foto nota atau bukti pembelian
-                                  (JPG/PNG).
-                                </FieldDescription>
-                              )}
-                            </Field>
+                            ) : (
+                              <>
+                                <LuUpload
+                                  size={24}
+                                  className="text-muted-foreground"
+                                />
+                                <span className="text-sm text-muted-foreground">
+                                  Klik untuk upload gambar
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            ref={fileInputRefTransaction}
+                            id="imageTransaction"
+                            type="file"
+                            accept="image/jpeg,image/png,image/jpg"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                onChange(file);
+                                setImageTransactionPreview(
+                                  URL.createObjectURL(file),
+                                );
+                              }
+                            }}
+                            {...rest}
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              {isNonGrant
+                                ? "Upload foto nota atau bukti pembelian (JPG/PNG)."
+                                : "Upload foto bukti serah terima (JPG/PNG)."}
+                            </FieldDescription>
                           )}
-                        />
-                      </>
-                    )}
+                        </Field>
+                      )}
+                    />
                   </div>
                 </div>
 

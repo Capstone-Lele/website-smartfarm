@@ -5,10 +5,11 @@ import {
   buildPayloadCreate,
   buildPayloadEdit,
 } from "@/lib/utils/payload-build";
+import { ProductResponse } from "@/types/master-data/product.types";
 
 export const productService = {
-  getAll: async (): Promise<ResponseDefault> => {
-    const response = await API_CLIENT.get<ResponseDefault>(
+  getAll: async (): Promise<ProductResponse> => {
+    const response = await API_CLIENT.get<ProductResponse>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.GET_ALL,
     );
     return response;
@@ -34,6 +35,14 @@ export const productService = {
     const response = await API_CLIENT.put<ResponseDefault>(
       API_ENDPOINTS.MASTER_DATA.PRODUCT.UPDATE(id),
       payload,
+    );
+    return response;
+  },
+
+  // New method to get product usage
+  getProductUsage: async (): Promise<ResponseDefault> => {
+    const response = await API_CLIENT.get<ResponseDefault>(
+      API_ENDPOINTS.MASTER_DATA.PRODUCT.GET_PRODUCT_USAGE,
     );
     return response;
   },

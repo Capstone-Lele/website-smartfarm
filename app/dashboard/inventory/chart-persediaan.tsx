@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
@@ -25,13 +26,11 @@ import ChartSkeleton from "@/components/sekeleton/chart-skeleton";
 export const description = "A stacked bar chart with a legend";
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
+  totalQuantity: {
+    label: "Total Quantity",
   },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
+  minQuantity: {
+    label: "Minimum Quantity",
   },
 } satisfies ChartConfig;
 
@@ -42,6 +41,15 @@ export function ChartBarStacked({
   data: any;
   isLoading?: boolean;
 }) {
+  const parsedData = useMemo(() => {
+    if (!Array.isArray(data)) return [];
+    return data.map((item: any) => ({
+      ...item,
+      totalQuantity: parseFloat(item.totalQuantity) || 0,
+      minQuantity: parseFloat(item.minQuantity) || 0,
+    }));
+  }, [data]);
+
   return (
     <DefaultCard className="flex flex-col w-full">
       <div className="flex items-center gap-2 mb-4">
@@ -55,9 +63,13 @@ export function ChartBarStacked({
             config={chartConfig}
             className=" md:min-h-[200px] lg:min-h-[300px] max-h-[260px] w-full "
           >
-            <BarChart accessibilityLayer data={data} margin={{ bottom: 20 }}>
+            <BarChart
+              accessibilityLayer
+              data={parsedData}
+              margin={{ bottom: 20 }}
+            >
               <CartesianGrid vertical={false} />
-              <YAxis width={24} domain={[0, "auto"]} />
+              <YAxis width={40} domain={[0, "auto"]} />
               <XAxis
                 dataKey="product"
                 tickLine={false}

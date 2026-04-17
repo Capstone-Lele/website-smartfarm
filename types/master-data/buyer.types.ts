@@ -2,7 +2,7 @@ export type Buyer = {
   id: string;
   name: string;
   type: string;
-  phoneNumber: string;
+  phone: string;
   email: string;
   address: string;
   createdAt: string;
@@ -19,7 +19,7 @@ export type BuyerResponse = {
 export type BuyerFormInput = {
   name?: string;
   type?: string;
-  phone?: string;
+  phoneNumber?: string;
   email?: string;
   address?: string;
 };

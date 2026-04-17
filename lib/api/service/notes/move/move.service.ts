@@ -16,4 +16,11 @@ export const moveService = {
     );
     return response;
   },
+
+  getAllWithParams: async (params: Record<string, string>): Promise<MovePoolResponse> => {
+    const response = await API_CLIENT.get<MovePoolResponse>(
+      API_ENDPOINTS.MOVE_NOTES.GET_ALL_WITH_PARAMS(params),
+    );
+    return response;
+  }
 };

@@ -65,6 +65,9 @@ const PostProductModal = () => {
     },
   });
 
+  const watchType = form.watch("type");
+  const watchCategory = form.watch("category");
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Submitting form with data:", data);
     try {
@@ -122,25 +125,94 @@ const PostProductModal = () => {
                   )}
                 />
                 <Controller
-                  name="category"
+                  name="type"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field>
-                      <FieldLabel htmlFor="category">Kategori Produk</FieldLabel>
+                      <FieldLabel htmlFor="type">Tipe Produk</FieldLabel>
                       <Combobox
-                        data={getCategoryData.data?.data.map((category) => ({
-                          value: category.name,
-                          label: category.name,
-                        })) || []}
-                        onValueChange={field.onChange}
+                        data={TYPE_PRODUCT}
+                        onValueChange={(val) => {
+                          field.onChange(val);
+                          // Reset kategori jika tipe berubah dan kategori tidak valid
+                          if (
+                            val === "inventory" &&
+                            form.getValues("category")?.toLowerCase() ===
+                              "pendanaan"
+                          ) {
+                            form.setValue("category", "");
+                          }
+                        }}
                         isLoading={productMutation.isPending}
-                        name="Kategori"
+                        name="Tipe"
+                        selectedValue={field.value}
                       />
                       {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan kategori produk.
+                          Masukkan tipe produk.
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="category"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="category">
+                        Kategori Produk
+                      </FieldLabel>
+                      <Combobox
+                        data={
+                          getCategoryData.data?.data
+                            .filter((category) => {
+                              if (
+                                watchType === "inventory" &&
+                                category.name.toLowerCase() === "pendanaan"
+                              ) {
+                                return false;
+                              }
+                              return true;
+                            })
+                            .map((category) => ({
+                              value: category.name,
+                              label: category.name,
+                            })) || []
+                        }
+                        onValueChange={(val) => {
+                          field.onChange(val);
+                          if (val.toLowerCase() === "pakan") {
+                            form.setValue(
+                              "unit",
+                              getUnitData.data?.data.find(
+                                (unit: Unit) =>
+                                  unit.name.toLowerCase() === "kg",
+                              )?.name || "kg",
+                            );
+                          } else if (val.toLowerCase() === "pendanaan") {
+                            form.setValue(
+                              "unit",
+                              getUnitData.data?.data.find(
+                                (unit: Unit) =>
+                                  unit.name.toLowerCase() === "uang",
+                              )?.name || "uang",
+                            );
+                          }
+                        }}
+                        isLoading={productMutation.isPending}
+                        name="Kategori"
+                        disable={!watchType}
+                        selectedValue={field.value}
+                      />
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan kategori produk.{" "}
+                          {!watchType && "Pilih Tipe Produk terlebih dahulu."}
                         </FieldDescription>
                       )}
                     </Field>
@@ -153,41 +225,38 @@ const PostProductModal = () => {
                     <Field>
                       <FieldLabel htmlFor="unit">Satuan Produk</FieldLabel>
                       <Combobox
-                        data={getUnitData.data?.data.map((unit:Unit) => ({
-                          value: unit.name,
-                          label: unit.name,
-                        })) || []}
+                        data={
+                          getUnitData.data?.data
+                            .filter((unit: Unit) => {
+                              if (
+                                watchCategory?.toLowerCase() === "pakan" &&
+                                unit.name.toLowerCase() !== "kg"
+                              ) {
+                                return false;
+                              }
+                              if (
+                                watchCategory?.toLowerCase() === "pendanaan" &&
+                                unit.name.toLowerCase() !== "uang"
+                              ) {
+                                return false;
+                              }
+                              return true;
+                            })
+                            .map((unit: Unit) => ({
+                              value: unit.name,
+                              label: unit.name,
+                            })) || []
+                        }
                         onValueChange={field.onChange}
                         isLoading={productMutation.isPending}
                         name="Satuan"
+                        selectedValue={field.value}
                       />
                       {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
                           Masukkan satuan produk.
-                        </FieldDescription>
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="type"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel htmlFor="type">Tipe Produk</FieldLabel>
-                      <Combobox
-                        data={TYPE_PRODUCT}
-                        onValueChange={field.onChange}
-                        isLoading={productMutation.isPending}
-                        name="Tipe"
-                      />
-                      {fieldState.invalid ? (
-                        <FieldError errors={[fieldState.error]} />
-                      ) : (
-                        <FieldDescription>
-                          Masukkan tipe produk.
                         </FieldDescription>
                       )}
                     </Field>

@@ -32,7 +32,7 @@ export const columns: ColumnDef<Sick>[] = [
     },
   },
   {
-    accessorKey: "startDate",
+    accessorKey: "originStartDate",
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -41,7 +41,7 @@ export const columns: ColumnDef<Sick>[] = [
       />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.startDate);
+      return formatDate(row.original.originStartDate);
     },
   },
   {
@@ -62,6 +62,19 @@ export const columns: ColumnDef<Sick>[] = [
           <span className="text-xs">{translateCategoryPool(row.original.destinationCategory)}</span>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "destinationStartDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="SIKLUS KOLAM TUJUAN"
+      />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.destinationStartDate);
     },
   },
   {

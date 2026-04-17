@@ -15,7 +15,8 @@ export type MovePool = {
   destinationPoolName: string;
   destinationCategory: string;
   user: string;
-  startDate: string;
+  originStartDate: string;
+  destinationStartDate: string;
 };
 
 export type MovePoolResponse = {

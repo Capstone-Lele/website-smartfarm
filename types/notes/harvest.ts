@@ -21,5 +21,25 @@ export type HarvestResponse = {
 export type ByIdHarvestResponse = {
   success: boolean;
   message: string;
-  data: Harvest;
+  data: Harvest[];
 };
+
+
+export interface HarvestDetail {
+    amount?: number;
+    createdAt?: string;
+    cycleId?: string;
+    deletedAt?: null;
+    id?: string;
+    image?: string;
+    reportDate?: string;
+    updatedAt?: string;
+    userId?: string;
+}
+
+
+export interface DetailHarvestResponse {
+    data: HarvestDetail[];
+    message: string;
+    success: boolean;
+}

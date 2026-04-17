@@ -48,7 +48,7 @@ const dataPath = [
       },
       {
         path: "/dashboard/master-data/units",
-        name: "Satuan",
+        name: "Unit",
       },
       {
         path: "/dashboard/master-data/buyers",
@@ -72,6 +72,14 @@ const dataPath = [
           return meta?.["inventory"] ?? `Produk #${params.id}`;
         },
       },
+      {
+        path: "/dashboard/inventory/[id]/detail",
+        name: "Detail Inventaris",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["inventory-notes"] ?? `Produk #${params.id}`;
+        },
+      },
     ],
   },
   {
@@ -80,14 +88,14 @@ const dataPath = [
   },
   {
     path: "/dashboard/reports",
-    name: "Laporan",
+    name: "Laporan Pemberian Pakan",
     sub_paths: [
+      // {
+      //   path: "/dashboard/reports/daily",
+      //   name: "Laporan Harian",
+      // },
       {
-        path: "/dashboard/reports/daily",
-        name: "Laporan Harian",
-      },
-      {
-        path: "/dashboard/reports/feeding",
+        path: "/dashboard/reports",
         name: "Laporan Pemberian Pakan",
       },
       {
@@ -110,11 +118,33 @@ const dataPath = [
         path: "/dashboard/reports/move",
         name: "Laporan Pindah Kolam",
       },
+      {
+        path: "/dashboard/reports/mortality",
+        name: "Laporan Kematian"
+      },
+      {
+        path: "/dashboard/reports/seeding",
+        name: "Laporan Tebar Benih"
+      },
+      {
+        path: "/dashboard/reports/harvest",
+        name: "Laporan Panen"
+      }
     ],
   },
   {
     path: "/dashboard/commodity",
     name: "Komoditas",
+    sub_paths: [
+      {
+        path: "/dashboard/commodity/[id]",
+        name: "Detail Komoditas",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["commodity"] ?? `Komoditas #${params.id}`;
+        },
+      },
+    ],
   },
   {
     path: "/dashboard/finance",

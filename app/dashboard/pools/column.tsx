@@ -19,28 +19,9 @@ import { getAvatarUrl } from "@/lib/utils/avatar";
 import AssignPoolModal from "./assign";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
+import { formatDate } from "@/lib/utils/format-date";
 
 export const columnsPool: ColumnDef<Pool>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -78,18 +59,17 @@ export const columnsPool: ColumnDef<Pool>[] = [
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
     cell: ({ row }) => {
-       const condition = ALL_CYCLE_CONDITIONS.find(
-        (cond) => cond.value === row.original.cycle
+      const condition = ALL_CYCLE_CONDITIONS.find(
+        (cond) => cond.value === row.original.cycle,
       );
       return condition ? (
-        <Badge className="px-2" variant={'outline'}>
+        <Badge className="px-2" variant={"outline"}>
           {condition.label}
         </Badge>
       ) : (
         <span>-</span>
       );
     },
-
   },
   {
     accessorKey: "petugas",
@@ -172,20 +152,56 @@ export const columnsPool: ColumnDef<Pool>[] = [
     },
   },
   {
-    accessorKey: "siklus",
+    accessorKey: "cycleStartDate",
     header: () => <span className="">SIKLUS</span>,
+    cell: ({ row }) => {
+      if (!row.original.cycleStartDate) {
+        return <span>-</span>;
+      }
+      return formatDate(row.original.cycleStartDate);
+    },
   },
   {
     accessorKey: "currentQuantity",
-    header: ({column}) => <DataTableColumnHeader column={column} title="JUMLAH IKAN" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="JUMLAH IKAN" />
+    ),
   },
   {
-    accessorKey: "kematian",
-    header: ({column}) => <DataTableColumnHeader column={column} title="KEMATIAN" />,
+    accessorKey: "mortality",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="KEMATIAN" />
+    ),
   },
   {
-    accessorKey: "umur",
-    header: ({column}) => <DataTableColumnHeader column={column} title="UMUR" />,
+    accessorKey: "movedQuantity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="PINDAH KOLAM" />
+    ),
+  },
+  {
+    id: "umur",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="UMUR" />
+    ),
+    cell: ({ row }) => {
+      const { cycleStartDate, cycleEndDate } = row.original;
+      
+      if (!cycleStartDate) {
+        return <span>-</span>;
+      }
+
+      const start = new Date(cycleStartDate);
+      start.setHours(0, 0, 0, 0);
+
+      const end = cycleEndDate ? new Date(cycleEndDate) : new Date();
+      end.setHours(0, 0, 0, 0);
+
+      const diffTime = end.getTime() - start.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      return <span>{diffDays >= 0 ? diffDays : 0} hari</span>;
+    },
   },
   {
     accessorKey: "status_air",
@@ -212,7 +228,9 @@ export const columnsPool: ColumnDef<Pool>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn href={`/dashboard/pools/${row.original.id}/${row.original.cycleId}`} />
+          <ButtonDetailColumn
+            href={`/dashboard/pools/${row.original.id}/${row.original.cycleId}`}
+          />
           <Separator orientation="vertical" className="h-6" />
           <AssignPoolModal pool={row.original} />
           <Separator orientation="vertical" className="h-6" />

@@ -5,17 +5,29 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { ImagePopup } from "@/components/image-popup";
 import { MovePool } from "@/types/notes/move";
 import { formatDate } from "@/lib/utils/format-date";
-import { Finance } from "@/types/finance";
+import { Finance } from "@/types/finance/finance";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
+import { ButtonCopy } from "@/components/button-copy";
 
 export const columns: ColumnDef<Finance>[] = [
+    {
+      accessorKey: "id",
+      header: () => <span>ID TRANSAKSI</span>,
+      cell: ({ row }) => (
+        <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
+      ),
+    },
   {
-    accessorKey: "date",
+    accessorKey: "transactionDate",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="TANGGAL TRANSAKSI"
+      />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.date);
+      return formatDate(row.original.transactionDate);
     },
   },
   {
@@ -24,31 +36,46 @@ export const columns: ColumnDef<Finance>[] = [
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
     cell: ({ row }) => {
-      return row.original.type === "in" ? 
-      (<span className="text-green-500">Pemasukan</span>) : (<span className="text-red-500">Pengeluaran</span>);
+      return row.original.type === "in" ? (
+        <span className="text-green-500">Pemasukan</span>
+      ) : (
+        <span className="text-red-500">Pengeluaran</span>
+      );
     },
-  },
-  {
-    accessorKey: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="KATEGORI" />
-    ),
   },
   {
     accessorKey: "notes",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="CATATAN" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="CATATAN TRANSAKSI"
+      />
     ),
+    cell: ({ row }) =>
+      // Batas panjang teks catatan transaksi yang ditampilkan di tabel
+      row.original.notes.length > 50
+        ? `${row.original.notes.substring(0, 50)}...`
+        : row.original.notes,
   },
   {
-    accessorKey: "image",
-    header: () => <span>GAMBAR</span>,
-    cell: ({ row }) => (
-      <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
-    ),
+    accessorKey: "transactionSource",
+    header: () => <span>SUMBER TRANSAKSI</span>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "transactionType",
+    header: () => <span>TIPE TRANSAKSI</span>,
+  },
+  {
+    accessorKey: "productCategory",
+    header: () => <span>KATEGORI PRODUK</span>,
+  },
+  {
+    accessorKey: "product",
+    header: () => <span>PRODUK</span>,
+  },
+  {
+    accessorKey: "totalPrice",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL" />
     ),
@@ -63,17 +90,14 @@ export const columns: ColumnDef<Finance>[] = [
     },
   },
   {
-      id: "actions",
-      header: () => <span className="">Actions</span>,
-      cell: ({ row }) => {
-
-  
-        return (
-          <div className="flex items-center text-primary gap-0.5">
-            <ButtonDetailColumn href={`/dashboard/pools/${row.original.id}}`} />
-            
-          </div>
-        );
-      },
+    id: "actions",
+    header: () => <span className="">Actions</span>,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center text-primary gap-0.5">
+          <ButtonDetailColumn href={`/dashboard/pools/${row.original.id}}`} />
+        </div>
+      );
     },
+  },
 ];

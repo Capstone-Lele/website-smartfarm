@@ -49,6 +49,7 @@ import {
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
 import { InventorySubmission } from "@/types/inventory";
 import { LuPackage, LuUser, LuClipboardList, LuHash } from "react-icons/lu";
+import { useUpdateInventorySubmission } from "@/lib/api/service/inventory-submission/useInventorySubmission";
 
 // ─── Zod Schema ──────────────────────────────────────────────────────────────
 
@@ -85,14 +86,15 @@ const formSchema = z.object({
       z.undefined(),
     ]),
   ),
-  notesTransaction: z.string().optional(),
-  imageTransaction: z
+  transactionNotes: z.string().optional(),
+  image: z
     .any()
     .refine(
       (file) =>
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
     ),
+  feedback: z.string().optional(),
 });
 
 // ─── Status badge helper ──────────────────────────────────────────────────────
@@ -131,6 +133,8 @@ const EditSubmissionModal = ({
     string | null
   >(null);
   const fileInputRefTransaction = useRef<HTMLInputElement>(null);
+  const { mutateAsync: updateInventorySubmission } =
+    useUpdateInventorySubmission();
 
   const form = useForm({
     resolver: zodResolver(formSchema) as any,
@@ -140,8 +144,9 @@ const EditSubmissionModal = ({
       transactionDate: new Date(),
       pricePerItem: "" as any,
       totalPrice: "" as any,
-      notesTransaction: "",
-      imageTransaction: undefined,
+      transactionNotes: "",
+      image: undefined,
+      feedback: "",
     },
   });
 
@@ -190,15 +195,30 @@ const EditSubmissionModal = ({
       transactionDate: new Date(),
       pricePerItem: "" as any,
       totalPrice: "" as any,
-      notesTransaction: "",
-      imageTransaction: undefined,
+      transactionNotes: "",
+      image: undefined,
+      feedback: "",
     });
     setImageTransactionPreview(null);
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const rejectPayload = {
+      status: data.status,
+      feedback: data.feedback,
+    };
+
     try {
       console.log("Submit data:", data);
+      if (data.status === "approved") {
+        await updateInventorySubmission({ id: submission.id, data });
+      } else {
+        await updateInventorySubmission({
+          id: submission.id,
+          data: rejectPayload,
+        });
+      }
+
       toast.success("Pengajuan berhasil diperbarui");
       setIsOpen(false);
     } catch (error: any) {
@@ -214,7 +234,9 @@ const EditSubmissionModal = ({
       <SheetTrigger className="">
         <div className="flex items-center gap-2">
           <ButtonEditColumn />
-          <span className="text-xs font-semibold text-yellow-600">Perlu tindakan</span>
+          <span className="text-xs font-semibold text-yellow-600">
+            Perlu tindakan
+          </span>
         </div>
       </SheetTrigger>
       <SheetContent
@@ -243,64 +265,32 @@ const EditSubmissionModal = ({
               </span>
             </div>
             <Separator />
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <div className="flex items-start gap-2">
-                <LuPackage
-                  className="mt-0.5 text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <div>
-                  <dt className="text-xs text-muted-foreground">Produk</dt>
-                  <dd className="font-medium">{submission.product}</dd>
-                </div>
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-4 text-sm mt-4">
+              <div>
+                <dt className="text-xs text-muted-foreground">Produk</dt>
+                <dd className="font-medium">{submission.product}</dd>
               </div>
-              <div className="flex items-start gap-2">
-                <LuClipboardList
-                  className="mt-0.5 text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <div>
-                  <dt className="text-xs text-muted-foreground">Kategori</dt>
-                  <dd className="font-medium">{submission.category}</dd>
-                </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">Kategori</dt>
+                <dd className="font-medium">{submission.category}</dd>
               </div>
-              <div className="flex items-start gap-2">
-                <LuHash
-                  className="mt-0.5 text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <div>
-                  <dt className="text-xs text-muted-foreground">Jumlah</dt>
-                  <dd className="font-medium">
-                    {submission.quantity}{" "}
-                    <span className="text-muted-foreground">
-                      {submission.unit}
-                    </span>
-                  </dd>
-                </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">Jumlah</dt>
+                <dd className="font-medium">
+                  {submission.quantity}{" "}
+                  <span className="text-muted-foreground">
+                    {submission.unit}
+                  </span>
+                </dd>
               </div>
-              <div className="flex items-start gap-2">
-                <LuUser
-                  className="mt-0.5 text-muted-foreground shrink-0"
-                  size={14}
-                />
-                <div>
-                  <dt className="text-xs text-muted-foreground">
-                    Diajukan oleh
-                  </dt>
-                  <dd className="font-medium">{submission.user}</dd>
-                </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">Diajukan oleh</dt>
+                <dd className="font-medium">{submission.user}</dd>
               </div>
               {submission.notes && (
-                <div className="col-span-2 flex items-start gap-2">
-                  <LuClipboardList
-                    className="mt-0.5 text-muted-foreground shrink-0"
-                    size={14}
-                  />
-                  <div>
-                    <dt className="text-xs text-muted-foreground">Catatan</dt>
-                    <dd className="font-medium">{submission.notes}</dd>
-                  </div>
+                <div className="col-span-2">
+                  <dt className="text-xs text-muted-foreground">Catatan</dt>
+                  <dd className="font-medium">{submission.notes}</dd>
                 </div>
               )}
               <div className="col-span-2">
@@ -330,7 +320,9 @@ const EditSubmissionModal = ({
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field>
-                      <FieldLabel htmlFor="status">Ubah Status Pengajuan</FieldLabel>
+                      <FieldLabel htmlFor="status">
+                        Ubah Status Pengajuan
+                      </FieldLabel>
                       <Combobox
                         data={INVENTORY_SUBMISSION_STATUS}
                         onValueChange={field.onChange}
@@ -348,6 +340,43 @@ const EditSubmissionModal = ({
                   )}
                 />
 
+                {/* ── Conditional: Feedback Section ── */}
+                {(status === "rejected" || status === "approved") && (
+                  <Controller
+                    name="feedback"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="feedback">
+                          {status === "rejected"
+                            ? "Catatan / Alasan Penolakan"
+                            : "Catatan Tambahan / Feedback"}
+                        </FieldLabel>
+                        <Input
+                          id="feedback"
+                          autoComplete="off"
+                          placeholder={
+                            status === "rejected"
+                              ? "Masukkan alasan penolakan"
+                              : "Masukkan catatan tambahan (opsional)"
+                          }
+                          {...field}
+                          className="bg-white"
+                        />
+                        {fieldState.invalid ? (
+                          <FieldError errors={[fieldState.error]} />
+                        ) : (
+                          <FieldDescription>
+                            {status === "rejected"
+                              ? "Berikan alasan penolakan pengajuan ini."
+                              : "Berikan catatan atau feedback untuk pengajuan ini."}
+                          </FieldDescription>
+                        )}
+                      </Field>
+                    )}
+                  />
+                )}
+
                 {/* ── Conditional: Approved → Transaction Section ── */}
                 {isApproved && (
                   <div>
@@ -359,19 +388,19 @@ const EditSubmissionModal = ({
                         render={({ field, fieldState }) => (
                           <Field className="col-span-2">
                             <FieldLabel htmlFor="transactionType">
-                              Sumber Dana
+                              Tipe Transaksi
                             </FieldLabel>
                             <Combobox
                               data={INVENTORY_TRANSACTION_TYPE_OPTIONS}
                               onValueChange={field.onChange}
-                              name="Tipe Sumber Dana"
+                              name="Tipe Tipe Transaksi"
                               selectedValue={field.value ?? "non-grant"}
                             />
                             {fieldState.invalid ? (
                               <FieldError errors={[fieldState.error]} />
                             ) : (
                               <FieldDescription>
-                                Sumber dana transaksi.
+                                Tipe Transaksi transaksi.
                               </FieldDescription>
                             )}
                           </Field>
@@ -487,7 +516,7 @@ const EditSubmissionModal = ({
                                 id="pricePerItem"
                                 type="number"
                                 min={0}
-                                step={100}
+                                step={1}
                                 placeholder="Contoh: 50000"
                                 {...field}
                               />
@@ -524,7 +553,7 @@ const EditSubmissionModal = ({
                                 id="totalPrice"
                                 type="number"
                                 min={0}
-                                step={100}
+                                step={1}
                                 placeholder="Dihitung otomatis"
                                 {...field}
                                 disabled
@@ -542,102 +571,104 @@ const EditSubmissionModal = ({
                       />
 
                       {/* Non-grant extras */}
-                      {isNonGrant && (
-                        <>
-                          <Controller
-                            name="notesTransaction"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                              <Field>
-                                <FieldLabel htmlFor="notesTransaction">
-                                  Catatan Transaksi{" "}
-                                  <span className="text-muted-foreground font-normal">
-                                    (Opsional)
-                                  </span>
-                                </FieldLabel>
-                                <Input
-                                  id="notesTransaction"
-                                  autoComplete="off"
-                                  placeholder="Contoh: Dibeli dari toko ABC, No. faktur 123"
-                                  {...field}
-                                  className="bg-white"
-                                />
-                                {fieldState.invalid ? (
-                                  <FieldError errors={[fieldState.error]} />
-                                ) : (
-                                  <FieldDescription>
-                                    Catatan detail transaksi pembelian.
-                                  </FieldDescription>
-                                )}
-                              </Field>
+                      <Controller
+                        name="transactionNotes"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field>
+                            <FieldLabel htmlFor="transactionNotes">
+                              Catatan Transaksi
+                            </FieldLabel>
+                            <Input
+                              id="notesTransaction"
+                              autoComplete="off"
+                              placeholder={
+                                isNonGrant
+                                  ? "Contoh: Dibeli dari toko ABC, No. faktur 123"
+                                  : "Contoh: Bantuan dari pemerintah"
+                              }
+                              {...field}
+                              className="bg-white"
+                            />
+                            {fieldState.invalid ? (
+                              <FieldError errors={[fieldState.error]} />
+                            ) : (
+                              <FieldDescription>
+                                {isNonGrant
+                                  ? "Catatan detail transaksi pembelian."
+                                  : "Catatan detail penerimaan bantuan."}
+                              </FieldDescription>
                             )}
-                          />
+                          </Field>
+                        )}
+                      />
 
-                          <Controller
-                            name="imageTransaction"
-                            control={form.control}
-                            render={({
-                              field: { onChange, value, ref: _ref, ...rest },
-                              fieldState,
-                            }) => (
-                              <Field>
-                                <FieldLabel htmlFor="imageTransaction">
-                                  Foto Bukti Transaksi / Nota
-                                </FieldLabel>
-                                <div
-                                  className="border-2 bg-white border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                                  onClick={() =>
-                                    fileInputRefTransaction.current?.click()
-                                  }
-                                >
-                                  {imageTransactionPreview ? (
-                                    <img
-                                      src={imageTransactionPreview}
-                                      alt="Preview"
-                                      className="max-h-36 rounded object-contain"
-                                    />
-                                  ) : (
-                                    <>
-                                      <LuUpload
-                                        size={24}
-                                        className="text-muted-foreground"
-                                      />
-                                      <span className="text-sm text-muted-foreground">
-                                        Klik untuk upload gambar
-                                      </span>
-                                    </>
-                                  )}
-                                </div>
-                                <input
-                                  ref={fileInputRefTransaction}
-                                  id="imageTransaction"
-                                  type="file"
-                                  accept="image/jpeg,image/png,image/jpg"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      onChange(file);
-                                      setImageTransactionPreview(
-                                        URL.createObjectURL(file),
-                                      );
-                                    }
-                                  }}
-                                  {...rest}
+                      <Controller
+                        name="image"
+                        control={form.control}
+                        render={({
+                          field: { onChange, value, ref: _ref, ...rest },
+                          fieldState,
+                        }) => (
+                          <Field>
+                            <FieldLabel htmlFor="image">
+                              {isNonGrant
+                                ? "Foto Bukti Transaksi / Nota"
+                                : "Foto Bukti Serah Terima"}
+                            </FieldLabel>
+                            <div
+                              className="border-2 bg-white border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                              onClick={() =>
+                                fileInputRefTransaction.current?.click()
+                              }
+                            >
+                              {imageTransactionPreview ? (
+                                <img
+                                  src={imageTransactionPreview}
+                                  alt="Preview"
+                                  className="max-h-36 rounded object-contain"
                                 />
-                                {fieldState.invalid ? (
-                                  <FieldError errors={[fieldState.error]} />
-                                ) : (
-                                  <FieldDescription>
-                                    Upload foto nota atau bukti pembelian
-                                    (JPG/PNG).
-                                  </FieldDescription>
-                                )}
-                              </Field>
+                              ) : (
+                                <>
+                                  <LuUpload
+                                    size={24}
+                                    className="text-muted-foreground"
+                                  />
+                                  <span className="text-sm text-muted-foreground">
+                                    Klik untuk upload gambar
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <input
+                              ref={fileInputRefTransaction}
+                              id="imageTransaction"
+                              type="file"
+                              accept="image/jpeg,image/png,image/jpg"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  onChange(file);
+                                  setImageTransactionPreview(
+                                    URL.createObjectURL(file),
+                                  );
+                                }
+                              }}
+                              {...rest}
+                            />
+                            {fieldState.invalid ? (
+                              <FieldError errors={[fieldState.error]} />
+                            ) : (
+                              <FieldDescription>
+                                {isNonGrant
+                                  ? "Upload foto nota atau bukti pembelian (JPG/PNG)."
+                                  : "Upload foto bukti serah terima hibah (JPG/PNG)."}
+                              </FieldDescription>
                             )}
-                          />
-                        </>
-                      )}
+                          </Field>
+                        )}
+                      />
                     </div>
                   </div>
                 )}

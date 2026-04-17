@@ -2,10 +2,25 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { InventoryDetail } from "@/types/inventory";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { INVENTORY_TRANSACTION_TYPE_OPTIONS, INVENTORY_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
+import {
+  INVENTORY_TRANSACTION_TYPE_OPTIONS,
+  INVENTORY_TYPE_OPTIONS,
+} from "@/lib/constants/type-inventory";
 import { formatDate } from "@/lib/utils/format-date";
+import { formatRupiah } from "@/lib/utils/format-rupiah";
+import ButtonDetailColumn from "@/components/button-column/button-detail-column";
+import { use } from "react";
+import { useParams } from "next/navigation";
+import { ButtonCopy } from "@/components/button-copy";
 
 export const columns: ColumnDef<InventoryDetail>[] = [
+  {
+    accessorKey: "id",
+    header: () => <span>ID CATATAN</span>,
+    cell: ({ row }) => (
+      <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
+    ),
+  },
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
@@ -20,6 +35,21 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NOTES" />
     ),
+    cell: ({ row }) => {
+      const notes = row.original.notes;
+      // limit to 20 characters
+      return (
+        <div>
+          {notes ? (
+            <div>
+              {notes.length > 20 ? `${notes.substring(0, 20)}...` : notes}
+            </div>
+          ) : (
+            "-"
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "type",
@@ -28,17 +58,15 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     ),
     cell: ({ row }) => {
       const type = row.original.type;
-         const option = INVENTORY_TYPE_OPTIONS.find(
-        (opt) => opt.value === type,
-      );
+      const option = INVENTORY_TYPE_OPTIONS.find((opt) => opt.value === type);
       return (
         <span
-          className={`font-medium ${
+          className={` ${
             type === "in"
               ? "text-green-600 bg-green-100 px-2 py-1 rounded-full"
               : type === "out"
-              ? "text-destructive bg-red-100 px-2 py-1 rounded-full"
-              : ""
+                ? "text-destructive bg-red-100 px-2 py-1 rounded-full"
+                : ""
           }`}
         >
           {option ? option.label : type || "-"}
@@ -49,43 +77,71 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   {
     accessorKey: "transactionType",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="SUMBER DANA" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="TIPE TRANSAKSI"
+      />
     ),
     cell: ({ row }) => {
       const transactionType = row.original.transactionType;
       const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
         (opt) => opt.value === transactionType,
       );
-      return (
-        <Badge variant="outline">
-          {option ? option.label : transactionType || "-"}
-        </Badge>
-      );
+      return <div>{option ? option.label : transactionType || "-"}</div>;
     },
   },
   {
     accessorKey: "category",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="KATEGORI" />
+      <DataTableColumnHeader className="" column={column} title="DARI" />
     ),
   },
   {
     accessorKey: "quantity",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="KUANTITAS (KG)" />
+      <DataTableColumnHeader className="" column={column} title="KUANTITAS" />
+    ),
+  },
+  {
+    accessorKey: "pricePerItem",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="HARGA PER ITEM"
+      />
     ),
     cell: ({ row }) => {
-      const type = row.original.type;
-      const quantity = row.original.quantity;
-      
+      // jika transactionType adalah grant maka tambahi text (perkiraan)
+      if (row.original.transactionType === "grant") {
+        return (
+          <div>
+            {formatRupiah(
+              row.original.pricePerItem ? Number(row.original.pricePerItem) : 0,
+            )}
+            <span className="text-xs text-muted-foreground ml-2">
+              (perkiraan)
+            </span>
+          </div>
+        );
+      }
+      return row.original.pricePerItem !== null
+        ? formatRupiah(Number(row.original.pricePerItem))
+        : "-";
+    },
+  },
+  {
+    id: "actions",
+    header: () => <span className="">Actions</span>,
+    cell: ({ row }) => {
+      const { id } = useParams();
       return (
-        <span
-          className={`font-semibold ${
-            type === "in" ? "text-green-500" : type === "out" ? "text-destructive" : ""
-          }`}
-        >
-          {quantity}
-        </span>
+        <div className="flex items-center text-primary gap-0.5">
+          <ButtonDetailColumn
+            href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.original.id}&&source=${row.original.source}`}
+          />
+        </div>
       );
     },
   },

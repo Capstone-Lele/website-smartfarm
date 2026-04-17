@@ -16,6 +16,8 @@ import MortalityTable from "./_mortality/table";
 import { MortalityBarChart } from "./_mortality/chart";
 import FeedingTable from "./_feeding/table";
 import { FeedingLineChart } from "./_feeding/chart";
+import MovePoolTable from "./_move-pool/table";
+import { MovePoolBarChart } from "./_move-pool/chart";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
 // Dummy data for the view
@@ -327,6 +329,37 @@ const CycleDetailPage = () => {
                     cycleId={cycleId}
                     cycleStartDate={cycleData.startDate}
                   />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DefaultCard>
+
+        {/* Row 6: Catatan Pemindahan Kolam */}
+        <DefaultCard className="px-0">
+          <Tabs defaultValue="grafik" className="gap-0">
+            <div className="border-b px-6 pb-4 flex items-center justify-between">
+              <h3 className="text-base font-bold">Catatan Pemindahan Kolam</h3>
+              <TabsList>
+                <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                <TabsTrigger value="tabel">Tabel</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="grafik" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId ? (
+                  <MovePoolBarChart cycleId={cycleId} />
+                ) : (
+                  <p>Data tidak tersedia</p>
+                )}
+              </div>
+            </TabsContent>
+            <TabsContent value="tabel" className="mt-0">
+              <div className="px-6 pt-6 pb-6">
+                {cycleId ? (
+                  <MovePoolTable cycleId={cycleId} />
                 ) : (
                   <p>Data tidak tersedia</p>
                 )}

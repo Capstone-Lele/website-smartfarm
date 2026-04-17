@@ -3,6 +3,7 @@ export type Pool = {
   acidityMin?: string | null;
   category: string;
   createdAt?: string | null;
+  cycleEndDate?: string | null;
   cycle?: null | string;
   cycleId: string;
   deletedAt?: null | string;
@@ -11,6 +12,9 @@ export type Pool = {
   id: string;
   length?: string | null;
   name: string;
+  cycleStartDate?: string | null;
+  mortality?: number | null;
+  movedQuantity?: number | null;
   currentQuantity?: number | null;
   temperatureMax?: string | null;
   temperatureMin?: string | null;

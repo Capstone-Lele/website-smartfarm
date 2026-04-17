@@ -1,0 +1,32 @@
+export const FINANCE_INVENTORY_DUMMY_DATA= [
+  {
+    id: "FIN-011",
+    date: "2026-03-01T10:00:00Z",
+    type: "out",
+    categoryProduct: "Pakan",
+    transactionSource: "Inventaris",
+    notes: "Pembelian pakan untuk kebutuhan 1 bulan",
+    transactionType: "Non-Hibah (non-grant)",
+    product: "Pakan AT15",
+    unit: "Kg",
+    quantity: "1000",
+    price_per_unit: 3500,
+    total_price: 15000000,
+    createdAt: "2026-03-01T10:05:00Z",
+  },
+  {
+    id: "FIN-012",
+    date: "2026-03-05T08:30:00Z",
+    type: "out",
+    categoryProduct: "Vitamin",
+    transactionSource: "Inventaris",
+    notes: "Pembelian vitamin untuk kebutuhan 1 bulan",
+    transactionType: "Hibah (grant)",
+    product: "Vitamin A",
+    unit: "Liter",
+    quantity: "1000",
+    price_per_unit: 3500 + " (harga perkiraan)",
+    total_price: 15000000,
+    createdAt: "2026-03-05T08:35:00Z",
+  }
+];

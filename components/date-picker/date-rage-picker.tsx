@@ -21,14 +21,16 @@ export function DatePickerWithRange({
   placeholder,
   resetValues,
   hideLabel,
+  initialDate,
 }: {
   onValueChange?: (startDate?: Date | null, endDate?: Date | null) => void;
   label?: string;
   placeholder?: string;
   resetValues?: number;
   hideLabel?: boolean;
+  initialDate?: DateRange;
 }) {
-  const [date, setDate] = useState<DateRange | undefined>();
+  const [date, setDate] = useState<DateRange | undefined>(initialDate);
 
   useEffect(() => {
     if (onValueChange) {
@@ -58,14 +60,14 @@ export function DatePickerWithRange({
 
   useEffect(() => {
     if (resetValues !== undefined && resetValues > 0) {
-      setDate(undefined);
+      setDate(initialDate);
     }
-  }, [resetValues]);
+  }, [resetValues, initialDate]);
 
   return (
     <Field className="w-full ">
       {!hideLabel && (
-        <FieldLabel htmlFor="date-picker-range" className="mt-[-2]">
+        <FieldLabel htmlFor="date-picker-range" className="mb-px">
           {label ?? "Date Picker Range"}
         </FieldLabel>
       )}

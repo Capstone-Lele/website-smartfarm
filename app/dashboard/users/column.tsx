@@ -16,26 +16,7 @@ import { formatDate } from "@/lib/utils/format-date";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 
 export const columnsUser: ColumnDef<User>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
+ 
   {
     accessorKey: "image",
     header: () => <span>GAMBAR</span>,

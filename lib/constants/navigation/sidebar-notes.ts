@@ -3,14 +3,14 @@ export const REPORT_SIDEBAR_ITEMS = [
     title: "Laporan",
     type: "title",
   },
-  {
-    title: "Harian",
-    href: "/dashboard/reports",
-    type: "menu",
-  },
+  // {
+  //   title: "Harian",
+  //   href: "/dashboard/reports",
+  //   type: "menu",
+  // },
   {
     title: "Pakan",
-    href: "/dashboard/reports/feeding",
+    href: "/dashboard/reports",
     type: "menu",
   },
   {

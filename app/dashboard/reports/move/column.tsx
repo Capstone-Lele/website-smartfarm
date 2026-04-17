@@ -34,7 +34,7 @@ export const columns: ColumnDef<MovePool>[] = [
     },
   },
   {
-    accessorKey: "startDate",
+    accessorKey: "originStartDate",
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -43,7 +43,7 @@ export const columns: ColumnDef<MovePool>[] = [
       />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.startDate);
+      return formatDate(row.original.originStartDate);
     },
   },
   {
@@ -66,6 +66,19 @@ export const columns: ColumnDef<MovePool>[] = [
           </span>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "destinationStartDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="SIKLUS KOLAM TUJUAN"
+      />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.destinationStartDate);
     },
   },
   {

@@ -1,44 +1,124 @@
+"use client";
 import CardStatistic from "@/components/card/card-statistic";
-import React from "react";
+import DefaultCard from "@/components/card/default-card";
+import { DataTable } from "@/components/data-table/data-table";
+import TableSkeleton from "@/components/sekeleton/table-skeleton";
+import React, { useState, useMemo } from "react";
 import { FaFish, FaWater } from "react-icons/fa";
-import { FiShield } from "react-icons/fi";
 import { IoFish } from "react-icons/io5";
+import { columns } from "./column";
+import PostSellCommodity from "./post";
+import { useCommodity } from "@/lib/api/service/commodity/useCommodity";
+import { TableFacetedFilter } from "@/types/table-faceted-filter";
+import { INVENTORY_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
+import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
+
+const tableFilter: TableFacetedFilter = [
+  {
+    column: "type",
+    option: INVENTORY_TYPE_OPTIONS.map((status) => ({
+      label: status.label,
+      value: status.value,
+    })),
+  },
+];
 
 const page = () => {
+  const { data, isLoading } = useCommodity();
+
+  const [dateRange, setDateRange] = useState<{
+    start: Date | null;
+    end: Date | null;
+  }>({ start: null, end: null });
+
+  const filteredCommodities = useMemo(() => {
+    const all = data?.data || [];
+    if (!dateRange.start && !dateRange.end) return all;
+    return all.filter((item) => {
+      const itemDate = new Date(item.date).getTime();
+      if (dateRange.start && dateRange.end) {
+        return (
+          itemDate >= dateRange.start.getTime() &&
+          itemDate <= dateRange.end.getTime()
+        );
+      }
+      if (dateRange.start) return itemDate >= dateRange.start.getTime();
+      if (dateRange.end) return itemDate <= dateRange.end.getTime();
+      return true;
+    });
+  }, [data, dateRange]);
+
+  const totalMasuk = filteredCommodities
+    .filter((item) => item.type === "in")
+    .reduce((sum, item) => sum + Number(item.quantity), 0);
+
+  const totalKeluar = filteredCommodities
+    .filter((item) => item.type === "out")
+    .reduce((sum, item) => sum + Math.abs(Number(item.quantity)), 0);
+
+  const totalStock = totalMasuk - totalKeluar;
 
   const cardData = [
-      {
-        title: "Total Stock Ikan",
-        value: "1000",
-        icon: <FaWater />,
-      },
-      {
-        title: "Ikan Keluar",
-        value: "1000",
-        icon: <IoFish />,
-      },
-      {
-        title: "Ikan Masuk",
-        value: "1000",
-        icon: <FaFish />,
-      },
-
-    ];
+    {
+      title: "Total Stock Ikan",
+      value: `${totalStock.toLocaleString("id-ID")} ekor`,
+      icon: <FaWater />,
+    },
+    {
+      title: "Ikan Keluar",
+      value: `${totalKeluar.toLocaleString("id-ID")} ekor`,
+      icon: <IoFish className="text-red-500" />,
+    },
+    {
+      title: "Ikan Masuk",
+      value: `${totalMasuk.toLocaleString("id-ID")} ekor`,
+      icon: <FaFish className="text-emerald-500" />,
+    },
+  ];
 
   return (
     <div className="">
-      <>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4 w-full">
-          {cardData.map((card, index) => (
-            <CardStatistic
-              key={index}
-              icon={card.icon}
-              title={card.title}
-              value={card.value}
-            />
-          ))}
+      <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4 mt-2">
+        <h1 className="text-2xl font-semibold">Komoditas</h1>
+        <div className="w-full md:w-72">
+          <DatePickerWithRange
+            label="Pilih Rentang Waktu"
+            onValueChange={(start, end) =>
+              setDateRange({ start: start ?? null, end: end ?? null })
+            }
+          />
         </div>
-      </>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4 w-full">
+        {cardData.map((card, index) => (
+          <CardStatistic
+            key={index}
+            icon={card.icon}
+            title={card.title}
+            value={card.value}
+          />
+        ))}
+      </div>
+
+      <DefaultCard>
+        <div className="w-full">
+          {isLoading ? (
+            <TableSkeleton />
+          ) : (
+            <div>
+              <div className="flex justify-end mb-4">
+                <PostSellCommodity />
+              </div>
+              <DataTable
+                columns={columns}
+                data={filteredCommodities}
+                facetedFilter={tableFilter}
+              />
+            </div>
+          )}
+        </div>
+      </DefaultCard>
     </div>
   );
 };

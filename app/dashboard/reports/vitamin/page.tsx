@@ -14,6 +14,8 @@ import { SelectCombobox } from "@/components/combobox/select";
 import ComboboxMultiple from "@/components/combobox/multibple";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { formatDate } from "@/lib/utils/format-date";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FeedingOverview } from "./_components/feeding-overview";
 
 const page = () => {
   const { data, isLoading, error } = useListVitamin();
@@ -163,15 +165,30 @@ const page = () => {
             </div>
           )}
         </DefaultCard>
-        <DefaultCard>
-          <div className="w-full">
-            {isLoading ? (
-              <TableSkeleton />
-            ) : (
-              <DataTable columns={columns} data={filteredData} />
+        <Tabs defaultValue="visualisasi" className="w-full">
+          <TabsList className="mb-2">
+            <TabsTrigger value="visualisasi">Ringkasan & Grafik</TabsTrigger>
+            <TabsTrigger value="tabel">Data Tabel</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="visualisasi">
+            {!isLoading && !isLoadingPool && !isLoadingUsers && (
+              <FeedingOverview data={filteredData} />
             )}
-          </div>
-        </DefaultCard>
+          </TabsContent>
+
+          <TabsContent value="tabel">
+            <DefaultCard>
+              <div className="w-full">
+                {isLoading ? (
+                  <TableSkeleton />
+                ) : (
+                  <DataTable columns={columns} data={filteredData} />
+                )}
+              </div>
+            </DefaultCard>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

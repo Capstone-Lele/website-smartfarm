@@ -1,11 +1,12 @@
 export type Vitamin = {
   vitaminName: string;
- poolName: string;
+  poolName: string;
   poolCategory: string;
   startDate: string;
   unit: string;
   id: string;
   cycleId: string;
+  cycleStartDate: string;
   userId: string;
   user: string;
   inventoryId: string;

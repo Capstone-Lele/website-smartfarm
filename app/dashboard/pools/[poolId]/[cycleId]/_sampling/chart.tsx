@@ -22,7 +22,7 @@ import TableSkeleton from "@/components/sekeleton/table-skeleton";
 
 export const description = "A line chart with a label";
 
-const HARVEST_TARGET_GRAM = 750;
+const HARVEST_TARGET_GRAM = 350;
 const MIN_PREDICTION_POINTS = 3;
 const MAX_PREDICTION_POINTS = 20;
 

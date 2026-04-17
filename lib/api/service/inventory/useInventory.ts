@@ -1,4 +1,4 @@
-import { InventoryResponse } from "@/types/inventory";
+import { InventoryResponse, InventoryResponseParamConsumption, InventoryResponseParamConsumptionData, InventoryResponseParamNote, InventoryResponseParamNoteData, InventoryResponseParamSubmission, InventoryResponseParamSubmissionData } from "@/types/inventory";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { inventoryService } from "./inventory.service";
 
@@ -18,6 +18,20 @@ export const useCreateInventory = () => {
     mutationKey: ["createInventory"],
     mutationFn: async (data: any) => {
       const response = await inventoryService.create(data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getInventory"] });
+    },
+  });
+};
+
+export const useUpdateInventory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["updateInventory"],
+    mutationFn: async ({ id, data }: { id: string; data: any }) => {
+      const response = await inventoryService.update(id, data);
       return response;
     },
     onSuccess: () => {
@@ -53,3 +67,52 @@ export const useDeleteInventory = () => {
 //     },
 //   });
 // };
+
+export const useGetInventoryNotesByIdWithParams = (id: string, params: Record<string, string>) => {
+  return useQuery<InventoryResponseParamNoteData>({
+    queryKey: ["getInventoryNotesByIdWithParams", id, params],
+    queryFn: async () => {
+      const response = await inventoryService.getByIdParamNote(id, params);
+      return response;
+    },
+  });
+};
+
+export const useGetInventorySubmissionByIdWithParams = (id: string, params: Record<string, string>) => {
+  return useQuery<InventoryResponseParamSubmissionData>({
+    queryKey: ["getInventorySubmissionByIdWithParams", id, params],
+    queryFn: async () => {
+      const response = await inventoryService.getByIdParamSubmission(id, params);
+      return response;
+    },
+  });
+};
+
+export const useGetInventoryConsumptionByIdWithParams = (id: string, params: Record<string, string>) => {
+  return useQuery<InventoryResponseParamConsumptionData>({
+    queryKey: ["getInventoryConsumptionByIdWithParams", id, params],
+    queryFn: async () => {
+      const response = await inventoryService.getByIdParamConsumption(id, params);
+      return response;
+    },
+  });
+
+};
+  // Post Transaction
+export const usePostInventoryTransaction = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["postInventoryTransaction"],
+    mutationFn: async (data: any) => {
+      const response = await inventoryService.postTransaction(data);
+      return response;
+    },
+    onSuccess: () => {
+      // refresh data inventory setelah transaksi berhasil dilakukan
+      queryClient.invalidateQueries({ queryKey: ["getInventoryNotesByIdWithParams"] });
+      queryClient.invalidateQueries({ queryKey: ["getInventorySubmissionByIdWithParams"] });
+      queryClient.invalidateQueries({ queryKey: ["getInventoryConsumptionByIdWithParams"] });
+      queryClient.invalidateQueries({ queryKey: ["getInventory"] });
+    },
+  });
+}

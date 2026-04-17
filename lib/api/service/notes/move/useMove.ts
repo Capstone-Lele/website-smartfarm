@@ -22,3 +22,14 @@ export const useMoveById = (id: string) => {
     enabled: !!id,
   });
 };
+
+export const useListMoveWithParams = (params: Record<string, string>) => {
+  const query = useQuery({
+    queryKey: ["moveNotes", params],
+    queryFn: async () => {
+      const response = await moveService.getAllWithParams(params);
+      return response;
+    },
+  });
+  return query;
+};

@@ -40,19 +40,11 @@ import { Product } from "@/types/master-data/product.types";
 const formSchema = z
   .object({
     productId: z.string().min(1, { message: "Produk wajib dipilih" }),
-    totalQuantity: z.coerce
-      .number()
-      .int({ message: "Jumlah stok harus berupa bilangan bulat" })
-      .min(0, { message: "Jumlah stok tidak boleh negatif" }),
     minQuantity: z.coerce
       .number()
       .int({ message: "Stok minimum harus berupa bilangan bulat" })
       .min(0, { message: "Stok minimum tidak boleh negatif" }),
   })
-  .refine((data) => data.totalQuantity >= data.minQuantity, {
-    message: "Jumlah stok harus lebih besar atau sama dengan stok minimum",
-    path: ["totalQuantity"],
-  });
 
 const PostInventoryModal = () => {
   const inventoryMutation = useCreateInventory();
@@ -64,7 +56,6 @@ const PostInventoryModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productId: "",
-      totalQuantity: "" as any,
       minQuantity: "" as any,
     },
   });
@@ -77,7 +68,13 @@ const PostInventoryModal = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await inventoryMutation.mutateAsync(data);
+      // menyisipkan totalQuantity dengan nilai 0
+      const dataWithTotalQuantity = {
+        ...data,
+        totalQuantity: 0,
+      };
+
+      await inventoryMutation.mutateAsync(dataWithTotalQuantity);
       form.reset();
       toast.success("Inventaris berhasil ditambahkan");
       setIsOpen(false);
@@ -131,42 +128,6 @@ const PostInventoryModal = () => {
                       ) : (
                         <FieldDescription>
                           Pilih produk yang akan ditambahkan ke inventaris.
-                        </FieldDescription>
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="totalQuantity"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field>
-                      <FieldLabel htmlFor="totalQuantity">
-                        Jumlah Stok
-                      </FieldLabel>
-                      <InputGroup>
-                        <InputGroupInput
-                          id="totalQuantity"
-                          type="number"
-                          placeholder="Contoh: 100"
-                          autoComplete="off"
-                          {...field}
-                        />
-                        <InputGroupAddon align={"inline-end"}>
-                          <Separator orientation="vertical" className="h-6" />{" "}
-                          {productUnits && (
-                            <span className="text-sm text-gray-500">
-                              {productUnits}
-                            </span>
-                          )}
-                        </InputGroupAddon>
-                      </InputGroup>
-                      {fieldState.invalid ? (
-                        <FieldError errors={[fieldState.error]} />
-                      ) : (
-                        <FieldDescription>
-                          Masukkan jumlah stok saat ini.
                         </FieldDescription>
                       )}
                     </Field>

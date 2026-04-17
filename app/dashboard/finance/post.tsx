@@ -43,9 +43,16 @@ import {
 import { cn } from "@/lib/utils";
 import { Combobox } from "@/components/combobox";
 import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct";
+import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
+import { usePostNonInventory } from "@/lib/api/service/finance/useFinance";
+
+const TRANSACTION_IN_OUT_OPTIONS = [
+  { label: "Pemasukan", value: "in" },
+  { label: "Pengeluaran", value: "out" },
+];
 
 const formSchema = z.object({
-  product: z.string().min(1, { message: "Nama produk wajib dipilih" }),
+  productId: z.string().min(1, { message: "Nama produk wajib dipilih" }),
   quantity: z
     .string()
     .min(1, { message: "Jumlah wajib diisi" })
@@ -73,6 +80,10 @@ const formSchema = z.object({
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
     ),
+  type: z.enum(["in", "out"], { message: "Tipe transaksi wajib dipilih" }),
+  transactionType: z.enum(["grant", "non-grant"], {
+    message: "Tipe transaksi harus dipilih",
+  }),
 });
 
 const PostFinance = () => {
@@ -80,28 +91,53 @@ const PostFinance = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const productOptions =
-    productsData?.data?.map((product: any) => ({
-      label: product.name,
-      value: product.id,
-    })) || [];
+  const nonInventoryMutation = usePostNonInventory();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      product: "",
+      productId: "",
       quantity: "",
       pricePerItem: "",
       totalPrice: "",
       notes: "",
       transactionDate: new Date(),
       image: undefined,
+      type: "in",
+      transactionType: "non-grant",
     },
   });
 
+  const inOut = useWatch({ control: form.control, name: "type" });
   const quantity = useWatch({ control: form.control, name: "quantity" });
-  const pricePerItem = useWatch({ control: form.control, name: "pricePerItem" });
+  const transactionType = useWatch({
+    control: form.control,
+    name: "transactionType",
+  });
+  const pricePerItem = useWatch({
+    control: form.control,
+    name: "pricePerItem",
+  });
+
+  const productOptions =
+    productsData?.data
+      ?.filter((product: any) => {
+        if (inOut === "in") {
+          return (
+            product.type !== "inventory" &&
+            product.category.toLowerCase() === "pendanaan"
+          );
+        } else {
+          return (
+            product.type !== "inventory" &&
+            product.category.toLowerCase() !== "pendanaan"
+          );
+        }
+      })
+      .map((product: any) => ({
+        label: product.name,
+        value: product.id,
+      })) || [];
 
   useEffect(() => {
     const qty = Number(quantity);
@@ -129,6 +165,18 @@ const PostFinance = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
+      const payload = {
+        productId: data.productId,
+        quantity: Number(data.quantity),
+        pricePerItem: Number(data.pricePerItem),
+        totalPrice: Number(data.totalPrice),
+        notes: data.notes,
+        transactionDate: data.transactionDate.toISOString(),
+        image: data.image,
+        type: data.type,
+        transactionType: data.transactionType,
+      }
+      nonInventoryMutation.mutateAsync(payload)
       console.log("Submit data:", data);
       form.reset();
       setImagePreview(null);
@@ -151,11 +199,11 @@ const PostFinance = () => {
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger className="cursor-pointer inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <FiPlusCircle />
-        Tambah Data
+        Catatan Non-Inventaris
       </SheetTrigger>
       <SheetContent className="sm:max-w-2xl h-screen overflow-auto">
         <SheetHeader className="border-b pb-4 mb-4">
-          <SheetTitle>Tambah Data Keuangan</SheetTitle>
+          <SheetTitle>Tambah Catatan Keuangan Non-Inventaris</SheetTitle>
           <SheetDescription>
             Isi form di bawah ini untuk mencatat data keuangan baru.
           </SheetDescription>
@@ -165,7 +213,57 @@ const PostFinance = () => {
             <FieldSet>
               <FieldGroup>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-4">
-                  
+                  <Controller
+                    name="type"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field className="col-span-1">
+                        <FieldLabel htmlFor="type">
+                          Pemasukan / Pengeluaran
+                        </FieldLabel>
+                        <Combobox
+                          data={TRANSACTION_IN_OUT_OPTIONS}
+                          onValueChange={field.onChange}
+                          name="Jenis Transaksi"
+                          selectedValue={field.value}
+                        />
+                        {fieldState.invalid ? (
+                          <FieldError errors={[fieldState.error]} />
+                        ) : (
+                          <FieldDescription>
+                            Tentukan arah arus dana.
+                          </FieldDescription>
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    name="productId"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="productId">
+                          Produk / Kategori (Non-Inventaris)
+                        </FieldLabel>
+                        <Combobox
+                          data={productOptions}
+                          onValueChange={field.onChange}
+                          name="Produk"
+                          selectedValue={field.value}
+                          isLoading={isLoadingProducts}
+                        />
+                        {fieldState.invalid ? (
+                          <FieldError errors={[fieldState.error]} />
+                        ) : (
+                          <FieldDescription>
+                            Masukan produk atau jenis transaksi.
+                          </FieldDescription>
+                        )}
+                      </Field>
+                    )}
+                  />
+
                   <Controller
                     name="transactionDate"
                     control={form.control}
@@ -217,25 +315,31 @@ const PostFinance = () => {
                   />
 
                   <Controller
-                    name="product"
+                    name="transactionType"
                     control={form.control}
                     render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="product">
-                          Produk / Kategori (Non-Inventaris)
+                      <Field className="col-span-1">
+                        <FieldLabel htmlFor="transactionType">
+                          Tipe Transaksi (Grant / Non-Grant)
                         </FieldLabel>
                         <Combobox
-                          data={productOptions}
+                          data={INVENTORY_TRANSACTION_TYPE_OPTIONS.filter(
+                            (item: any) => {
+                              if (inOut === "in") {
+                                return item.value !== "grant";
+                              }
+                              return item;
+                            },
+                          )}
                           onValueChange={field.onChange}
-                          name="Produk"
+                          name="Tipe Transaksi"
                           selectedValue={field.value}
-                          isLoading={isLoadingProducts}
                         />
                         {fieldState.invalid ? (
                           <FieldError errors={[fieldState.error]} />
                         ) : (
                           <FieldDescription>
-                            Masukan produk atau jenis transaksi.
+                            Tipe dana transaksi.
                           </FieldDescription>
                         )}
                       </Field>
@@ -274,18 +378,21 @@ const PostFinance = () => {
                     render={({ field, fieldState }) => (
                       <Field>
                         <FieldLabel htmlFor="pricePerItem">
-                          Harga Per Item
+                          Harga Per Unit
                         </FieldLabel>
                         <InputGroup>
                           <InputGroupAddon align="inline-start">
                             Rp
-                            <Separator orientation="vertical" className="h-6 mx-2" />
+                            <Separator
+                              orientation="vertical"
+                              className="h-6 mx-2"
+                            />
                           </InputGroupAddon>
                           <InputGroupInput
                             id="pricePerItem"
                             type="number"
-                            min={0}
-                            step={100}
+                            min={1}
+                            step={1}
                             placeholder="Contoh: 50000"
                             {...field}
                           />
@@ -293,7 +400,9 @@ const PostFinance = () => {
                         {fieldState.invalid ? (
                           <FieldError errors={[fieldState.error]} />
                         ) : (
-                          <FieldDescription>Harga satuan barang.</FieldDescription>
+                          <FieldDescription>
+                            Harga unit produk.
+                          </FieldDescription>
                         )}
                       </Field>
                     )}
@@ -305,11 +414,16 @@ const PostFinance = () => {
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field>
-                        <FieldLabel htmlFor="totalPrice">Total Harga</FieldLabel>
+                        <FieldLabel htmlFor="totalPrice">
+                          Total Harga
+                        </FieldLabel>
                         <InputGroup>
                           <InputGroupAddon align="inline-start">
                             Rp
-                            <Separator orientation="vertical" className="h-6 mx-2" />
+                            <Separator
+                              orientation="vertical"
+                              className="h-6 mx-2"
+                            />
                           </InputGroupAddon>
                           <InputGroupInput
                             id="totalPrice"
@@ -322,13 +436,13 @@ const PostFinance = () => {
                         {fieldState.invalid ? (
                           <FieldError errors={[fieldState.error]} />
                         ) : (
-                          <FieldDescription>Jumlah × Harga Per Item.</FieldDescription>
+                          <FieldDescription>
+                            Jumlah × Harga Per Unit.
+                          </FieldDescription>
                         )}
                       </Field>
                     )}
                   />
-
-
 
                   <Controller
                     name="notes"
@@ -336,10 +450,7 @@ const PostFinance = () => {
                     render={({ field, fieldState }) => (
                       <Field className="col-span-2">
                         <FieldLabel htmlFor="notes">
-                          Catatan Transaksi{" "}
-                          <span className="text-muted-foreground font-normal">
-                            (Opsional)
-                          </span>
+                          Catatan Transaksi
                         </FieldLabel>
                         <Input
                           id="notes"
@@ -366,7 +477,11 @@ const PostFinance = () => {
                       fieldState,
                     }) => (
                       <Field className="col-span-2">
-                        <FieldLabel htmlFor="image">Foto Bukti</FieldLabel>
+                        <FieldLabel htmlFor="image">
+                          {transactionType !== "grant"
+                            ? "Foto Bukti Transaksi / Nota"
+                            : "Foto Bukti Serah Terima"}
+                        </FieldLabel>
                         <div
                           className="border-2 border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
                           onClick={() => fileInputRef.current?.click()}
@@ -384,7 +499,7 @@ const PostFinance = () => {
                                 className="text-muted-foreground"
                               />
                               <span className="text-sm text-muted-foreground">
-                                Klik untuk upload foto bukti nota (JPG/PNG)
+                                Klik untuk upload foto bukti (JPG/PNG)
                               </span>
                             </>
                           )}

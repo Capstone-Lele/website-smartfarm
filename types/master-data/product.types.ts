@@ -18,3 +18,19 @@ export type ProductResponse = {
   message: string;
   data: Product[];
 };
+
+
+export interface ProductUsage {
+    category: string;
+    id: string;
+    name: string;
+    type: string;
+    unit: string;
+}
+
+export interface Response {
+    data: ProductUsage[];
+    message: string;
+    success: boolean;
+}
+
