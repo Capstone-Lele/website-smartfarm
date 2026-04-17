@@ -63,13 +63,11 @@ const biomassData = [
 const DashboardPage = () => {
   const { data: dashboard } = useDashboard();
 
-  // Finance Data Hooks
   const { data: commodityData } = useFinanceCommodity();
   const { data: inventoryData } = useFinanceInventory();
   const { data: inventorySubmissionData } = useFinanceInventorySubmission();
   const { data: nonInventoryData } = useFinanceNonInventory();
 
-  // Hitung akumulasi bulan ini saja
   const { totalIncome, totalExpense, netProfit } = useMemo(() => {
     let income = 0;
     let expense = 0;
@@ -139,7 +137,7 @@ const DashboardPage = () => {
     },
     {
       title: "Stok Pakan",
-      value: dashboard?.totalFood || "-",
+      value: dashboard?.totalFood+" kg" || "-",
       sub: "keseluruhan",
     },
     {
@@ -195,7 +193,6 @@ const DashboardPage = () => {
         </p>
       </div>
 
-            {/* Finance Summary */}
       <div>
         <h2 className="text-sm font-semibold text-gray-700 mb-2 mt-2">
           Ringkasan Finansial (Bulan Ini){" "}
@@ -269,9 +266,8 @@ const DashboardPage = () => {
       </div>
 
 
-      {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Biomass trend */}
+        {/* Biomass trend[ lagi di kerjakan] */}
         <DefaultCard className="lg:col-span-2">
           <h2 className="text-sm font-semibold text-gray-700 mb-1">
             Tren Pemberian Pakan (kg)
