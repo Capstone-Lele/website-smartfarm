@@ -129,6 +129,10 @@ const dataPath = [
       {
         path: "/dashboard/reports/harvest",
         name: "Laporan Panen"
+      },
+      {
+        path: "/dashboard/reports/iot",
+        name: "Laporan IoT"
       }
     ],
   },
