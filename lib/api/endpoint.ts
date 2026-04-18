@@ -135,6 +135,9 @@ export const API_ENDPOINTS = {
   },
   DASHBOARD:{
     GET: "/app/dashboard",
+  },
+  IOT: {
+    GET_ALL: "/iot/pool/data",
   }
 
 } as const;

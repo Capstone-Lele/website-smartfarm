@@ -53,4 +53,9 @@ export const REPORT_SIDEBAR_ITEMS = [
     href: "/dashboard/reports/harvest",
     type: "menu",
   },
+  {
+    title: "Alat IOT",
+    href: "/dashboard/reports/iot",
+    type: "menu",
+  },
 ];
