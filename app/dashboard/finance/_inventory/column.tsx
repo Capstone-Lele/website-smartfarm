@@ -7,6 +7,7 @@ import ButtonDetailColumn from "@/components/button-column/button-detail-column"
 import { FinanceInventory } from "@/types/finance/finance-inventory";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { ButtonCopy } from "@/components/button-copy";
+import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 
 export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
   {
@@ -45,6 +46,9 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
   {
     accessorKey: "transactionSource",
     header: () => <span>SUMBER TRANSAKSI</span>,
+    cell: ({ row }) => {
+      return sourceLabelTranslation(row.original.transactionSource);
+    },
   },
   {
     accessorKey: "productCategory",
@@ -112,10 +116,11 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonDetailColumn
-            href={`/dashboard/finance/inventory/${row.original.id}`}
+            href={`/dashboard/finance/${row.original.sourceId}?type=inventory_notes`}
           />
         </div>
       );
     },
   },
+  ,
 ];

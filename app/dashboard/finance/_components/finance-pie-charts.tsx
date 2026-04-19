@@ -14,6 +14,7 @@ import { Finance } from "@/types/finance/finance";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { CHART_COLORS } from "@/lib/constants/chart-color";
 import { LuTrendingUp } from "react-icons/lu";
+import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 
 interface FinancePieChartsProps {
   data: Finance[];
@@ -48,7 +49,7 @@ const buildSegments = (
     .filter(([, value]) => value > 0)
     .map(([source, value], index) => ({
       id: source.replace(/\s+/g, "-").toLowerCase(),
-      label: source,
+      label: sourceLabelTranslation(source), 
       value,
       fill: CHART_COLORS[index % CHART_COLORS.length],
     }));
@@ -57,7 +58,7 @@ const buildSegments = (
 const buildChartConfig = (segments: Segment[]): ChartConfig => {
   const cfg: ChartConfig = { value: { label: "Jumlah" } };
   segments.forEach((s) => {
-    cfg[s.id] = { label: s.label, color: s.fill };
+    cfg[s.id] = { label:s.label, color: s.fill };
   });
   return cfg;
 };

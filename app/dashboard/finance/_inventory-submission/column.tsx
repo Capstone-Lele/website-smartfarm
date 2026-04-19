@@ -7,6 +7,7 @@ import ButtonDetailColumn from "@/components/button-column/button-detail-column"
 import { FinanceInventorySubmission } from "@/types/finance/finance-inventory-submission";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { ButtonCopy } from "@/components/button-copy";
+import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 
 export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[] =
   [
@@ -46,6 +47,9 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     {
       accessorKey: "transactionSource",
       header: () => <span>SUMBER TRANSAKSI</span>,
+      cell: ({ row }) => {
+        return sourceLabelTranslation(row.original.transactionSource);
+      },
     },
     {
       accessorKey: "applicant",
@@ -120,7 +124,7 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
         return (
           <div className="flex items-center text-primary gap-0.5">
             <ButtonDetailColumn
-              href={`/dashboard/finance/inventory-submission/${row.original.id}`}
+              href={`/dashboard/finance/${row.original.sourceId}?type=inventory_submissions`}
             />
           </div>
         );

@@ -17,6 +17,18 @@ export const useGetProducts = () => {
     },
   });
 };
+
+export const useGetProductById = (id: string) => {
+  return useQuery<ProductResponse>({
+    queryKey: ["getProductById", id],
+    queryFn: async () => {
+      const response = await productService.getById(id);
+      return response;
+    },
+    enabled: !!id,
+  });
+};
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   return useMutation({

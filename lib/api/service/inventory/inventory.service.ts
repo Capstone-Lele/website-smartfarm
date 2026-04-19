@@ -3,6 +3,7 @@ import {
   InventoryResponse,
   InventoryResponseParamConsumption,
   InventoryResponseParamConsumptionData,
+  InventoryResponseParamNote,
   InventoryResponseParamNoteData,
   InventoryResponseParamSubmission,
   InventoryResponseParamSubmissionData,
@@ -14,11 +15,18 @@ import {
   buildPayloadEdit,
 } from "@/lib/utils/payload-build";
 import { RequestInventoryTransaction } from "@/types/inventory-transaction";
+import { InventoryResponseById } from "@/types/notes/inventory";
 
 export const inventoryService = {
   getAll: async (): Promise<InventoryResponse> => {
     const response = await API_CLIENT.get<InventoryResponse>(
       API_ENDPOINTS.INVENTORY.GET_ALL,
+    );
+    return response;
+  },
+  getById: async (id: string): Promise<InventoryResponseById> => {
+    const response = await API_CLIENT.get<InventoryResponseById>(
+      API_ENDPOINTS.INVENTORY.GET_BY_ID(id),
     );
     return response;
   },

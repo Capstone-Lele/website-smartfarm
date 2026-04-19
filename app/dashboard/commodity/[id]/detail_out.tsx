@@ -152,7 +152,7 @@ const DetailOut = ({ id }: { id: string }) => {
           },
           {
             label: "Total Harga",
-            value: formatRupiah(dataFinance?.[0]?.totalPrice || 0),
+            value: formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0),
             color: "text-emerald-600",
           },
         ].map((card, i) => (
@@ -206,19 +206,19 @@ const DetailOut = ({ id }: { id: string }) => {
               <div className="space-y-4">
                 <InfoRow
                   label="ID Transaksi"
-                  value={dataFinance?.[0]?.id || "-"}
+                  value={dataFinance?.data?.[0]?.id || "-"}
                 />
                 <InfoRow
                   label="Tanggal Order"
-                  value={formatDate(dataFinance?.[0]?.transactionDate || "")}
+                  value={formatDate(dataFinance?.data?.[0]?.transactionDate || "")}
                 />
                 <InfoRow
                   label="Total Harga"
-                  value={formatRupiah(dataFinance?.[0]?.totalPrice || 0)}
+                  value={formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0)}
                 />
                 <InfoRow
                   label="Catatan Transaksi"
-                  value={dataFinance?.[0]?.notes || "-"}
+                  value={dataFinance?.data?.[0]?.notes || "-"}
                 />
               </div>
 
@@ -227,10 +227,10 @@ const DetailOut = ({ id }: { id: string }) => {
                 <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
                   Nota Penjualan
                 </p>
-                {dataFinance?.[0]?.image ? (
+                {dataFinance?.data?.[0]?.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={dataFinance?.[0]?.image}
+                    src={dataFinance?.data?.[0]?.image}
                     alt="Nota Penjualan"
                     className="rounded-md border object-cover max-h-52 w-full"
                   />
@@ -271,7 +271,7 @@ const DetailOut = ({ id }: { id: string }) => {
             <div className="flex items-center justify-between rounded-md border bg-gray-100 px-4 py-3 mt-2">
               <span className="text-sm font-semibold">Total Keseluruhan</span>
               <span className="text-base font-bold ">
-                {formatRupiah(dataFinance?.[0]?.totalPrice || 0)}
+                {formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0)}
               </span>
             </div>
           </div>

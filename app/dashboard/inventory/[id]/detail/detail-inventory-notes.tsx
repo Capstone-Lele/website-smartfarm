@@ -34,8 +34,8 @@ function InfoRow({
 }
 
 const DetailInventoryNotes = ({
-  id,
-  source,
+  id, // inventory id
+  source, // notes id
 }: {
   id: string;
   source: string;

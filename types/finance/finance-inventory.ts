@@ -1,6 +1,7 @@
 export type FinanceInventory = {
   id: string;
   type: string;
+  sourceId: string;
   transactionSource: string;
   transactionDate: string;
   productCategory: string;

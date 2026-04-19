@@ -8,6 +8,9 @@ import { formatDate } from "@/lib/utils/format-date";
 import { Finance } from "@/types/finance/finance";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
 import { ButtonCopy } from "@/components/button-copy";
+import { sourceLabelTranslation } from "@/lib/constants/type-finance";
+import { inventoryTransactionTypeTranslation } from "@/lib/constants/type-inventory";
+import { usePathname } from "next/navigation";
 
 export const columns: ColumnDef<Finance>[] = [
     {
@@ -61,10 +64,17 @@ export const columns: ColumnDef<Finance>[] = [
   {
     accessorKey: "transactionSource",
     header: () => <span>SUMBER TRANSAKSI</span>,
+    cell: ({ row }) => {
+      return sourceLabelTranslation(row.original.transactionSource);
+    }
   },
+
   {
     accessorKey: "transactionType",
     header: () => <span>TIPE TRANSAKSI</span>,
+    cell: ({ row }) => {
+      return inventoryTransactionTypeTranslation(row.original.transactionType);
+    }
   },
   {
     accessorKey: "productCategory",
@@ -93,9 +103,20 @@ export const columns: ColumnDef<Finance>[] = [
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
+      const pathname = usePathname();
+      let detailLink = "";
+      if(row.original.transactionSource === "non_inventory") {
+        detailLink = `${pathname}/${row.original.sourceId}?type=non_inventory`;
+      } else if (row.original.transactionSource === "commodity_sales") {
+        detailLink = `${pathname}/${row.original.sourceId}?type=commodity_sales`;
+      } else if (row.original.transactionSource === "inventory_notes") {
+        detailLink = `${pathname}/${row.original.sourceId}?type=inventory_notes`;
+      } else if (row.original.transactionSource === "inventory_submissions") {
+        detailLink = `${pathname}/${row.original.sourceId}?type=inventory_submissions`;
+      }
       return (
         <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn href={`/dashboard/pools/${row.original.id}}`} />
+          <ButtonDetailColumn href={detailLink} />
         </div>
       );
     },

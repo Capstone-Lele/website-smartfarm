@@ -54,6 +54,7 @@ const page = () => {
         allData.push({
           id: item.id,
           transactionDate: item.transactionDate,
+          sourceId: item.sourceId,
           type: item.type,
           transactionSource: item.transactionSource,
           transactionType: "-",
@@ -71,6 +72,7 @@ const page = () => {
         allData.push({
           id: item.id,
           transactionDate: item.transactionDate,
+          sourceId: item.sourceId,
           type: item.type,
           transactionSource: item.transactionSource,
           productCategory: item.productCategory,
@@ -88,6 +90,7 @@ const page = () => {
         allData.push({
           id: item.id,
           transactionDate: item.transactionDate,
+          sourceId: item.sourceId,
           type: item.type,
           transactionSource: item.transactionSource,
           productCategory: item.productCategory,
@@ -105,6 +108,7 @@ const page = () => {
         allData.push({
           id: item.id,
           transactionDate: item.transactionDate,
+          sourceId: item.sourceId,
           type: item.type,
           transactionSource: "non_inventory",
           productCategory: item.productCategory,
@@ -232,7 +236,14 @@ const page = () => {
             </div>
           </TabsContent>
           <TabsContent value="laporan">
-            <FinanceReportTab data={memoizedValue} rentang_tanggal={dateRange.start && dateRange.end ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}` : ""} />
+            <FinanceReportTab
+              data={memoizedValue}
+              rentang_tanggal={
+                dateRange.start && dateRange.end
+                  ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`
+                  : ""
+              }
+            />
           </TabsContent>
           <TabsContent value="semua-data">
             <DefaultCard>

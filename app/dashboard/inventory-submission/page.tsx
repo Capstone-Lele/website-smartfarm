@@ -8,7 +8,6 @@ import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./column";
 import {
-  useGetInventorySubmissionById,
   useGetInventorySubmissions,
 } from "@/lib/api/service/inventory-submission/useInventorySubmission";
 import { TableFacetedFilter } from "@/types/table-faceted-filter";

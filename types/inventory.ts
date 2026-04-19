@@ -48,7 +48,7 @@ export type InventorySubmissionResponse = {
 export type InventorySubmissionDetailResponse = {
   success: boolean;
   message: string;
-  data: InventorySubmission;
+  data: InventorySubmission[];
 };
 
 export type InventorySubmission = {

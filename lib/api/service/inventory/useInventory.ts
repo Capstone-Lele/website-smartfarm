@@ -1,6 +1,7 @@
 import { InventoryResponse, InventoryResponseParamConsumption, InventoryResponseParamConsumptionData, InventoryResponseParamNote, InventoryResponseParamNoteData, InventoryResponseParamSubmission, InventoryResponseParamSubmissionData } from "@/types/inventory";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { inventoryService } from "./inventory.service";
+import { InventoryResponseById } from "@/types/notes/inventory";
 
 export const useInventory = () => {
   return useQuery<InventoryResponse>({
@@ -11,6 +12,17 @@ export const useInventory = () => {
     },
   });
 };
+
+export const useInventoryById = (id: string) => {
+  return useQuery<InventoryResponseById>({
+    queryKey: ["getInventoryById", id],
+    queryFn: async () => {
+      const response = await inventoryService.getById(id);
+      return response;
+    },
+    enabled: !!id,
+  });
+}
 
 export const useCreateInventory = () => {
   const queryClient = useQueryClient();

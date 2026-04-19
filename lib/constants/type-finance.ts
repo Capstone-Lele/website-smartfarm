@@ -8,6 +8,7 @@ export const SOURCE_LABELS = [
   { value: "commodity_sales", label: "Penjualan Komoditas" },
   { value: "inventory_notes", label: "Inventaris" },
   { value: "inventory_submission", label: "Pengajuan Inventaris" },
+  { value: "inventory_submissions", label: "Pengajuan Inventaris" },
 ];
 
 export const sourceLabelTranslation = (value: string): string => {
