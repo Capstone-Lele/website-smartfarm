@@ -236,7 +236,7 @@ const DashboardPage = () => {
               </div>
               <div>
                 <p className="text-xs text-emerald-600 font-medium">
-                  Laba Bersih Transaksi
+                  Laba / Rugi
                 </p>
                 <p
                   className={`text-xl font-bold mt-0.5 ${netProfit >= 0 ? "text-emerald-700" : "text-rose-600"}`}
