@@ -2,6 +2,7 @@ export type FinanceInventorySubmission = {
   id: string;
   transactionDate: string;
   type: string;
+  sourceId: string;
   transactionSource: string;
   applicant: string;
   productCategory: string;

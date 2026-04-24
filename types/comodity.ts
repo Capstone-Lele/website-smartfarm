@@ -7,6 +7,9 @@ export type Commodity = {
   quantity: number | string;
   soldQuantity?: number | null;
   category: string;
+  cycleStartDate?: string | null;
+  poolName?: string | null;
+  buyerName?: string | null;
 };
 
 export type CommodityResponse = {

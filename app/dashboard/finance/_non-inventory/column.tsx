@@ -108,10 +108,11 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonDetailColumn
-            href={`/dashboard/finance/non-inventory/${row.original.id}`}
+            href={`/dashboard/finance/${row.original.sourceId}?type=non_inventory`}
           />
         </div>
       );
     },
   },
+  ,
 ];

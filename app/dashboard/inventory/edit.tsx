@@ -47,7 +47,6 @@ const formSchema = z.object({
 
 const EditInventoryModal = ({ inventory }: { inventory: Inventory }) => {
   const inventoryMutation = useUpdateInventory();
-  const { data: productsData, isLoading: isLoadingProducts } = useGetProducts();
   const [isOpen, setIsOpen] = useState(false);
 
   // Set initial unit string from inventory
@@ -67,19 +66,11 @@ const EditInventoryModal = ({ inventory }: { inventory: Inventory }) => {
 
   useEffect(() => {
     form.reset({
-      productId: inventory?.productId || "",
+      productId: inventory?.product || "",
       minQuantity: Number(inventory?.minQuantity) || 0,
     });
     setProductUnits(inventory?.unit || "");
   }, [inventory, form]);
-
-  const productOptions =
-    productsData?.data
-      ?.filter((product: Product) => product.type === "inventory")
-      .map((product: any) => ({
-        label: product.name,
-        value: product.id,
-      })) || [];
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -125,14 +116,16 @@ const EditInventoryModal = ({ inventory }: { inventory: Inventory }) => {
                     <Field>
                       <FieldLabel htmlFor="Produk">Produk</FieldLabel>
                       {/* Disable combobox for edit */}
-                      <Combobox
-                        data={productOptions}
-                        onValueChange={field.onChange}
-                        name="Produk"
-                        selectedValue={field.value}
-                        isLoading={isLoadingProducts}
-                        disable={true}
-                      />
+                      <InputGroup>
+                        <InputGroupInput
+                          id="productId"
+                          type="text"
+                          placeholder="Pilih produk"
+                          autoComplete="off"
+                          value={field.value}
+                          disabled
+                        />
+                      </InputGroup>
                       {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
                       ) : (

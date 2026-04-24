@@ -10,6 +10,7 @@ import {
   LuArrowUpDown,
 } from "react-icons/lu";
 import {
+  useGetInventoryByIdWithParams,
   useGetInventoryConsumptionByIdWithParams,
   useGetInventoryNotesByIdWithParams,
   useGetInventorySubmissionByIdWithParams,
@@ -24,6 +25,7 @@ import { InventoryDetail } from "@/types/inventory";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InventoryOverview } from "./_components/inventory-overview";
+import { FiPlusCircle } from "react-icons/fi";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
@@ -34,7 +36,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     end: Date | null | undefined;
   }>({ start: null, end: null });
 
-  const { data: inventoryData } = useInventory();
+  // const { data: inventoryData } = useInventory();
   const {
     data: inventoryDetailDataNotes,
     isLoading: isLoadingInventoryDetailNotes,
@@ -51,6 +53,10 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   } = useGetInventoryConsumptionByIdWithParams(id, {
     inventoryType: "consumption",
   });
+  const { data: inventoryDetail, isLoading: isLoadingInventoryDetail } =
+    useGetInventoryByIdWithParams(id, {
+      inventoryType: "all",
+    });
 
   const isLoading =
     isLoadingInventoryDetailNotes ||
@@ -65,7 +71,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
       notes: item.notes ?? "",
       type: item.type,
       category: "Inventaris",
-      source:"inventory-notes",
+      source: "inventory-notes",
       unit: "",
       quantity: item.quantity,
       pricePerItem: item.pricePerItem ?? null,
@@ -82,11 +88,11 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         notes: item.notes ?? "",
         type: "in" as const,
         category: "Pengajuan Inventaris",
-        source:"inventory-submission",
+        source: "inventory-submission",
         unit: "",
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
-        transactionType: item.transaction_type ?? "-",
+        transactionType: item.transactionType ?? "-",
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
         deletedAt: item.deletedAt ?? null,
@@ -98,7 +104,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         notes: "",
         type: "out" as const,
         category: "Inventaris",
-        source:"inventory-consumption",
+        source: "inventory-consumption",
         unit: "",
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
@@ -122,16 +128,18 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   });
 
   useEffect(() => {
-    if (inventoryData?.data) {
-      const inventory = inventoryData.data.find((item) => item.id === id);
+    if (inventoryDetail?.data) {
+      const inventory = inventoryDetail.data.find((item) => item.id === id);
       if (inventory?.product) {
         setLabel("inventory", inventory.product);
       }
     }
     return () => removeLabel("inventory");
-  }, [inventoryData?.data, id, setLabel, removeLabel]);
+  }, [inventoryDetail?.data, id, setLabel, removeLabel]);
 
-  const currentInventory = inventoryData?.data?.find((item) => item.id === id);
+  const currentInventory = inventoryDetail?.data?.find(
+    (item) => item.id === id,
+  );
 
   const totalIn = mergedInventoryDetails
     .filter((item) => item.type === "in")
@@ -203,7 +211,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
           ) : (
             <InventoryOverview
               details={filteredInventoryDetails}
-              currentInventory={currentInventory}
+              currentInventory={inventoryDetail?.data?.[0]}
             />
           )}
         </TabsContent>
@@ -217,7 +225,14 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
                 ) : (
                   <div>
                     <div className="flex justify-end items-center mb-4">
-                      <PostStockInOut />
+                      {inventoryDetail?.data?.[0].deletedAt ? (
+                        <div className=" cursor-not-allowed inline-flex items-center gap-2 rounded-md bg-primary/80 px-4 py-2 text-sm font-medium text-white hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                          <FiPlusCircle />
+                          Tambah Stok
+                        </div>
+                      ) : (
+                        <PostStockInOut />
+                      )}
                     </div>
                     <DataTable
                       columns={columns}

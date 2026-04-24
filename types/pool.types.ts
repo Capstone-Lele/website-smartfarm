@@ -6,7 +6,7 @@ export type Pool = {
   cycleEndDate?: string | null;
   cycle?: null | string;
   cycleId: string;
-  deletedAt?: null | string;
+  deletedAt: null | string;
   diameter?: null | string;
   height?: string | null;
   id: string;

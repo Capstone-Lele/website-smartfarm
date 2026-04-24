@@ -36,6 +36,7 @@ import { Combobox } from "@/components/combobox";
 import { LuPackage, LuSave } from "react-icons/lu";
 import { Separator } from "@/components/ui/separator";
 import { Product } from "@/types/master-data/product.types";
+import { InventoryResponse } from "@/types/inventory";
 
 const formSchema = z
   .object({
@@ -46,7 +47,7 @@ const formSchema = z
       .min(0, { message: "Stok minimum tidak boleh negatif" }),
   })
 
-const PostInventoryModal = () => {
+const PostInventoryModal = ({dataInventory} : {dataInventory?: InventoryResponse}) => {
   const inventoryMutation = useCreateInventory();
   const { data: productsData, isLoading: isLoadingProducts } = useGetProducts();
   const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +62,7 @@ const PostInventoryModal = () => {
   });
 
   const productOptions =
-    productsData?.data?.filter((product: Product) => product.type == "inventory").map((product: any) => ({
+    productsData?.data?.filter((product: Product) => !product.deletedAt && product.type == "inventory" && !dataInventory?.data?.some((inv) => inv.productId === product.id)).map((product: any) => ({
       label: product.name,
       value: product.id,
     })) || [];

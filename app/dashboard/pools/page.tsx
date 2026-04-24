@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 import { Pool } from "@/types/pool.types";
 import { columnsPoolQuarantine } from "./_quarantine/column";
-import { FaFish, FaWater  } from "react-icons/fa";
+import { FaFish, FaWater } from "react-icons/fa";
 import { IoFish } from "react-icons/io5";
 import { FiShield } from "react-icons/fi";
 
@@ -117,7 +117,7 @@ const page = () => {
                     ) : (
                       <div>
                         <div className="flex justify-end">
-                          <PostKolamModal />
+                          <PostKolamModal dataPool={data?.data || []} />
                         </div>
                         <DataTable
                           columns={columnsPool}
@@ -135,7 +135,7 @@ const page = () => {
                     ) : (
                       <div>
                         <div className="flex justify-end">
-                          <PostKolamModal />
+                          <PostKolamModal dataPool={data?.data || []} />
                         </div>
                         <DataTable
                           columns={columnsPoolQuarantine}

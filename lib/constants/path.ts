@@ -1,4 +1,3 @@
-
 const dataPath = [
   {
     path: "/dashboard",
@@ -120,16 +119,20 @@ const dataPath = [
       },
       {
         path: "/dashboard/reports/mortality",
-        name: "Laporan Kematian"
+        name: "Laporan Kematian",
       },
       {
         path: "/dashboard/reports/seeding",
-        name: "Laporan Tebar Benih"
+        name: "Laporan Tebar Benih",
       },
       {
         path: "/dashboard/reports/harvest",
-        name: "Laporan Panen"
-      }
+        name: "Laporan Panen",
+      },
+      {
+        path: "/dashboard/reports/iot",
+        name: "Laporan IoT",
+      },
     ],
   },
   {
@@ -149,6 +152,16 @@ const dataPath = [
   {
     path: "/dashboard/finance",
     name: "Keuangan",
+    sub_paths: [
+      {
+        path: "/dashboard/finance/[id]",
+        name: "Detail Transaksi",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["finance"] ?? `Transaksi #${params.id}`;
+        },
+      },
+    ],
   },
 ];
 

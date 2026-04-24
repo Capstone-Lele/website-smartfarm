@@ -71,7 +71,7 @@ const Page = () => {
         ))}
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <ChartBarStacked data={data?.data} isLoading={isLoading} />
+        <ChartBarStacked data={data?.data.filter((item) => !item.deletedAt)} isLoading={isLoading} />
         <ChartPie data={usageData?.data} isLoading={isUsageLoading} />
       </div>
       <DefaultCard>
@@ -81,7 +81,7 @@ const Page = () => {
           ) : (
             <div>
               <div className="flex justify-end">
-                <PostInventoryModal />
+                <PostInventoryModal dataInventory={data} />
               </div>
               <DataTable columns={columns} data={data?.data || []} />
             </div>

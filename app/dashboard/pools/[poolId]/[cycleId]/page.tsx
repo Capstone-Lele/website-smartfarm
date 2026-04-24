@@ -20,17 +20,6 @@ import MovePoolTable from "./_move-pool/table";
 import { MovePoolBarChart } from "./_move-pool/chart";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
-// Dummy data for the view
-const cycleProfile = {
-  tipe: "Pembesaran",
-  tanggal_mulai: "15-01-2024",
-  tanggal_tutup: "-",
-  pembuat: "AMIRUL",
-  jumlah_awal: 1000,
-  jumlah_saat_ini: 800,
-  total_hari: "26 Hari Total",
-};
-
 const waterQuality = {
   suhu: { value: 28, status: "Aman", unit: "C" },
   ph: { value: 1, status: "Bahaya", unit: "" },

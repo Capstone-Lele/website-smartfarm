@@ -9,8 +9,8 @@ const page = () => {
   const searchParams = useSearchParams();
   const { id } = params;
   const source = searchParams.get("source");
-  const idSource = searchParams.get("inventoryId") || "";
-  const idInventory = id?.toString() || "";
+  const idSource = searchParams.get("inventoryId") || "";// notes id
+  const idInventory = id?.toString() || ""; // inventaris id
 
   return (
     <div>

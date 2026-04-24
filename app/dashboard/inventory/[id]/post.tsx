@@ -66,20 +66,26 @@ const formSchema = z.object({
       (file) =>
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
-    ),
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: "Ukuran file maksimal 5MB",
+    }),
   transactionType: z.enum(["grant", "non-grant"], {
     message: "Tipe transaksi harus dipilih",
   }),
   // transaksi :]
   transactionDate: z.date({ message: "Tanggal transaksi wajib diisi" }),
-  notesTransaction: z.string().optional(),
+  notesTransaction: z.string().min(2, { message: "Catatan transaksi wajib diisi" }),
   imageTransaction: z
     .any()
     .refine(
       (file) =>
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
-    ),
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: "Ukuran file maksimal 5MB",
+    }),
   pricePerItem: z.preprocess(
     (val) =>
       val === "" || val === null || val === undefined ? undefined : val,
@@ -287,10 +293,7 @@ const PostStockInOut = () => {
                     render={({ field, fieldState }) => (
                       <Field>
                         <FieldLabel htmlFor="notes">
-                          Catatan Stok{" "}
-                          <span className="text-muted-foreground font-normal">
-                            (Opsional)
-                          </span>
+                          Catatan Stok
                         </FieldLabel>
                         <Input
                           id="notes"
@@ -451,7 +454,8 @@ const PostStockInOut = () => {
                       render={({ field, fieldState }) => (
                         <Field>
                           <FieldLabel htmlFor="pricePerItem">
-                            Harga Per Item/{unit} {isNonGrant ? "" : "(Perkiraan)"}
+                            Harga Per Item/{unit}{" "}
+                            {isNonGrant ? "" : "(Perkiraan)"}
                           </FieldLabel>
                           <InputGroup>
                             <InputGroupAddon align="inline-start">

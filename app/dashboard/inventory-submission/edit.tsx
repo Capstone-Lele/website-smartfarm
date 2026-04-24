@@ -86,13 +86,17 @@ const formSchema = z.object({
       z.undefined(),
     ]),
   ),
-  transactionNotes: z.string().optional(),
+  transactionNotes: z.string().min(2, { message: "Catatan transaksi wajib diisi" }),
   image: z
     .any()
     .refine(
       (file) =>
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
+    )
+    .refine(
+      (file) => !file || file.size <= 5 * 1024 * 1024,
+      { message: "Ukuran file maksimal 5MB" },
     ),
   feedback: z.string().optional(),
 });

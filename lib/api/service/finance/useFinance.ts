@@ -7,7 +7,7 @@ export const useFinanceBySourceId = (sourceId: string) => {
     queryKey: ["getFinanceBySourceId", sourceId],
     queryFn: async () => {
       const response = await financeService.getFinanceBySourceId(sourceId);
-      return response.data;
+      return response;
     },
     enabled: !!sourceId,
   });

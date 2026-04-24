@@ -55,6 +55,8 @@ const PostProductModal = () => {
   const getCategoryData = useCategory();
   const [isOpen, setIsOpen] = useState(false);
 
+  const filteredUnits = getUnitData.data?.data.filter((unit: Unit) => unit.deletedAt === null) || [];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -187,7 +189,7 @@ const PostProductModal = () => {
                           if (val.toLowerCase() === "pakan") {
                             form.setValue(
                               "unit",
-                              getUnitData.data?.data.find(
+                              filteredUnits.find(
                                 (unit: Unit) =>
                                   unit.name.toLowerCase() === "kg",
                               )?.name || "kg",
@@ -195,7 +197,7 @@ const PostProductModal = () => {
                           } else if (val.toLowerCase() === "pendanaan") {
                             form.setValue(
                               "unit",
-                              getUnitData.data?.data.find(
+                              filteredUnits.find(
                                 (unit: Unit) =>
                                   unit.name.toLowerCase() === "uang",
                               )?.name || "uang",
@@ -226,7 +228,7 @@ const PostProductModal = () => {
                       <FieldLabel htmlFor="unit">Satuan Produk</FieldLabel>
                       <Combobox
                         data={
-                          getUnitData.data?.data
+                          filteredUnits
                             .filter((unit: Unit) => {
                               if (
                                 watchCategory?.toLowerCase() === "pakan" &&

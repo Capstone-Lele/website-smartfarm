@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
     PRODUCT: {
       GET_PRODUCT_USAGE: "/master-data/product/usage",
       GET_ALL: "/master-data/products",
+      GET_BY_ID: (id: string) => `/master-data/product/${id}`,
       CREATE: "/master-data/product",
       DELETE: (id: string) => `/master-data/product/${id}`,
       UPDATE: (id: string) => `/master-data/product/${id}`,
@@ -105,6 +106,7 @@ export const API_ENDPOINTS = {
   },
   INVENTORY: {
     GET_ALL: "/inventory",
+    GET_BY_ID: (id: string) => `/note/inventory/${id}`,
     GET_BY_ID_WITH_PARAMS: (id: string, params: Record<string, string>) => {
       const query = new URLSearchParams(params).toString();
       return `/inventory/${id}?${query}`;
@@ -117,7 +119,10 @@ export const API_ENDPOINTS = {
   INVENTORY_SUBMISSION: {
     GET_ALL: "/inventory/submissions",
     GET_BY_ID: (id: string) => `/inventory/submission/${id}`,
-    UPDATE: (id: string) => `/inventory/submission/${id}`,
+    UPDATE: (id: string) => `/inventory/submission/status/${id}`,
+  },
+  NON_INVENTORY: {
+    GET_BY_ID: (id: string) => `/inventory/non-inventory/${id}`,
   },
   COMMODITY:{
     GET_COMMODITY_BY_ID_AND_TYPE: (sourceId: string, sourceType: string) => `/commodity/${sourceId}?type=${sourceType}`,
@@ -137,8 +142,10 @@ export const API_ENDPOINTS = {
     GET: "/app/dashboard",
   },
   IOT: {
-    GET_ALL: "/iot/pool/data",
-  }
-
+    GET_ALL: "/iot/pool/data", // historical data untuk semua kolam
+    GET_BY_NODE: (nodeId: string) => `/iot/pool/${nodeId}`, // historical data untuk node tertentu
+    GET_ALL_LIVE: "/iot/pool/data", // data real-time untuk semua kolam
+    GET_LIVE_BY_NODE: (nodeId: string) => `/iot/chart/${nodeId}`, // data real-time untuk node tertentu
+  },
 } as const;
 

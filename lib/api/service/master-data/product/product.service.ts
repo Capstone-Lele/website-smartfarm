@@ -15,6 +15,13 @@ export const productService = {
     return response;
   },
 
+  getById: async (id: string): Promise<ProductResponse> => {
+    const response = await API_CLIENT.get<ProductResponse>(
+      API_ENDPOINTS.MASTER_DATA.PRODUCT.GET_BY_ID(id),
+    );
+    return response;
+  },
+
   create: async (data: any): Promise<ResponseDefault> => {
     const payload = buildPayloadCreate(data);
     const response = await API_CLIENT.post<ResponseDefault>(

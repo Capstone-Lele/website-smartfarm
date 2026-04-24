@@ -34,7 +34,7 @@ import z from "zod";
 import { TbPencilMinus } from "react-icons/tb";
 import { Pool } from "@/types/pool.types";
 import { toast } from "sonner";
-import { useUpdatePool } from "@/lib/api/service/pools/usePool";
+import { usePool, useUpdatePool } from "@/lib/api/service/pools/usePool";
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
 import {
   InputGroup,
@@ -70,6 +70,7 @@ const formSchema = z.object({
 });
 
 const EditPoolModal = ({ pool }: { pool: Pool }) => {
+  const { data:dataPool, isLoading, error } = usePool();
   const poolMutation = useUpdatePool();
   const [isCirclePool, setIsCirclePool] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -106,6 +107,17 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
   }, [pool]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    // check if pool with the same name already exists    const nameExists = dataPool?.some(
+     const nameExists = dataPool?.data?.some(
+      (p: Pool) =>
+        p.name.toLowerCase() === data.name.toLowerCase() && p.id !== pool.id,
+    );
+    if (nameExists) {
+      toast.error("Nama kolam sudah digunakan", {
+        description: "Silakan gunakan nama lain.",
+      });
+      return;
+    }
     const dataPrep = {
       name: data.name,
       category: data.category,
@@ -159,6 +171,7 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
                       <Input
                         id="name"
                         autoComplete="off"
+                        disabled
                         placeholder="Contoh: Kolam A"
                         {...field}
                       />

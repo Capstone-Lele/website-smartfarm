@@ -3,13 +3,13 @@ import ButtonDetailColumn from "@/components/button-column/button-detail-column"
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
 import ButtonTransactionColumn from "@/components/button-column/button-transaction-column";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
-import PopupConfirmation from "@/components/popup-confimation";
 import { Separator } from "@/components/ui/separator";
 import { useDeleteInventory } from "@/lib/api/service/inventory/useInventory";
 import { Inventory } from "@/types/inventory";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
 import EditInventoryModal from "./edit";
+import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 
 export const columns: ColumnDef<Inventory>[] = [
   {
@@ -57,7 +57,7 @@ export const columns: ColumnDef<Inventory>[] = [
   {
     id: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="STATUS" />
+      <DataTableColumnHeader className="" column={column} title="STATUS STOCK" />
     ),
     cell: ({ row }) => {
       const totalQuantity = Number(row.original.totalQuantity);
@@ -81,21 +81,41 @@ export const columns: ColumnDef<Inventory>[] = [
     },
   },
   {
-    id: "action",
-    header: () => <span>ACTION</span>,
+    id: "isActive",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="STATUS" />
+    ),
     cell: ({ row }) => {
       const deleteInventoryMutation = useDeleteInventory();
 
-      const handleDeleteInventory = async (id: string) => {
+      const handleCheckedChange = async () => {
         try {
-          const res = await deleteInventoryMutation.mutateAsync(id);
-          toast.success(res.message || "Inventaris berhasil dihapus");
-        } catch (error: any) {
-          toast.error("Gagal menghapus inventaris", {
-            description: error?.message || "Silakan coba lagi.",
+          const res = await deleteInventoryMutation.mutateAsync(row.original.id);
+          toast.success(`Inventaris ${row.original.product} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`);
+        } catch (error) {
+          toast.error("Gagal mengubah status inventaris", {
+            description: "Silakan coba lagi.",
           });
         }
       };
+
+      const isDeleted = row.original.deletedAt !== null;
+      return (
+        <div>
+            <ButtonSwitchColumn
+              isActive={!isDeleted}
+              onCheckedChange={handleCheckedChange}
+              isLoading={deleteInventoryMutation.isPending}
+            />
+        </div>
+      );
+    },
+  },
+  {
+    id: "action",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => {
+     
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonTransactionColumn
@@ -103,16 +123,7 @@ export const columns: ColumnDef<Inventory>[] = [
           />
           <Separator orientation="vertical" className="h-6" />
           <EditInventoryModal inventory={row.original} />
-          <Separator orientation="vertical" className="h-6" />
-          <PopupConfirmation
-            title="Hapus Inventaris"
-            message={`Apakah anda yakin menghapus inventaris ( ${row.original.product} ) ini?`}
-            type="error"
-            onConfirm={() => handleDeleteInventory(row.original.id)}
-            isLoading={deleteInventoryMutation.isPending}
-          >
-            <ButtonDeleteColumn />
-          </PopupConfirmation>
+         
         </div>
       );
     },

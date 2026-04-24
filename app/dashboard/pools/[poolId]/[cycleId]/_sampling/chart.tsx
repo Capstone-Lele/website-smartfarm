@@ -98,11 +98,16 @@ const buildChartData = (
     };
   }
 
+  // Implementasi prediksi menggunakan Regresi Linear Sederhana (Simple Linear Regression)
+  // dengan metode Kuadrat Terkecil (Least Squares Method).
+  // x = indeks data (0, 1, 2, ...), y = nilai berat (actual)
   const n = points.length;
+  // Menghitung jumlah dari nilai x, y, x*y, dan x^2
   const sumX = points.reduce((acc, point) => acc + point.x, 0);
   const sumY = points.reduce((acc, point) => acc + point.y, 0);
   const sumXY = points.reduce((acc, point) => acc + point.x * point.y, 0);
   const sumXX = points.reduce((acc, point) => acc + point.x * point.x, 0);
+  // Penyebut untuk rumus kemiringan (slope)
   const denominator = n * sumXX - sumX * sumX;
 
   if (denominator === 0) {
@@ -114,6 +119,9 @@ const buildChartData = (
     };
   }
 
+  // Calculate slope (m) and intercept (b) untuk persamaan y = mx + b
+  // slope (kemiringan): rata-rata pertumbuhan gram/interval waktu antar sampling
+  // intercept (titik potong): estimasi berat awal saat x = 0 (awal pendataan)
   const slope = (n * sumXY - sumX * sumY) / denominator;
   const intercept = (sumY - slope * sumX) / n;
   const mergedData: ChartPoint[] = [...baseData];
@@ -134,9 +142,14 @@ const buildChartData = (
   const lastDate = new Date(lastKnown.reportDate).getTime();
   let estimatedHarvestDate: string | null = null;
 
+  // Membuat proyeksi data masa depan berdasarkan model regresi linier y = mx + b
+  // offset mewakili interval titik sampling ke depan sampai maksimal dari MAX_PREDICTION_POINTS
   for (let offset = 1; offset <= MAX_PREDICTION_POINTS; offset += 1) {
+    // Tentukan nilai x selanjutnya di masa depan
     const xValue = points[points.length - 1].x + offset;
+    // Prediksi nilai (y) menggunakan persamaan regresi dari data sebelumnya
     const predicted = slope * xValue + intercept;
+    // Tentukan tanggal masa depan dengan menambahkan rata-rata jarak waktu sampling pada tanggal real terakhir
     const predictionDate = new Date(
       lastDate + averageIntervalMs * offset,
     ).toISOString();
@@ -165,7 +178,7 @@ const buildChartData = (
 export function SamplingChartLineLabel({
   cycleId,
 }: SamplingChartLineLabelProps) {
-  const { data, isLoading } = useListSamplingWithParams({  cycleId });
+  const { data, isLoading } = useListSamplingWithParams({ cycleId });
 
   const { chartData, canPredict, estimatedHarvestDate, predictionPointCount } =
     useMemo(() => buildChartData(data?.data || []), [data]);

@@ -4,6 +4,7 @@ export type Product = {
   category: string;
   unit: string;
   type: string;
+  deletedAt: string | null;
 };
 
 export type ProductRequest = {

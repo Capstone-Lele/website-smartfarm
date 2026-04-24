@@ -3,6 +3,7 @@ export type Finance = {
   transactionDate: string;
   type: string;
   transactionSource: string;
+  sourceId?: string;
   productCategory?: string;
   transactionType?: string;
   product?: string;
