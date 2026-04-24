@@ -3,11 +3,11 @@
 import React from "react";
 import { InventoryPriceAnalysis } from "./inventory-price-analysis";
 import InventoryStockTrendChart from "./inventory-stock-trend-chart";
-import { InventoryDetail, Inventory } from "@/types/inventory";
+import { InventoryDetail, Inventory, InventoryDetailByParam } from "@/types/inventory";
 
 interface InventoryOverviewProps {
   details: InventoryDetail[];
-  currentInventory: Inventory | undefined;
+  currentInventory: InventoryDetailByParam | undefined;
 }
 
 export const InventoryOverview: React.FC<InventoryOverviewProps> = ({

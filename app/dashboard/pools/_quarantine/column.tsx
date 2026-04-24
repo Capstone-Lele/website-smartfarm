@@ -4,7 +4,6 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { LuEye, LuTrash } from "react-icons/lu";
-import PopupConfirmation from "@/components/popup-confimation";
 import EditPoolQuarantineModal from "./edit";
 import { useDeletePool } from "@/lib/api/service/pools/usePool";
 import { toast } from "sonner";
@@ -18,6 +17,7 @@ import Image from "next/image";
 import { getAvatarUrl } from "@/lib/utils/avatar";
 import AssignPoolModal from "./assign";
 import { useParams } from "next/navigation";
+import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 
 export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   {
@@ -165,23 +165,43 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
     header: () => <span className="">JUMLAH IKAN</span>,
   },
   {
-    id: "actions",
-    header: () => <span className="">Actions</span>,
+    id: "isActive",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="STATUS" />
+    ),
     cell: ({ row }) => {
       const deletePoolMutation = useDeletePool();
-      const params = useParams();
 
-      const handleDeletePool = async (id: string) => {
+      const handleCheckedChange = async () => {
         try {
-          const res = await deletePoolMutation.mutateAsync(id);
-          toast.success(res.message || "Kolam berhasil dihapus");
-        } catch (error: any) {
-          toast.error("Gagal menghapus kolam", {
-            description: error?.message || "Silakan coba lagi.",
+          const res = await deletePoolMutation.mutateAsync(row.original.id);
+          toast.success(
+            `Kolam ${row.original.name} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`,
+          );
+        } catch (error) {
+          toast.error("Gagal mengubah status kolam", {
+            description: "Silakan coba lagi.",
           });
         }
       };
 
+      const isDeleted = row.original.deletedAt !== null;
+      return (
+        <div>
+          <ButtonSwitchColumn
+            isActive={!isDeleted}
+            onCheckedChange={handleCheckedChange}
+            isLoading={deletePoolMutation.isPending}
+          />
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: () => <span className="">Actions</span>,
+    cell: ({ row }) => {
+      const params = useParams();
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonDetailColumn
@@ -191,16 +211,6 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
           <AssignPoolModal pool={row.original} />
           <Separator orientation="vertical" className="h-6" />
           <EditPoolQuarantineModal pool={row.original} />
-          <Separator orientation="vertical" className="h-6" />
-          <PopupConfirmation
-            title="Hapus Kolam"
-            message={`Apakah anda yakin menghapus kolam ( ${row.original.name} ) ini?`}
-            type="error"
-            onConfirm={() => handleDeletePool(row.original.id)}
-            isLoading={deletePoolMutation.isPending}
-          >
-            <ButtonDeleteColumn />
-          </PopupConfirmation>
         </div>
       );
     },

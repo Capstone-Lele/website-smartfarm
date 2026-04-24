@@ -1,5 +1,6 @@
 import {
   InventoryCreateRequest,
+  InventoryDetailWithParamResponse,
   InventoryResponse,
   InventoryResponseParamConsumption,
   InventoryResponseParamConsumptionData,
@@ -54,6 +55,15 @@ export const inventoryService = {
   },
 
   // Detail Inventory atau data in outnya
+  getByIdParamAll: async (
+    id: string,
+    params: Record<string, string>,
+  ): Promise<InventoryDetailWithParamResponse> => {
+    const response = await API_CLIENT.get<InventoryDetailWithParamResponse>(
+      API_ENDPOINTS.INVENTORY.GET_BY_ID_WITH_PARAMS(id, params),
+    );
+    return response;
+  },
   getByIdParamSubmission: async (
     id: string,
     params: Record<string, string>,

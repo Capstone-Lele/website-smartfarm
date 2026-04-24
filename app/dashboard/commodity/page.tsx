@@ -12,6 +12,8 @@ import { useCommodity } from "@/lib/api/service/commodity/useCommodity";
 import { TableFacetedFilter } from "@/types/table-faceted-filter";
 import { INVENTORY_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { columns_out } from "./column-out";
 
 const tableFilter: TableFacetedFilter = [
   {
@@ -110,11 +112,33 @@ const page = () => {
               <div className="flex justify-end mb-4">
                 <PostSellCommodity />
               </div>
-              <DataTable
-                columns={columns}
-                data={filteredCommodities}
-                facetedFilter={tableFilter}
-              />
+              <Tabs defaultValue="table-in" className="w-full">
+                <TabsList className="mb-4 flex-wrap">
+                  <TabsTrigger value="table-in">
+                    Tabel Masuk
+                  </TabsTrigger>
+                  <TabsTrigger value="table-out">
+                    Tabel Keluar
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="table-in">
+                  <div>
+                    <DataTable
+                      columns={columns}
+                      data={filteredCommodities.filter((item) => item.type === "in")}
+                    />
+                  </div>
+                </TabsContent>
+                <TabsContent value="table-out">
+                  <div>
+                    <DataTable
+                      columns={columns_out}
+                      data={filteredCommodities.filter((item) => item.type === "out")}
+                    />
+                  </div>
+                </TabsContent>
+
+              </Tabs>
             </div>
           )}
         </div>

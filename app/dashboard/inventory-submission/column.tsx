@@ -4,6 +4,9 @@ import { InventorySubmission } from "@/types/inventory";
 import { ColumnDef } from "@tanstack/react-table";
 import EditSubmissionModal from "./edit";
 import { TbPencilMinus } from "react-icons/tb";
+import ButtonDetailColumn from "@/components/button-column/button-detail-column";
+import { usePathname } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 
 export const columns: ColumnDef<InventorySubmission>[] = [
   {
@@ -39,7 +42,9 @@ export const columns: ColumnDef<InventorySubmission>[] = [
       const colorClass =
         colorMap[status?.toLowerCase()] ?? "bg-gray-200 text-gray-700";
       return (
-        <span className={`${colorClass} px-2 py-0.5 rounded-xs font-medium flex items-center w-fit capitalize`}>
+        <span
+          className={`${colorClass} px-2 py-0.5 rounded-xs font-medium flex items-center w-fit capitalize`}
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
           {status}
         </span>
@@ -49,10 +54,14 @@ export const columns: ColumnDef<InventorySubmission>[] = [
   {
     accessorKey: "reviewedDate",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TANGGAL DITINJAU" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="TANGGAL DITINJAU"
+      />
     ),
     cell: ({ row }) => {
-      if( row.original.status === "pending") {
+      if (row.original.status === "pending") {
         return <span className="text-muted-foreground">-</span>;
       }
       return formatDate(row.original.updatedAt);
@@ -92,23 +101,28 @@ export const columns: ColumnDef<InventorySubmission>[] = [
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
+      const pathname = usePathname();
       return (
         <div className="flex items-center text-primary gap-0.5">
-          {row.original.status === "pending" ? (
-            <EditSubmissionModal submission={row.original} />
-          ) : (
-            <div className="flex items-center gap-2">
-              <div 
-                className="h-9 w-9 p-0 cursor-not-allowed opacity-50 text-black flex items-center justify-center rounded-md"
-                title={`Tidak bisa diedit (telah ${row.original.status === 'approved' ? 'disetujui' : 'ditolak'})`}
-              >
-                <TbPencilMinus size={20} />
+          <ButtonDetailColumn href={`${pathname}/${row.original.id}`} />
+          <Separator orientation="vertical" className="h-6" />
+          <div className="flex items-center text-primary gap-0.5">
+            {row.original.status === "pending" ? (
+              <EditSubmissionModal submission={row.original} />
+            ) : (
+              <div className="flex items-center gap-2">
+                <div
+                  className="h-9 w-9 p-0 cursor-not-allowed opacity-50 text-black flex items-center justify-center rounded-md"
+                  title={`Tidak bisa diedit (telah ${row.original.status === "approved" ? "disetujui" : "ditolak"})`}
+                >
+                  <TbPencilMinus size={20} />
+                </div>
+                <span className="text-xs font-semibold text-muted-foreground">
+                  Telah ditinjau
+                </span>
               </div>
-              <span className="text-xs font-semibold text-muted-foreground">
-                Telah ditinjau
-              </span>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       );
     },

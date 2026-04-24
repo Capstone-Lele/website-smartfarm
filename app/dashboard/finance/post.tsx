@@ -45,6 +45,7 @@ import { Combobox } from "@/components/combobox";
 import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct";
 import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 import { usePostNonInventory } from "@/lib/api/service/finance/useFinance";
+import { Product } from "@/types/master-data/product.types";
 
 const TRANSACTION_IN_OUT_OPTIONS = [
   { label: "Pemasukan", value: "in" },
@@ -121,20 +122,22 @@ const PostFinance = () => {
 
   const productOptions =
     productsData?.data
-      ?.filter((product: any) => {
+      ?.filter((product: Product) => {
         if (inOut === "in") {
           return (
+            product.deletedAt === null &&
             product.type !== "inventory" &&
             product.category.toLowerCase() === "pendanaan"
           );
         } else {
           return (
+            product.deletedAt === null &&
             product.type !== "inventory" &&
             product.category.toLowerCase() !== "pendanaan"
           );
         }
       })
-      .map((product: any) => ({
+      .map((product: Product) => ({
         label: product.name,
         value: product.id,
       })) || [];

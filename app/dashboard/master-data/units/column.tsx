@@ -4,17 +4,14 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { LuTrash } from "react-icons/lu";
-import PopupConfirmation from "@/components/popup-confimation";
 import EditUnitModal from "./edit";
 import { useDeleteUnit } from "@/lib/api/service/master-data/unit/useUnit";
 import { toast } from "sonner";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
-
-type Unit = {
-  id: string;
-  name: string;
-};
+import { Unit } from "@/types/master-data/unit.types";
+import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
+import { Spinner } from "@/components/ui/spinner";
 
 export const columnsUnit: ColumnDef<Unit>[] = [
   {
@@ -24,8 +21,10 @@ export const columnsUnit: ColumnDef<Unit>[] = [
     ),
   },
   {
-    id: "actions",
-    header: () => <span className="">Actions</span>,
+    id: "isActive",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="STATUS" />
+    ),
     cell: ({ row }) => {
       const deleteUnitMutation = useDeleteUnit();
 
@@ -34,16 +33,39 @@ export const columnsUnit: ColumnDef<Unit>[] = [
         row.original.name.toLowerCase(),
       );
 
-      const handleDeleteUnit = async (id: string) => {
+      const handleCheckedChange = async () => {
         try {
-          const res = await deleteUnitMutation.mutateAsync(id);
-          toast.success(res.message || "Satuan berhasil dihapus");
-        } catch (error: any) {
-          toast.error("Gagal menghapus satuan", {
-            description: error?.message || "Silakan coba lagi.",
+          const res = await deleteUnitMutation.mutateAsync(row.original.id);
+          toast.success(`Satuan ${row.original.name} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`);
+        } catch (error) {
+          toast.error("Gagal mengubah status satuan", {
+            description: "Silakan coba lagi.",
           });
         }
       };
+
+      const isDeleted = row.original.deletedAt !== null;
+      return (
+        <div>
+            <ButtonSwitchColumn
+              isActive={!isDeleted}
+              isDisabled={isDisabled}
+              onCheckedChange={handleCheckedChange}
+              isLoading={deleteUnitMutation.isPending}
+            />
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: () => <span className="">Actions</span>,
+    cell: ({ row }) => {
+
+      const disabledUnits = ["liter", "kg", "meter", "ml", "uang"];
+      const isDisabled = disabledUnits.includes(
+        row.original.name.toLowerCase(),
+      );
 
       return (
         <div className="flex items-center text-primary gap-0.5">
@@ -52,16 +74,6 @@ export const columnsUnit: ColumnDef<Unit>[] = [
           ) : (
             <EditUnitModal unit={row.original} />
           )}
-          {/* <Separator orientation="vertical" className="h-6" /> */}
-          {/* <PopupConfirmation
-            title="Hapus Satuan"
-            message={`Apakah anda yakin menghapus satuan ( ${row.original.name} ) ini?`}
-            type="error"
-            onConfirm={() => handleDeleteUnit(row.original.id)}
-            isLoading={deleteUnitMutation.isPending}
-          > */}
-          {/* <ButtonDeleteColumn/> */}
-          {/* </PopupConfirmation> */}
         </div>
       );
     },

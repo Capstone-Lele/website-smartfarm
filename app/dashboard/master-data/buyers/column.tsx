@@ -6,11 +6,11 @@ import { useDeleteBuyer } from "@/lib/api/service/master-data/buyer/useBuyer";
 import { formatDate } from "@/lib/utils/format-date";
 import { Buyer } from "@/types/master-data/buyer.types";
 import { ColumnDef } from "@tanstack/react-table";
-import PopupConfirmation from '@/components/popup-confimation';
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { TYPE_BUYER } from "@/lib/constants/tye-buyer";
 import EditBuyerModal from "./edit";
+import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 
 export const columnsBuyer: ColumnDef<Buyer>[] = [
   {
@@ -67,35 +67,43 @@ export const columnsBuyer: ColumnDef<Buyer>[] = [
     },
   },
   {
-    id: "actions",
-    header: () => <span className="">Actions</span>,
+    id: "isActive",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="STATUS" />
+    ),
     cell: ({ row }) => {
       const deleteBuyerMutation = useDeleteBuyer();
 
-      const handleDeleteBuyer = async (id: string) => {
+      const handleCheckedChange = async () => {
         try {
-          const res = await deleteBuyerMutation.mutateAsync(id);
-          toast.success(res.message || "Pembeli berhasil dihapus");
-        } catch (error: any) {
-          toast.error("Gagal menghapus pembeli", {
-            description: error?.message || "Silakan coba lagi.",
+          const res = await deleteBuyerMutation.mutateAsync(row.original.id);
+          toast.success(`Pembeli ${row.original.name} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`);
+        } catch (error) {
+          toast.error("Gagal mengubah status pembeli", {
+            description: "Silakan coba lagi.",
           });
         }
       };
 
+      const isDeleted = row.original.deletedAt !== null;
+      return (
+        <div>
+            <ButtonSwitchColumn
+              isActive={!isDeleted}
+              onCheckedChange={handleCheckedChange}
+              isLoading={deleteBuyerMutation.isPending}
+            />
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: () => <span className="">Actions</span>,
+    cell: ({ row }) => {
       return (
         <div className="flex items-center text-primary gap-0.5">
           <EditBuyerModal buyer={row.original} />
-          <Separator orientation="vertical" className="h-6" />
-          <PopupConfirmation
-            title="Hapus Pembeli"
-            message={`Apakah anda yakin menghapus pembeli ( ${row.original.name} ) ini?`}
-            type="error"
-            onConfirm={() => handleDeleteBuyer(row.original.id)}
-            isLoading={deleteBuyerMutation.isPending}
-          >
-            <ButtonDeleteColumn/>
-          </PopupConfirmation>
         </div>
       );
     },

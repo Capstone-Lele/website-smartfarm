@@ -46,17 +46,8 @@ import {
   useFinanceInventorySubmission,
   useFinanceNonInventory,
 } from "@/lib/api/service/finance/useFinance";
-
-// ─── Dummy Data ────────────────────────────────────────────────────────────────
-
-const biomassData = [
-  { bulan: "Nov", biomass: 420 },
-  { bulan: "Des", biomass: 560 },
-  { bulan: "Jan", biomass: 710 },
-  { bulan: "Feb", biomass: 640 },
-  { bulan: "Mar", biomass: 880 },
-  { bulan: "Apr", biomass: 950 },
-];
+import { useListFeed } from "@/lib/api/service/notes/feed/useFeed";
+import { transformFeedToTrendData } from "@/lib/utils/transform-feed-data";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -67,6 +58,11 @@ const DashboardPage = () => {
   const { data: inventoryData } = useFinanceInventory();
   const { data: inventorySubmissionData } = useFinanceInventorySubmission();
   const { data: nonInventoryData } = useFinanceNonInventory();
+  const { data: feedData } = useListFeed();
+
+  const biomassData = useMemo(() => {
+    return transformFeedToTrendData(feedData?.data || [], 6);
+  }, [feedData]);
 
   const { totalIncome, totalExpense, netProfit } = useMemo(() => {
     let income = 0;
@@ -128,17 +124,17 @@ const DashboardPage = () => {
     {
       title: "Total Staf",
       value: dashboard?.totalStaff || "-",
-      sub: "keseluruhan staff",
+      sub: "staff (Petugas) aktif",
     },
     {
       title: "Panen Bulan Ini",
       value: dashboard?.totalHarvestQuantity || "-",
-      sub: "",
+      sub: "(ekor) ikan panen bulan ini",
     },
     {
       title: "Stok Pakan",
-      value: dashboard?.totalFood+" kg" || "-",
-      sub: "keseluruhan",
+      value: dashboard?.totalFood || "-",
+      sub: "(kg) keseluruhan",
     },
     {
       title: "Survival Rate",
@@ -249,7 +245,6 @@ const DashboardPage = () => {
         </div>
       </div>
 
-
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
         {statCards.map((card, i) => (
@@ -265,14 +260,28 @@ const DashboardPage = () => {
         ))}
       </div>
 
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Biomass trend[ lagi di kerjakan] */}
+        {/* Biomass trend */}
         <DefaultCard className="lg:col-span-2">
-          <h2 className="text-sm font-semibold text-gray-700 mb-1">
-            Tren Pemberian Pakan (kg)
-          </h2>
-          <p className="text-xs text-gray-400 mb-4">6 bulan terakhir</p>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-700 mb-1">
+                Tren Pemberian Pakan (kg)
+              </h2>
+              <p className="text-xs text-gray-400">6 bulan terakhir</p>
+            </div>
+            {biomassData.length > 0 && (
+              <div className="text-right">
+                <p className="text-xs text-gray-500">Total Bulan Ini</p>
+                <p className="text-xs font-medium">
+                  {biomassData[biomassData.length - 1].biomass.toLocaleString(
+                    "id-ID",
+                  )}{" "}
+                  kg
+                </p>
+              </div>
+            )}
+          </div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={biomassData}>
               <defs>
@@ -299,6 +308,27 @@ const DashboardPage = () => {
                   borderRadius: 8,
                   border: "1px solid #e5e7eb",
                 }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload[0]) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-white p-3 rounded-lg border border-gray-200">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {data.bulan}
+                        </p>
+                        <p className="text-sm text-blue-600 mt-1">
+                          Total: {data.biomass.toLocaleString("id-ID")} kg
+                        </p>
+                        {data.details && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            {data.details.count} laporan
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
               />
               <Area
                 type="monotone"
@@ -307,7 +337,7 @@ const DashboardPage = () => {
                 strokeWidth={2}
                 fill="url(#biomassGrad)"
                 dot={{ r: 4, fill: "#3b82f6" }}
-                name="Biomass (kg)"
+                name="Pakan (kg)"
               />
             </AreaChart>
           </ResponsiveContainer>

@@ -1,4 +1,4 @@
-import { InventoryResponse, InventoryResponseParamConsumption, InventoryResponseParamConsumptionData, InventoryResponseParamNote, InventoryResponseParamNoteData, InventoryResponseParamSubmission, InventoryResponseParamSubmissionData } from "@/types/inventory";
+import { InventoryDetailWithParamResponse, InventoryResponse, InventoryResponseParamConsumption, InventoryResponseParamConsumptionData, InventoryResponseParamNote, InventoryResponseParamNoteData, InventoryResponseParamSubmission, InventoryResponseParamSubmissionData } from "@/types/inventory";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { inventoryService } from "./inventory.service";
 import { InventoryResponseById } from "@/types/notes/inventory";
@@ -79,6 +79,16 @@ export const useDeleteInventory = () => {
 //     },
 //   });
 // };
+
+export const useGetInventoryByIdWithParams = (id: string, params: Record<string, string>) => {
+  return useQuery<InventoryDetailWithParamResponse>({
+    queryKey: ["getInventoryByIdWithParams", id, params],
+    queryFn: async () => {
+      const response = await inventoryService.getByIdParamAll(id, params);
+      return response;
+    },
+  });
+}
 
 export const useGetInventoryNotesByIdWithParams = (id: string, params: Record<string, string>) => {
   return useQuery<InventoryResponseParamNoteData>({

@@ -42,6 +42,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { he } from "zod/v4/locales";
+import { Pool } from "@/types/pool.types";
 
 const optionalPositiveNumber = (fieldName: string) =>
   z.preprocess(
@@ -67,15 +68,16 @@ const formSchema = z.object({
   diameter: optionalPositiveNumber("Diameter"),
 });
 
-const PostKolamModal = () => {
+const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
   const poolMutation = useCreatePool();
   const [isCirclePool, setIsCirclePool] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const nextPoolName = dataPool ? `Kolam ${dataPool.length + 1}` : "Kolam 1";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: nextPoolName || "",
       category: "",
       length: "" as any,
       width: "" as any,
@@ -94,6 +96,17 @@ const PostKolamModal = () => {
   }, [isCirclePool]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    // check if pool with the same name already exists
+    const nameExists = dataPool?.some(
+      (pool) => pool.name.toLowerCase() === data.name.toLowerCase(),
+    );
+    if (nameExists) {
+      toast.error("Nama kolam sudah digunakan", {
+        description: "Silakan gunakan nama lain yang unik.",
+      });
+      return;
+    }
+
     const dataPrep = {
       name: data.name,
       category: data.category,
@@ -146,6 +159,7 @@ const PostKolamModal = () => {
                       <Input
                         id="name"
                         autoComplete="off"
+                        disabled
                         placeholder="Contoh: Kolam A"
                         {...field}
                       />
@@ -153,7 +167,7 @@ const PostKolamModal = () => {
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan nama kolam.
+                          Nama kolam otomatis diisi berdasarkan jumlah kolam yang ada
                         </FieldDescription>
                       )}
                     </Field>

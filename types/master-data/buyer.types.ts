@@ -7,7 +7,7 @@ export type Buyer = {
   address: string;
   createdAt: string;
   updatedAt: string;
-  deletedAt?: string | null;
+  deletedAt: string | null;
 };
 
 export type BuyerResponse = {

@@ -1,6 +1,7 @@
 export type Unit = {
     id: string;
     name: string;
+    deletedAt: string | null;
 };
 
 export type UnitRequest = {

@@ -119,7 +119,7 @@ export const API_ENDPOINTS = {
   INVENTORY_SUBMISSION: {
     GET_ALL: "/inventory/submissions",
     GET_BY_ID: (id: string) => `/inventory/submission/${id}`,
-    UPDATE: (id: string) => `/inventory/submission/${id}`,
+    UPDATE: (id: string) => `/inventory/submission/status/${id}`,
   },
   NON_INVENTORY: {
     GET_BY_ID: (id: string) => `/inventory/non-inventory/${id}`,
@@ -142,8 +142,10 @@ export const API_ENDPOINTS = {
     GET: "/app/dashboard",
   },
   IOT: {
-    GET_ALL: "/iot/pool/data",
-  }
-
+    GET_ALL: "/iot/pool/data", // historical data untuk semua kolam
+    GET_BY_NODE: (nodeId: string) => `/iot/pool/${nodeId}`, // historical data untuk node tertentu
+    GET_ALL_LIVE: "/iot/pool/data", // data real-time untuk semua kolam
+    GET_LIVE_BY_NODE: (nodeId: string) => `/iot/chart/${nodeId}`, // data real-time untuk node tertentu
+  },
 } as const;
 

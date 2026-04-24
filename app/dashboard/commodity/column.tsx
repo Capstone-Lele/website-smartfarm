@@ -76,6 +76,19 @@ export const columns: ColumnDef<Commodity>[] = [
     },
   },
   {
+    accessorKey: "poolName",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="NAMA KOLAM" />
+    ),
+  },
+   {
+    accessorKey: "cycleStartDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+    ),
+    cell: ({ row }) => row.original.cycleStartDate ? formatDate(row.original.cycleStartDate) : "-",
+  },
+  {
     id: "actions",
     header: () => <span>ACTION</span>,
     cell: ({ row }) => (

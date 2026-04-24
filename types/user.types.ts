@@ -6,6 +6,7 @@ export type User = {
   image: string; 
   createdAt: string;
   updatedAt: string;
+  deletedAt: string | null; 
 };
 
 export type UserRequest = {

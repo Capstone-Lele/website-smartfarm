@@ -62,10 +62,28 @@ export type InventorySubmission = {
   transaction_type: string | null;
   unit: string;
   status: string;
+  feedback: string | null;
   notes?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+};
+
+export type InventoryDetailByParam = {
+  id: string;
+  productId: string;
+  product: string;
+  unitId: string;
+  unit: string;
+  totalQuantity: string;
+  updatedAt: string;
+  deletedAt: string | null;
+};
+
+export type InventoryDetailWithParamResponse = {
+  success: boolean;
+  message: string;
+  data: InventoryDetailByParam[];
 };
 
 /* 3diff response by param */
@@ -90,7 +108,7 @@ export type InventoryResponseParamNoteData = {
   success: boolean;
   message: string;
   data: InventoryResponseParamNote[];
-}
+};
 
 export type InventoryResponseParamSubmission = {
   id: string;
@@ -111,7 +129,7 @@ export type InventoryResponseParamSubmissionData = {
   success: boolean;
   message: string;
   data: InventoryResponseParamSubmission[];
-}
+};
 
 export type InventoryResponseParamConsumption = {
   id: string;
@@ -132,7 +150,7 @@ export type InventoryResponseParamConsumptionData = {
   success: boolean;
   message: string;
   data: InventoryResponseParamConsumption[];
-}
+};
 
 /* Example response */
 /* export type InventoryResponseParamNotes = {

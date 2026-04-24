@@ -12,11 +12,11 @@ import {
 import { CardStatisticReport } from "@/components/card/card-statistic-report";
 import DefaultCard from "@/components/card/default-card";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
-import { InventoryDetail, Inventory } from "@/types/inventory";
+import { InventoryDetail, Inventory, InventoryDetailByParam } from "@/types/inventory";
 
 interface InventoryPriceAnalysisProps {
   details: InventoryDetail[];
-  currentInventory: Inventory | undefined;
+  currentInventory: InventoryDetailByParam | undefined;
 }
 
 export const InventoryPriceAnalysis: React.FC<InventoryPriceAnalysisProps> = ({

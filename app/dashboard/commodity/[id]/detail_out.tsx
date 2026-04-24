@@ -20,6 +20,7 @@ import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { useCommodityByIdAndType } from "@/lib/api/service/commodity/useCommodity";
 import { useFinanceBySourceId } from "@/lib/api/service/finance/useFinance";
 import { CommodityByIdAndSourceIdItems } from "@/types/comodity";
+import { useDetailCycle } from "@/lib/api/service/cycles/useCycle";
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
@@ -40,7 +41,12 @@ function SaleItemCard({
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(index === 0);
-
+  const { data: dataCycle, isLoading: isLoadingCycle } = useDetailCycle(
+    item.cycleId || "",
+  );
+  const cycleStartDate = dataCycle?.data?.[0]?.startDate
+    ? formatDate(dataCycle.data[0].startDate)
+    : "-";
   return (
     <div className="rounded-sm border bg-muted/10 overflow-hidden">
       {/* Header */}
@@ -70,40 +76,47 @@ function SaleItemCard({
         <div className="p-4 pt-0 space-y-3">
           <Separator className="mb-3" />
           <div className="grid grid-cols-1 gap-2 text-sm">
-            <div>
+            <div className="flex flex-wrap justify-between items-center">
               <p className="text-xs text-muted-foreground mb-0.5">
                 Hasil Panen
               </p>
               <p className="font-medium">
-                {item.harvestDate} | {item.poolName}
+                {item.harvestDate} | {item.poolName} | Siklus:{" "}
+                {isLoadingCycle ? "Loading..." : cycleStartDate}
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-1">
-              <div className="rounded-md bg-muted/30 p-2.5 text-center">
-                <p className="text-xs text-muted-foreground">Jumlah</p>
-                <p className="font-semibold">{item.quantity} ekor</p>
+            <div className="space-y-1.5 mt-2 border-t pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Jumlah</span>
+                <span className="text-sm font-medium">
+                  {item.quantity} ekor
+                </span>
               </div>
-              <div className="rounded-md bg-muted/30 p-2.5 text-center">
-                <p className="text-xs text-muted-foreground">Berat</p>
-                <p className="font-semibold">{item.quantityKg} kg</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Berat</span>
+                <span className="text-sm font-medium">
+                  {item.quantityKg} kg
+                </span>
               </div>
-              <div className="rounded-md bg-muted/30 p-2.5 text-center">
-                <p className="text-xs text-muted-foreground">Harga/kg</p>
-                <p className="font-semibold">
-                  {new Intl.NumberFormat("id-ID").format(item.priceKg)}
-                </p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Harga/kg</span>
+                <span className="text-sm font-medium">
+                  Rp {new Intl.NumberFormat("id-ID").format(item.priceKg)}
+                </span>
               </div>
-            </div>
-            <div className="flex items-center justify-between bg-primary/5 px-3 py-2 mt-1">
-              <span className="text-xs text-muted-foreground">Subtotal</span>
-              <span className="font-semibold text-primary">
-                {formatRupiah(item.subTotal)}
-              </span>
+              <div className="flex items-center justify-between border-t pt-1.5 mt-1.5">
+                <span className="text-xs text-muted-foreground font-semibold">
+                  Subtotal
+                </span>
+                <span className="font-bold text-primary">
+                  {formatRupiah(item.subTotal)}
+                </span>
+              </div>
             </div>
             {item.notes && (
               <div>
                 <p className="text-xs text-muted-foreground mb-0.5">
-                  Catatan Item
+                  Catatan Item :
                 </p>
                 <p className="text-sm italic text-muted-foreground">
                   {item.notes}
@@ -210,7 +223,9 @@ const DetailOut = ({ id }: { id: string }) => {
                 />
                 <InfoRow
                   label="Tanggal Order"
-                  value={formatDate(dataFinance?.data?.[0]?.transactionDate || "")}
+                  value={formatDate(
+                    dataFinance?.data?.[0]?.transactionDate || "",
+                  )}
                 />
                 <InfoRow
                   label="Total Harga"
@@ -250,7 +265,7 @@ const DetailOut = ({ id }: { id: string }) => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-sm">Daftar Item Komoditas</h3>
+                <h3 className="font-semibold text-sm">Daftar Order Item Komoditas</h3>
               </div>
               <Badge
                 variant="secondary"
@@ -268,7 +283,7 @@ const DetailOut = ({ id }: { id: string }) => {
             </div>
 
             {/* Grand total bar */}
-            <div className="flex items-center justify-between rounded-md border bg-gray-100 px-4 py-3 mt-2">
+            <div className="flex items-center justify-between rounded-sm border bg-gray-100 px-4 py-3 mt-2">
               <span className="text-sm font-semibold">Total Keseluruhan</span>
               <span className="text-base font-bold ">
                 {formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0)}

@@ -124,7 +124,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
       ) : (
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[260px]"
+          className="mx-auto aspect-square max-h-[260px] w-full"
         >
           <PieChart>
             <ChartTooltip cursor={false} content={<CustomTooltip />} />
@@ -172,7 +172,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
             </Pie>
             <ChartLegend
               content={<ChartLegendContent nameKey="id" />}
-              className="flex-wrap gap-2 *:basis-1/2 *:justify-center pt-2"
+              className="flex flex-wrap gap-1 *:basis-1/2 *:justify-center pt-1"
             />
           </PieChart>
         </ChartContainer>

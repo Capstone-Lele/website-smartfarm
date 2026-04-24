@@ -69,6 +69,10 @@ const formSchema = z.object({
       (file) =>
         file && ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
+    )
+    .refine(
+      (file) => !file || file.size <= 5 * 1024 * 1024,
+      { message: "Ukuran file maksimal 5MB" },
     ),
 
   /* order items */
@@ -152,7 +156,7 @@ function OrderItemRow({
           <span className="text-sm font-semibold text-foreground">
             Item #{index + 1}
           </span>
-          {!isOpen && (
+          {/* {!isOpen && (
             <span className="text-xs font-medium text-muted-foreground ml-2">
               {OptionalNoteId
                 ? DUMMY_COMMODITY_NOTES.find((c) => c.value === OptionalNoteId)
@@ -160,7 +164,7 @@ function OrderItemRow({
                 : "Belum diisi"}{" "}
               — {formatRupiah(rowTotal)}
             </span>
-          )}
+          )} */}
         </div>
         {canRemove && (
           <Button
@@ -307,10 +311,7 @@ function OrderItemRow({
             render={({ field }) => (
               <Field>
                 <FieldLabel>
-                  Catatan{" "}
-                  <span className="text-muted-foreground text-xs">
-                    (opsional)
-                  </span>
+                  Catatan
                 </FieldLabel>
                 <Textarea
                   placeholder="Keterangan..."
@@ -390,7 +391,7 @@ const PostSellCommodity = () => {
   }, [grandTotal, form]);
 
   const buyerOptions =
-    buyersData?.data?.map((buyer: Buyer) => ({
+    buyersData?.data?.filter((buyer: Buyer) => !buyer.deletedAt).map((buyer: Buyer) => ({
       label: `${buyer.name} (${buyer.type})`,
       value: buyer.id,
     })) || [];
