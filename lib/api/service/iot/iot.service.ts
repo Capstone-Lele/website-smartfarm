@@ -138,53 +138,53 @@ export const iotService = {
     const response = await API_CLIENT.get<ResponseIOTData>(
       API_ENDPOINTS.IOT.GET_ALL_LIVE,
     );
-    // return response;
-    return {
-      success: true,
-      message: "All pool data retrieved successfully",
-      data: [
-        {
-          node_id: 1,
-          ph: 7.05,
-          temp: 28.34,
-          timestamp: 1769697026.2630956,
-          receivedAt: "2026-01-29T08:00:00.000Z",
-        },
-        {
-          node_id: 2,
-          ph: 7.85,
-          temp: 29.12,
-          timestamp: 1769697026.2630956,
-          receivedAt: "2026-01-29T08:00:05.000Z",
-        },
-        {
-          node_id: 3,
-          ph: 8.15,
-          temp: 28.45,
-          timestamp: 1769697026.2630956,
-          receivedAt: "2026-01-29T08:00:10.000Z",
-        },
-      ],
-    };
+    return response;
+    // return {
+    //   success: true,
+    //   message: "All pool data retrieved successfully",
+    //   data: [
+    //     {
+    //       node_id: 1,
+    //       ph: 7.05,
+    //       temp: 28.34,
+    //       timestamp: 1769697026.2630956,
+    //       receivedAt: "2026-01-29T08:00:00.000Z",
+    //     },
+    //     {
+    //       node_id: 2,
+    //       ph: 7.85,
+    //       temp: 29.12,
+    //       timestamp: 1769697026.2630956,
+    //       receivedAt: "2026-01-29T08:00:05.000Z",
+    //     },
+    //     {
+    //       node_id: 3,
+    //       ph: 8.15,
+    //       temp: 28.45,
+    //       timestamp: 1769697026.2630956,
+    //       receivedAt: "2026-01-29T08:00:10.000Z",
+    //     },
+    //   ],
+    // };
   },
 
   getLiveByNode: async (nodeId: string) => {
-    // const response = await API_CLIENT.get<IOTDataLiveDetail>(
-    //   API_ENDPOINTS.IOT.GET_LIVE_BY_NODE(nodeId),
-    // );
-    // return response;
-    return {
-      success: true,
-      message: "All pool data retrieved successfully",
-      data: [
-        {
-          node_id: {nodeId},
-          ph: 2.05,
-          temp: 3.87,
-          timestamp: 1769697026.2630956,
-          receivedAt: "2026-01-29T08:00:00.000Z",
-        },
-      ],
-    };
+    const response = await API_CLIENT.get<IOTDataLiveDetail>(
+      API_ENDPOINTS.IOT.GET_LIVE_BY_NODE(nodeId),
+    );
+    return response;
+    // return {
+    //   success: true,
+    //   message: "All pool data retrieved successfully",
+    //   data: [
+    //     {
+    //       node_id: {nodeId},
+    //       ph: 2.05,
+    //       temp: 3.87,
+    //       timestamp: 1769697026.2630956,
+    //       receivedAt: "2026-01-29T08:00:00.000Z",
+    //     },
+    //   ],
+    // };
   },
 };
