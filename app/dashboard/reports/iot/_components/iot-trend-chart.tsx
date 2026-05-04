@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -18,6 +18,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants/chart-color";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface IotTrendChartProps {
   data: any[];
@@ -34,6 +36,8 @@ export const IotTrendChart: React.FC<IotTrendChartProps> = ({
   title,
   description,
 }) => {
+  const [showDots, setShowDots] = useState(false);
+
   const chartConfig = useMemo(() => {
     const config: ChartConfig = {};
     nodes.forEach((node, index) => {
@@ -48,8 +52,25 @@ export const IotTrendChart: React.FC<IotTrendChartProps> = ({
 
   return (
     <DefaultCard className="col-span-1 w-full">
-      <h2 className="text-sm font-semibold text-gray-700 mb-1">{title}</h2>
-      <p className="text-xs text-gray-400 mb-4">{description}</p>
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h2 className="text-sm font-semibold text-gray-700 mb-1">{title}</h2>
+          <p className="text-xs text-gray-400">{description}</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="show-dots"
+            checked={showDots}
+            onCheckedChange={setShowDots}
+          />
+          <Label
+            htmlFor="show-dots"
+            className="text-xs text-slate-600 font-medium cursor-pointer"
+          >
+            Tampilkan Titik
+          </Label>
+        </div>
+      </div>
 
       {data.length === 0 ? (
         <div className="h-[260px] flex items-center justify-center text-sm text-gray-400">
@@ -92,7 +113,14 @@ export const IotTrendChart: React.FC<IotTrendChartProps> = ({
                     type="monotone"
                     stroke={CHART_COLORS[index % CHART_COLORS.length]}
                     strokeWidth={2}
-                    dot={false}
+                    dot={
+                      showDots
+                        ? {
+                            fill: CHART_COLORS[index % CHART_COLORS.length],
+                            opacity: 0.8,
+                          }
+                        : false
+                    }
                     activeDot={{ r: 6 }}
                     connectNulls={true}
                   />

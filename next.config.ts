@@ -34,6 +34,7 @@ const nextConfig: NextConfig = {
   experimental: {
     mcpServer: true,
   },
+  devIndicators: false,
 };
 
 export default nextConfig;

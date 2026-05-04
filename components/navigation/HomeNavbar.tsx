@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { BsSendFill } from "react-icons/bs";
+import { LuLogIn } from "react-icons/lu";
 
 const HomeNavbar = () => {
   const navItems = [
@@ -83,14 +85,14 @@ const HomeNavbar = () => {
                 );
               })}
             </div>
-            <div className="flex items-center">
+            <Link href="/login" className="flex items-center">
               <button className="rounded-full bg-primary-surface text-sm font-medium text-slate-700 transition-colors hover:bg-primary-surface/90 flex items-center pl-3 pr-1 py-1 cursor-pointer">
-                Kontak Kami
+                Login
                 <div className="bg-primary text-white rounded-full p-2 ml-2">
-                  <BsSendFill />
+                  <LuLogIn />
                 </div>
               </button>
-            </div>
+            </Link>
           </div>
         </div>
       </nav>

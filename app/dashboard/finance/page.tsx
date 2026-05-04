@@ -4,7 +4,6 @@ import React, { useMemo, useState } from "react";
 import { columns } from "./column";
 import { Finance } from "@/types/finance/finance";
 import { DataTable } from "@/components/data-table/data-table";
-import { FINANCE_DUMMY_DATA } from "@/lib/constants/dummy-respoonse/finances/finance";
 import PostFinance from "./post";
 import CashFlowChart from "./_components/cash-flow-chart";
 import FinancePieCharts from "./_components/finance-pie-charts";

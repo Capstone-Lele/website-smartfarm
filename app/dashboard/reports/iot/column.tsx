@@ -1,14 +1,14 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { IOTData } from "@/types/notes/iot";
+import { IOTData, IOTDataHistorical } from "@/types/notes/iot";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { format } from "date-fns";
 
 export const getColumns = (
   filterType: "ph" | "temp" | "all",
-): ColumnDef<IOTData>[] => {
-  const baseColumns: ColumnDef<IOTData>[] = [
+): ColumnDef<IOTDataHistorical>[] => {
+  const baseColumns: ColumnDef<IOTDataHistorical>[] = [
     {
       accessorKey: "node_id",
       header: ({ column }) => (
@@ -16,12 +16,12 @@ export const getColumns = (
       ),
     },
     {
-      accessorKey: "receivedAt",
+      accessorKey: "createdAt",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Waktu" />
       ),
       cell: ({ row }) => {
-        const dateStr = row.getValue("receivedAt") as string;
+        const dateStr = row.getValue("createdAt") as string;
         if (!dateStr) return "-";
         return format(new Date(dateStr), "dd MMM yyyy, HH:mm");
       },

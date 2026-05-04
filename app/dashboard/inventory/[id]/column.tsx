@@ -12,6 +12,7 @@ import ButtonDetailColumn from "@/components/button-column/button-detail-column"
 import { use } from "react";
 import { useParams } from "next/navigation";
 import { ButtonCopy } from "@/components/button-copy";
+import { formatNumber } from "@/lib/utils/format-number";
 
 export const columns: ColumnDef<InventoryDetail>[] = [
   {
@@ -102,6 +103,14 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KUANTITAS" />
     ),
+    cell: ({ row }) => {
+      return (
+        <div>
+          <span>{formatNumber(row.original.quantity)}</span>
+          <p className="font-medium">{row.original.unit ? row.original.unit : "-"}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "pricePerItem",

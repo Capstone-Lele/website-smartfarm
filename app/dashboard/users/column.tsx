@@ -15,6 +15,8 @@ import { formatDate } from "@/lib/utils/format-date";
 import ButtonDeleteColumn from "@/components/button-column/button-delete-column";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 
+import DetailUserSheet from "./detail";
+
 export const columnsUser: ColumnDef<User>[] = [
  
   {
@@ -49,6 +51,16 @@ export const columnsUser: ColumnDef<User>[] = [
         </Badge>
       );
     },
+  },
+  {
+    id: "jumlah_akses",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="JUMLAH AKSES" />
+    ),
+    cell: ({ row }) => {
+      const data = row.original.permission?.length || 0;
+      return <span>{data}</span>;
+    }
   },
   {
     accessorKey: "createdAt",
@@ -106,6 +118,7 @@ export const columnsUser: ColumnDef<User>[] = [
 
       return (
         <div className="flex items-center text-primary gap-0.5">
+          <DetailUserSheet user={row.original} />
           <EditUserModal user={row.original} />
         </div>
       );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,8 +12,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LuDownload } from "react-icons/lu";
-import { ChevronDown } from "lucide-react";
-import { ExportPreviewModal } from "./export-preview-modal";
+import { ChevronDown, Printer } from "lucide-react";
+import { ExportPreviewTable } from "./export-preview-table";
+import { usePathname } from "next/navigation";
+import dataPath from "@/lib/constants/path";
+import { useReactToPrint } from "react-to-print";
 
 interface ExportOptionsProps {
   /** TanStack Table instance */
@@ -23,7 +26,42 @@ interface ExportOptionsProps {
 }
 
 export function ExportOptions({ table, title, fileName }: ExportOptionsProps) {
-  const [open, setOpen] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+  const pathName = usePathname();
+
+  const checkPathname = () => {
+    for (const item of dataPath) {
+      if (pathName === item.path) {
+        return item.name;
+      }
+      if (item.sub_paths) {
+        for (const subItem of item.sub_paths) {
+          if (pathName === subItem.path) {
+            return subItem.name;
+          }
+        }
+      }
+    }
+    return "";
+  };
+
+  const pathSegments = checkPathname();
+  const reportTitle = title ?? `${pathSegments || "Data"}`;
+
+  const handlePrint = useReactToPrint({
+    contentRef: tableRef,
+    documentTitle: reportTitle,
+    pageStyle: `
+      @media print {
+        @page { size: landscape; margin: 10mm; }
+        body { font-family: sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        table { page-break-inside: auto; }
+        tr { page-break-inside: avoid; page-break-after: auto; }
+        thead { display: table-header-group; }
+        tfoot { display: table-footer-group; }
+      }
+    `,
+  });
 
   return (
     <>
@@ -41,22 +79,19 @@ export function ExportOptions({ table, title, fileName }: ExportOptionsProps) {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => setOpen(true)}
+              onClick={() => handlePrint()}
             >
-              <LuDownload className="mr-2 h-4 w-4" />
-              Export ke PDF
+              <Printer className="mr-2 h-4 w-4" />
+              Print / Preview
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <ExportPreviewModal
-        open={open}
-        onClose={() => setOpen(false)}
-        table={table}
-        title={title ?? "Data Export"}
-        fileName={fileName}
-      />
+      
+      {/* Render hidden template for print referencing */}
+      <div className="hidden">
+        <ExportPreviewTable ref={tableRef} table={table} title={reportTitle} />
+      </div>
     </>
   );
 }

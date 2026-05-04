@@ -1,7 +1,10 @@
+"use client";
+import { GeneralInfoResponse } from "@/types/guest";
 import React from "react";
 import { LuArrowDown } from "react-icons/lu";
 
-const HomeHeader = () => {
+const HomeHeader = ({data}:{data?:GeneralInfoResponse}) => {
+  const generalInfo = data?.data[0];
   return (
     <main id="beranda">
       <section
@@ -43,15 +46,15 @@ const HomeHeader = () => {
             <p className="text-lg text-gray-600">Tahun Pengalaman</p>
           </div>
           <div>
-            <h2 className="text-4xl font-semibold mb-2">1000+</h2>
+            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalExistingTransaction || "-"}</h2>
             <p className="text-lg text-gray-600">Transaksi Penjualan</p>
           </div>
           <div>
-            <h2 className="text-4xl font-semibold mb-2">500+</h2>
+            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalSuccessHarvest || "-"}</h2>
             <p className="text-lg text-gray-600">Panen</p>
           </div>
           <div>
-            <h2 className="text-4xl font-semibold mb-2">10+</h2>
+            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalPools || "-"}</h2>
             <p className="text-lg text-gray-600">Kolam Budidaya</p>
           </div>
         </div>

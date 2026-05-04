@@ -25,21 +25,20 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { FaFish, FaWater, FaLeaf } from "react-icons/fa";
-import { IoFish } from "react-icons/io5";
-import { FiShield, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 import {
   LuUsersRound,
   LuTrendingUp,
   LuPackage,
   LuWallet,
   LuTrendingDown,
+  LuOctagonAlert,
 } from "react-icons/lu";
 import { Scale } from "lucide-react";
 import { useDashboard } from "@/lib/api/service/dashboard/useDashboard";
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { useMemo } from "react";
+import { ImFileEmpty } from "react-icons/im";
 import {
   useFinanceCommodity,
   useFinanceInventory,
@@ -48,6 +47,9 @@ import {
 } from "@/lib/api/service/finance/useFinance";
 import { useListFeed } from "@/lib/api/service/notes/feed/useFeed";
 import { transformFeedToTrendData } from "@/lib/utils/transform-feed-data";
+import { useGetInventorySubmissions } from "@/lib/api/service/inventory-submission/useInventorySubmission";
+import Link from "next/link";
+import { calculateFinanceSummary } from "@/lib/utils/get-finance-data-1month";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -59,55 +61,24 @@ const DashboardPage = () => {
   const { data: inventorySubmissionData } = useFinanceInventorySubmission();
   const { data: nonInventoryData } = useFinanceNonInventory();
   const { data: feedData } = useListFeed();
+  const { data: inventorySubmissionsData } = useGetInventorySubmissions();
+
+  // Calculate pending count if not provided
+  const calculatedPendingCount = inventorySubmissionsData?.data.filter(
+    (item) => item.status === "pending",
+  ).length;
 
   const biomassData = useMemo(() => {
     return transformFeedToTrendData(feedData?.data || [], 6);
   }, [feedData]);
 
   const { totalIncome, totalExpense, netProfit } = useMemo(() => {
-    let income = 0;
-    let expense = 0;
-    const currDate = new Date();
-    const firstDayOfMonth = new Date(
-      currDate.getFullYear(),
-      currDate.getMonth(),
-      1,
-    ).getTime();
-    const lastDayOfMonth = new Date(
-      currDate.getFullYear(),
-      currDate.getMonth() + 1,
-      0,
-      23,
-      59,
-      59,
-      999,
-    ).getTime();
-
-    const processData = (arr: any[]) => {
-      if (!arr) return;
-      arr.forEach((item) => {
-        const time = new Date(item.transactionDate).getTime();
-        if (time >= firstDayOfMonth && time <= lastDayOfMonth) {
-          if (item.transactionType === "grant") return; // exclude hibah/pendanaan
-          if (item.type === "in") {
-            income += Number(item.totalPrice) || 0;
-          } else if (item.type === "out") {
-            expense += Number(item.totalPrice) || 0;
-          }
-        }
-      });
-    };
-
-    processData(commodityData || []);
-    processData(inventoryData || []);
-    processData(inventorySubmissionData || []);
-    processData(nonInventoryData || []);
-
-    return {
-      totalIncome: income,
-      totalExpense: expense,
-      netProfit: income - expense,
-    };
+    return calculateFinanceSummary(
+      commodityData,
+      inventoryData,
+      inventorySubmissionData,
+      nonInventoryData,
+    );
   }, [commodityData, inventoryData, inventorySubmissionData, nonInventoryData]);
 
   const statCards = [
@@ -138,7 +109,8 @@ const DashboardPage = () => {
     },
     {
       title: "Survival Rate",
-      value: dashboard?.survivalRate + " %" || "-",
+      value:
+        dashboard?.survivalRate == null ? "-" : `${dashboard.survivalRate}%`,
       sub: "berdasarkan siklus panen",
     },
   ];
@@ -177,6 +149,25 @@ const DashboardPage = () => {
   };
   return (
     <div className="flex flex-col gap-4 pb-4">
+      {/* Pending Inventory Submissions Alert */}
+      {calculatedPendingCount
+        ? calculatedPendingCount > 0 && (
+            <div className="rounded-sm bg-amber-100 text-amber-800 p-4 flex flex-row items-start sm:items-center justify-between">
+              <p className="text-sm font-medium flex items-center gap-3">
+                <LuOctagonAlert />
+                Ada {calculatedPendingCount} pengajuan inventaris yang menunggu
+                persetujuan.
+              </p>
+              <Link
+                href="/dashboard/inventory-submission"
+                className="inline-block text-sm font-medium text-amber-700 underline"
+              >
+                Lihat Pengajuan
+              </Link>
+            </div>
+          )
+        : null}
+
       {/* Welcome banner */}
       <div className="rounded-sm bg-gradient-to-r from-primary via-blue-500 to-secondary p-5 text-white shadow-md">
         <p className="text-sm font-medium opacity-80">Selamat datang kembali</p>
@@ -349,59 +340,66 @@ const DashboardPage = () => {
             Status Populasi Ikan
           </h2>
           <p className="text-xs text-gray-400 mb-2">Seluruh siklus aktif</p>
-          <ChartContainer
-            config={mortalityConfig}
-            className="mx-auto aspect-[4/3] max-h-[220px]"
-          >
-            <PieChart>
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Pie
-                data={mortalityData}
-                dataKey="value"
-                nameKey="name"
-                innerRadius={60}
-                strokeWidth={2}
-                paddingAngle={3}
-              >
-                <Label
-                  content={({ viewBox }) => {
-                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                      return (
-                        <text
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                        >
-                          <tspan
+          {mortalityData.every((d) => d.value === 0) ? (
+            <div className="flex h-[260px] flex-col items-center justify-center gap-3 text-muted-foreground">
+              <ImFileEmpty className="h-10 w-10 opacity-25" />
+              <span className="text-sm">Belum ada data populasi</span>
+            </div>
+          ) : (
+            <ChartContainer
+              config={mortalityConfig}
+              className="mx-auto aspect-[4/3] max-h-[220px]"
+            >
+              <PieChart>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                  data={mortalityData}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={60}
+                  strokeWidth={2}
+                  paddingAngle={3}
+                >
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text
                             x={viewBox.cx}
                             y={viewBox.cy}
-                            className="fill-foreground text-2xl font-bold"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
                           >
-                            {totalFish.toLocaleString("id-ID")}
-                          </tspan>
-                          <tspan
-                            x={viewBox.cx}
-                            y={(viewBox.cy || 0) + 20}
-                            className="fill-muted-foreground text-xs"
-                          >
-                            Total Populasi
-                          </tspan>
-                        </text>
-                      );
-                    }
-                  }}
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-2xl font-bold"
+                            >
+                              {totalFish.toLocaleString("id-ID")}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 20}
+                              className="fill-muted-foreground text-xs"
+                            >
+                              Total Populasi
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                </Pie>
+                <ChartLegend
+                  content={<ChartLegendContent nameKey="name" />}
+                  className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center text-xs"
                 />
-              </Pie>
-              <ChartLegend
-                content={<ChartLegendContent nameKey="name" />}
-                className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center text-xs"
-              />
-            </PieChart>
-          </ChartContainer>
+              </PieChart>
+            </ChartContainer>
+          )}
         </DefaultCard>
       </div>
     </div>

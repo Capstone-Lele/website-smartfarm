@@ -50,9 +50,9 @@ const page = () => {
     }
 
     const filtered = data.filter((item) => {
-      if (!item.receivedAt) return false;
+      if (!item.createdAt) return false;
 
-      const itemDate = new Date(item.receivedAt);
+      const itemDate = new Date(item.createdAt);
       const { startDate, endDate } = selectedDateRange;
 
       const isDateMatch =

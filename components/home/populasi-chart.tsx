@@ -17,32 +17,22 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { ImFileEmpty } from "react-icons/im";
 
 export const description = "A bar chart";
 
-const chartData = [
-  { kolam: "Kolam 1", populasi: 1200 },
-  { kolam: "Kolam 2", populasi: 850 },
-  { kolam: "Kolam 3", populasi: 1500 },
-  { kolam: "Kolam 4", populasi: 950 },
-  { kolam: "Kolam 5", populasi: 1100 },
-  { kolam: "Kolam 6", populasi: 1300 },
-  { kolam: "Kolam 7", populasi: 700 },
-  { kolam: "Kolam 8", populasi: 1600 },
-  { kolam: "Kolam 9", populasi: 1050 },
-  { kolam: "Kolam 10", populasi: 900 },
-  { kolam: "Kolam 11", populasi: 1450 },
-  { kolam: "Kolam 12", populasi: 1250 },
-];
-
 const chartConfig = {
-  populasi: {
+  total: {
     label: "Populasi Ikan",
     color: "var(--primary)",
   },
 } satisfies ChartConfig;
 
-export function PopulasiChartBarDefault() {
+export function PopulasiChartBarDefault({
+  chartData = [],
+}: {
+  chartData?: { poolName: string; total: number }[];
+}) {
   return (
     <Card className="w-full  rounded-sm">
       <CardHeader>
@@ -52,15 +42,22 @@ export function PopulasiChartBarDefault() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {
+          chartData.length === 0 ? (
+            <div className="flex h-[260px] flex-col items-center justify-center gap-3 text-muted-foreground">
+                          <ImFileEmpty className="h-10 w-10 opacity-25" />
+                          <span className="text-sm">Belum ada data populasi</span>
+                        </div>
+          ) : (
         <ChartContainer config={chartConfig} className="h-75 w-full">
           <BarChart accessibilityLayer data={chartData} margin={{ left: 10 }}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="kolam"
+              dataKey="poolName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.replace("Kolam", "K")}
+              // tickFormatter={(value) => value.replace("Kolam", "K")}
             />
             <YAxis
               tickLine={false}
@@ -72,9 +69,11 @@ export function PopulasiChartBarDefault() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="populasi" fill="var(--color-populasi)" radius={8} />
+            <Bar dataKey="total" fill="var(--color-total)" maxBarSize={40} />
           </BarChart>
         </ChartContainer>
+          )
+        }
       </CardContent>
     </Card>
   );

@@ -20,13 +20,14 @@ export const useGetUsers = () => {
     return query;
 };
 
-export const useGetUserById = (id: string) => {
+export const useGetUserById = (id: string, enabled: boolean = true) => {
     return useQuery({
         queryKey: ['user', id],
         queryFn: async () => {
             const response = await userService.getById(id);
             return response;
         },
+        enabled: enabled,
     });
 };
 
@@ -40,6 +41,7 @@ export const useCreateUser = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
+            queryClient.invalidateQueries({ queryKey: ["clearRedisCache"] });
         }
     });
 };
@@ -68,6 +70,7 @@ export const useUpdateUser = () => {
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['users' ] });
+            queryClient.invalidateQueries({ queryKey: ["clearRedisCache"] });
             queryClient.invalidateQueries({ queryKey: ['userInfo'] });
             queryClient.invalidateQueries({ queryKey: ['user', variables.id] });
         }

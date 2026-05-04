@@ -19,7 +19,6 @@ export type ProfileResponse = {
 
 export type ProfileEditInput = {
   name?: string;
-  password?: string;
+  newPassword?: string;
   image?: File | string | null;
-  confirmPassword?: string;
 };

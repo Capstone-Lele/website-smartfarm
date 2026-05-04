@@ -1,7 +1,10 @@
 import React from "react";
 import { PanenChartBarInteractive } from "./panen-chart";
+import { GeneralInfoResponse } from "@/types/guest";
+import { formatDate } from "@/lib/utils/format-date";
 
-const HomePanen = () => {
+const HomePanen = ({ data }: { data?: GeneralInfoResponse }) => {
+  const generalInfo = data?.data[0];
   return (
     <section id="panen" className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -16,14 +19,15 @@ const HomePanen = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="col-span-3">
-            <PanenChartBarInteractive />
+            <PanenChartBarInteractive data={data} />
           </div>
 
           <div className="bg-white rounded-sm border border-slate-200 p-6 flex flex-col h-full shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">
-                  10 Panen Terakhir
+                  {generalInfo?.harvestSection.latestHarvest.length || "-"}{" "}
+                  Panen Terakhir
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
                   Riwayat terbaru dari kolam
@@ -35,44 +39,35 @@ const HomePanen = () => {
             </div>
 
             <div className="flex flex-col gap-2 flex-1">
-              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-sm">
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-slate-900">
-                    Kolam 3
-                  </h4>
-                  <p className="text-xs text-slate-500">20 April 2024</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">5.000</p>
-                  <p className="text-xs text-slate-500">ekor</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-sm">
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-slate-900">
-                    Kolam 7
-                  </h4>
-                  <p className="text-xs text-slate-500">15 April 2024</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">8.000</p>
-                  <p className="text-xs text-slate-500">ekor</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-sm">
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-slate-900">
-                    Kolam 1
-                  </h4>
-                  <p className="text-xs text-slate-500">10 April 2024</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">3.500</p>
-                  <p className="text-xs text-slate-500">ekor</p>
-                </div>
-              </div>
+              {generalInfo?.harvestSection.latestHarvest.length ? (
+                generalInfo.harvestSection.latestHarvest.map(
+                  (harvest, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 bg-slate-50 p-4 rounded-sm"
+                    >
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-slate-900">
+                          {harvest.poolName}
+                        </h4>
+                        <p className="text-xs text-slate-500">
+                          {formatDate(harvest.reportDate) || "-"}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-slate-900">
+                          {harvest.totalQuantity || "-"}
+                        </p>
+                        <p className="text-xs text-slate-500">ekor</p>
+                      </div>
+                    </div>
+                  ),
+                )
+              ) : (
+                <p className="text-sm text-slate-500">
+                  Belum ada data panen terbaru.
+                </p>
+              )}
             </div>
           </div>
         </div>

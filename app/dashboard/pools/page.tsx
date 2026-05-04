@@ -6,7 +6,7 @@ import { columnsPool } from "./column";
 import PostKolamModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import DefaultCard from "@/components/card/default-card";
-import { LuUserRound, LuUsersRound } from "react-icons/lu";
+import { LuCheck, LuUserRound, LuUsersRound } from "react-icons/lu";
 import CardStatistic from "@/components/card/card-statistic";
 import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -169,9 +169,132 @@ const page = () => {
             </TabsList>
             <Separator className="my-4" />
             <TabsContent value="cycle">
-              Make changes to your account here.
+              <div className="flex flex-col gap-4">
+                <div className="border border-gray-200 rounded-md p-4">
+                  <h3 className="font-semibold text-gray-800 text-lg border-b border-gray-200 pb-2 mb-3">
+                    Kolam Pembesaran
+                  </h3>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kondisi siklus: Panen
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Stand By (tidak terpakai)
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kondisi siklus: Aktif Budidaya
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Aktif Budidaya (sedang terpakai)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-md p-4">
+                  <h3 className="font-semibold text-gray-800 text-lg border-b border-gray-200 pb-2 mb-3">
+                    Kolam Pembenihan
+                  </h3>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kondisi siklus: Pindah
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Stand By (tidak terpakai)
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kondisi siklus: Aktif Budidaya
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Aktif Budidaya (sedang terpakai)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-md p-4">
+                  <h3 className="font-semibold text-gray-800 text-lg border-b border-gray-200 pb-2 mb-3">
+                    Kolam Karantina
+                  </h3>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kolam: Kosong (tidak ada ikan)
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Stand By
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        Ketika kolam: Ada ikan
+                      </p>
+                      <p className="text-gray-600">
+                        Maka kondisi kolam: Perawatan
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
-            <TabsContent value="move">Change your password here.</TabsContent>
+            <TabsContent value="move">
+              <div className="flex flex-col gap-4">
+                <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
+                  <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                    <LuCheck className="text-white w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Pembenihan {`-->`} Pembesaran
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      Ikan di kolam pembenihan dapat berpindah ke kolam
+                      pembesaran
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
+                  <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                    <LuCheck className="text-white w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Pembenihan {`<-->`} Karantina
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      Ikan di kolam pembenihan dapat berpindah ke kolam
+                      karantina <br />
+                      Ikan di kolam karantina dapat berpindah ke kolam
+                      pembenihan
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
+                  <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                    <LuCheck className="text-white w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Pembesaran {`<-->`} Karantina
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      Ikan di kolam pembesaran dapat berpindah ke kolam
+                      karantina <br />
+                      Ikan di kolam karantina dapat berpindah ke kolam
+                      pembesaran
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
           </Tabs>
         </DefaultCard>
       )}

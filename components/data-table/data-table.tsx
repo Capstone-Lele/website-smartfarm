@@ -126,13 +126,15 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      {table.getSelectedRowModel().rows.length > 0 && (
-        <FloatingMenuSelectedRow table={table} />
-      )}
+      <div className="print:hidden">
+        {table.getSelectedRowModel().rows.length > 0 && (
+          <FloatingMenuSelectedRow table={table} />
+        )}
+      </div>
 
       <div className="">
         {children && <div className="">{children}</div>}
-        <div className="flex items-center justify-between py-4 gap-2">
+        <div className="flex items-center justify-between py-4 gap-2 print:hidden">
           <div className="flex flex-1 items-center gap-2">
             {/* Search */}
             <div>
@@ -247,7 +249,7 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </Table>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 print:hidden">
           <DataTablePagination table={table} />
         </div>
       </div>

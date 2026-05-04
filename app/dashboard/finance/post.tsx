@@ -46,6 +46,7 @@ import { useGetProducts } from "@/lib/api/service/master-data/product/useProduct
 import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 import { usePostNonInventory } from "@/lib/api/service/finance/useFinance";
 import { Product } from "@/types/master-data/product.types";
+import PopupConfirmation from "@/components/popup-confimation";
 
 const TRANSACTION_IN_OUT_OPTIONS = [
   { label: "Pemasukan", value: "in" },
@@ -54,33 +55,41 @@ const TRANSACTION_IN_OUT_OPTIONS = [
 
 const formSchema = z.object({
   productId: z.string().min(1, { message: "Nama produk wajib dipilih" }),
-  quantity: z
-    .string()
-    .min(1, { message: "Jumlah wajib diisi" })
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Jumlah harus berupa angka positif",
-    }),
-  pricePerItem: z
-    .string()
-    .min(1, { message: "Harga per item wajib diisi" })
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Harga harus berupa angka positif",
-    }),
-  totalPrice: z
-    .string()
-    .min(1, { message: "Total harga wajib diisi" })
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Total harga harus berupa angka positif",
-    }),
-  notes: z.string().optional(),
+  quantity: z.coerce
+    .number({
+      error: "Jumlah wajib diisi dan harus berupa angka",
+    })
+    .positive({ message: "Jumlah harus berupa angka positif" }),
+  pricePerItem: z.coerce
+    .number({
+      error: "Harga per item wajib diisi dan harus berupa angka",
+    })
+    .positive({ message: "Harga harus berupa angka positif" }),
+  totalPrice: z.coerce
+    .number({
+      error: "Total harga wajib diisi dan harus berupa angka",
+    })
+    .positive({ message: "Total harga harus berupa angka positif" }),
+  notes: z
+    .string({ message: "Catatan wajib diisi" })
+    .min(1, { message: "Catatan wajib diisi" }),
   transactionDate: z.date({ message: "Tanggal wajib diisi" }),
   image: z
     .any()
     .refine(
+      (file) => file instanceof File || (typeof window === "undefined" && file),
+      {
+        message: "Foto wajib diupload",
+      },
+    )
+    .refine(
       (file) =>
         !file || ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
       { message: "Format file harus JPG atau PNG" },
-    ),
+    )
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, {
+      message: "Ukuran file maksimal 5MB",
+    }),
   type: z.enum(["in", "out"], { message: "Tipe transaksi wajib dipilih" }),
   transactionType: z.enum(["grant", "non-grant"], {
     message: "Tipe transaksi harus dipilih",
@@ -90,6 +99,8 @@ const formSchema = z.object({
 const PostFinance = () => {
   const { data: productsData, isLoading: isLoadingProducts } = useGetProducts();
   const [isOpen, setIsOpen] = useState(false);
+  const [dialogConfirmationOpen, setDialogConfirmationOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nonInventoryMutation = usePostNonInventory();
@@ -98,9 +109,9 @@ const PostFinance = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productId: "",
-      quantity: "",
-      pricePerItem: "",
-      totalPrice: "",
+      quantity: "" as any,
+      pricePerItem: "" as any,
+      totalPrice: "" as any,
       notes: "",
       transactionDate: new Date(),
       image: undefined,
@@ -146,11 +157,11 @@ const PostFinance = () => {
     const qty = Number(quantity);
     const price = Number(pricePerItem);
     if (!isNaN(qty) && !isNaN(price) && qty > 0 && price > 0) {
-      form.setValue("totalPrice", (qty * price).toString(), {
+      form.setValue("totalPrice", (qty * price) as any, {
         shouldValidate: true,
       });
     } else {
-      form.setValue("totalPrice", "");
+      form.setValue("totalPrice", "" as any);
     }
   }, [quantity, pricePerItem, form]);
 
@@ -167,29 +178,38 @@ const PostFinance = () => {
   }, [isOpen]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    if (!dialogConfirmationOpen && !isSubmitting) {
+      setDialogConfirmationOpen(true);
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
       const payload = {
         productId: data.productId,
-        quantity: Number(data.quantity),
-        pricePerItem: Number(data.pricePerItem),
-        totalPrice: Number(data.totalPrice),
+        quantity: data.quantity,
+        pricePerItem: data.pricePerItem,
+        totalPrice: data.totalPrice,
         notes: data.notes,
         transactionDate: data.transactionDate.toISOString(),
         image: data.image,
         type: data.type,
         transactionType: data.transactionType,
-      }
-      nonInventoryMutation.mutateAsync(payload)
+      };
+      await nonInventoryMutation.mutateAsync(payload);
       console.log("Submit data:", data);
       form.reset();
       setImagePreview(null);
-      toast.success("Catatan keuangan berhasil ditambahkan");
+      toast.success("Catatan non inventaris berhasil ditambahkan");
       setIsOpen(false);
     } catch (error: any) {
       console.error("Error submitting form:", error);
       toast.error("Gagal menambahkan catatan", {
         description: error?.message || "Silakan coba lagi.",
       });
+    } finally {
+      setIsSubmitting(false);
+      setDialogConfirmationOpen(false);
     }
   };
 
@@ -199,361 +219,384 @@ const PostFinance = () => {
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger className="cursor-pointer inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-        <FiPlusCircle />
-        Catatan Non-Inventaris
-      </SheetTrigger>
-      <SheetContent className="sm:max-w-2xl h-screen overflow-auto">
-        <SheetHeader className="border-b pb-4 mb-4">
-          <SheetTitle>Tambah Catatan Keuangan Non-Inventaris</SheetTitle>
-          <SheetDescription>
-            Isi form di bawah ini untuk mencatat data keuangan baru.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="px-4">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldSet>
-              <FieldGroup>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-4">
-                  <Controller
-                    name="type"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field className="col-span-1">
-                        <FieldLabel htmlFor="type">
-                          Pemasukan / Pengeluaran
-                        </FieldLabel>
-                        <Combobox
-                          data={TRANSACTION_IN_OUT_OPTIONS}
-                          onValueChange={field.onChange}
-                          name="Jenis Transaksi"
-                          selectedValue={field.value}
-                        />
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Tentukan arah arus dana.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="productId"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="productId">
-                          Produk / Kategori (Non-Inventaris)
-                        </FieldLabel>
-                        <Combobox
-                          data={productOptions}
-                          onValueChange={field.onChange}
-                          name="Produk"
-                          selectedValue={field.value}
-                          isLoading={isLoadingProducts}
-                        />
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Masukan produk atau jenis transaksi.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="transactionDate"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="transactionDate">
-                          Tanggal Transaksi
-                        </FieldLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              id="transactionDate"
-                              variant="outline"
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {field.value ? (
-                                format(field.value, "dd MMMM yyyy", {
-                                  locale: localeId,
-                                })
-                              ) : (
-                                <span>Pilih tanggal</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              captionLayout="dropdown"
-                              disabled={(date) => date > new Date()}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Tanggal transaksi terjadi.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="transactionType"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field className="col-span-1">
-                        <FieldLabel htmlFor="transactionType">
-                          Tipe Transaksi (Grant / Non-Grant)
-                        </FieldLabel>
-                        <Combobox
-                          data={INVENTORY_TRANSACTION_TYPE_OPTIONS.filter(
-                            (item: any) => {
-                              if (inOut === "in") {
-                                return item.value !== "grant";
-                              }
-                              return item;
-                            },
+    <>
+      <PopupConfirmation
+        title="Konfirmasi Penambahan Catatan Non-Inventaris"
+        message="Apakah Anda yakin ingin menyimpan catatan keuangan ini? Pastikan semua informasi sudah benar."
+        type="warning"
+        onConfirm={() => {
+          setIsSubmitting(true);
+          form.handleSubmit(onSubmit)();
+        }}
+        onCancel={() => {
+          toast("Penambahan dibatalkan");
+        }}
+        isLoading={isSubmitting}
+        isOpen={dialogConfirmationOpen}
+        setOpen={setDialogConfirmationOpen}
+      />
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger className="cursor-pointer inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <FiPlusCircle />
+          Catatan Non-Inventaris
+        </SheetTrigger>
+        <SheetContent className="sm:max-w-2xl h-screen overflow-auto">
+          <SheetHeader className="border-b pb-4 mb-4">
+            <SheetTitle>Tambah Catatan Non-Inventaris</SheetTitle>
+            <SheetDescription>
+              Isi form di bawah ini untuk mencatat data baru.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="px-4">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldSet>
+                <FieldGroup>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                    <Controller
+                      name="type"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="col-span-1">
+                          <FieldLabel htmlFor="type">
+                            Pemasukan / Pengeluaran
+                          </FieldLabel>
+                          <Combobox
+                            data={TRANSACTION_IN_OUT_OPTIONS}
+                            onValueChange={field.onChange}
+                            name="Jenis Transaksi"
+                            selectedValue={field.value}
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Tentukan arah arus dana.
+                            </FieldDescription>
                           )}
-                          onValueChange={field.onChange}
-                          name="Tipe Transaksi"
-                          selectedValue={field.value}
-                        />
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Tipe dana transaksi.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
+                        </Field>
+                      )}
+                    />
 
-                  {/* Quantity */}
-                  <Controller
-                    name="quantity"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="quantity">Jumlah</FieldLabel>
-                        <Input
-                          id="quantity"
-                          type="number"
-                          min={1}
-                          step={1}
-                          autoComplete="off"
-                          placeholder="Contoh: 10"
-                          {...field}
-                        />
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>Jumlah item.</FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
+                    <Controller
+                      name="productId"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="productId">
+                            Produk / Kategori (Non-Inventaris)
+                          </FieldLabel>
+                          <Combobox
+                            data={productOptions}
+                            onValueChange={field.onChange}
+                            name="Produk"
+                            selectedValue={field.value}
+                            isLoading={isLoadingProducts}
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Masukan produk atau jenis transaksi.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
 
-                  {/* Price per item */}
-                  <Controller
-                    name="pricePerItem"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="pricePerItem">
-                          Harga Per Unit
-                        </FieldLabel>
-                        <InputGroup>
-                          <InputGroupAddon align="inline-start">
-                            Rp
-                            <Separator
-                              orientation="vertical"
-                              className="h-6 mx-2"
-                            />
-                          </InputGroupAddon>
-                          <InputGroupInput
-                            id="pricePerItem"
+                    <Controller
+                      name="transactionDate"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="transactionDate">
+                            Tanggal Transaksi
+                          </FieldLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                id="transactionDate"
+                                variant="outline"
+                                className={cn(
+                                  "w-full justify-start text-left font-normal",
+                                  !field.value && "text-muted-foreground",
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {field.value ? (
+                                  format(field.value, "dd MMMM yyyy", {
+                                    locale: localeId,
+                                  })
+                                ) : (
+                                  <span>Pilih tanggal</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                captionLayout="dropdown"
+                                disabled={(date) => date > new Date()}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Tanggal transaksi terjadi.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="transactionType"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="col-span-1">
+                          <FieldLabel htmlFor="transactionType">
+                            Tipe Transaksi (Grant / Non-Grant)
+                          </FieldLabel>
+                          <Combobox
+                            data={INVENTORY_TRANSACTION_TYPE_OPTIONS.filter(
+                              (item: any) => {
+                                if (inOut === "in") {
+                                  return item.value !== "grant";
+                                }
+                                return item;
+                              },
+                            )}
+                            onValueChange={field.onChange}
+                            name="Tipe Transaksi"
+                            selectedValue={field.value}
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Tipe dana transaksi.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    {/* Quantity */}
+                    <Controller
+                      name="quantity"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="quantity">Jumlah</FieldLabel>
+                          <Input
+                            id="quantity"
                             type="number"
                             min={1}
                             step={1}
-                            placeholder="Contoh: 50000"
+                            autoComplete="off"
+                            placeholder="Contoh: 10"
                             {...field}
+                            value={field.value as number | string}
                           />
-                        </InputGroup>
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Harga unit produk.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  {/* Total Price (Auto calculated) */}
-                  <Controller
-                    name="totalPrice"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field>
-                        <FieldLabel htmlFor="totalPrice">
-                          Total Harga
-                        </FieldLabel>
-                        <InputGroup>
-                          <InputGroupAddon align="inline-start">
-                            Rp
-                            <Separator
-                              orientation="vertical"
-                              className="h-6 mx-2"
-                            />
-                          </InputGroupAddon>
-                          <InputGroupInput
-                            id="totalPrice"
-                            type="number"
-                            placeholder="Dihitung otomatis"
-                            disabled
-                            {...field}
-                          />
-                        </InputGroup>
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Jumlah × Harga Per Unit.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="notes"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field className="col-span-2">
-                        <FieldLabel htmlFor="notes">
-                          Catatan Transaksi
-                        </FieldLabel>
-                        <Input
-                          id="notes"
-                          autoComplete="off"
-                          placeholder="Catatan tambahan (contoh: No Faktur 1234)"
-                          {...field}
-                        />
-                        {fieldState.invalid ? (
-                          <FieldError errors={[fieldState.error]} />
-                        ) : (
-                          <FieldDescription>
-                            Informasi lebih rinci soal transaksi.
-                          </FieldDescription>
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="image"
-                    control={form.control}
-                    render={({
-                      field: { onChange, value, ref: _ref, ...rest },
-                      fieldState,
-                    }) => (
-                      <Field className="col-span-2">
-                        <FieldLabel htmlFor="image">
-                          {transactionType !== "grant"
-                            ? "Foto Bukti Transaksi / Nota"
-                            : "Foto Bukti Serah Terima"}
-                        </FieldLabel>
-                        <div
-                          className="border-2 border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          {imagePreview ? (
-                            <img
-                              src={imagePreview}
-                              alt="Preview"
-                              className="max-h-48 rounded object-contain"
-                            />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
                           ) : (
-                            <>
-                              <LuUpload
-                                size={24}
-                                className="text-muted-foreground"
-                              />
-                              <span className="text-sm text-muted-foreground">
-                                Klik untuk upload foto bukti (JPG/PNG)
-                              </span>
-                            </>
+                            <FieldDescription>Jumlah item.</FieldDescription>
                           )}
-                        </div>
-                        <input
-                          ref={fileInputRef}
-                          id="image"
-                          type="file"
-                          accept="image/jpeg,image/png,image/jpg"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              onChange(file);
-                              setImagePreview(URL.createObjectURL(file));
-                            }
-                          }}
-                          {...rest}
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
+                        </Field>
+                      )}
+                    />
 
-                <Field orientation="vertical" className="col-span-2 mt-6">
-                  <Button
-                    type="submit"
-                    className="cursor-pointer mr-2 inline-flex items-center"
-                  >
-                    <LuSave size={16} className="mr-2" />
-                    Simpan
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="cursor-pointer inline-flex items-center"
-                    type="button"
-                    onClick={handleReset}
-                  >
-                    <RiResetRightLine size={16} className="mr-2" />
-                    Reset
-                  </Button>
-                </Field>
-              </FieldGroup>
-            </FieldSet>
-          </form>
-        </div>
-      </SheetContent>
-    </Sheet>
+                    {/* Price per item */}
+                    <Controller
+                      name="pricePerItem"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="pricePerItem">
+                            Harga Per Unit
+                          </FieldLabel>
+                          <InputGroup>
+                            <InputGroupAddon align="inline-start">
+                              Rp
+                              <Separator
+                                orientation="vertical"
+                                className="h-6 mx-2"
+                              />
+                            </InputGroupAddon>
+                            <InputGroupInput
+                              id="pricePerItem"
+                              type="number"
+                              min={1}
+                              step={1}
+                              placeholder="Contoh: 50000"
+                              {...field}
+                              value={field.value as number | string}
+                            />
+                          </InputGroup>
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Harga unit produk.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    {/* Total Price (Auto calculated) */}
+                    <Controller
+                      name="totalPrice"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field>
+                          <FieldLabel htmlFor="totalPrice">
+                            Total Harga
+                          </FieldLabel>
+                          <InputGroup>
+                            <InputGroupAddon align="inline-start">
+                              Rp
+                              <Separator
+                                orientation="vertical"
+                                className="h-6 mx-2"
+                              />
+                            </InputGroupAddon>
+                            <InputGroupInput
+                              id="totalPrice"
+                              type="number"
+                              placeholder="Dihitung otomatis"
+                              disabled
+                              {...field}
+                              value={field.value as number | string}
+                            />
+                          </InputGroup>
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Jumlah × Harga Per Unit.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="notes"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field className="col-span-2">
+                          <FieldLabel htmlFor="notes">
+                            Catatan Transaksi
+                          </FieldLabel>
+                          <Input
+                            id="notes"
+                            autoComplete="off"
+                            placeholder="Catatan tambahan (contoh: No Faktur 1234)"
+                            {...field}
+                          />
+                          {fieldState.invalid ? (
+                            <FieldError errors={[fieldState.error]} />
+                          ) : (
+                            <FieldDescription>
+                              Informasi lebih rinci soal transaksi.
+                            </FieldDescription>
+                          )}
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="image"
+                      control={form.control}
+                      render={({
+                        field: { onChange, value, ref: _ref, ...rest },
+                        fieldState,
+                      }) => (
+                        <Field className="col-span-2">
+                          <FieldLabel htmlFor="image">
+                            {transactionType !== "grant"
+                              ? "Foto Bukti Transaksi / Nota"
+                              : "Foto Bukti Serah Terima"}
+                          </FieldLabel>
+                          <div
+                            className="border-2 border-dashed rounded-md p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            {imagePreview ? (
+                              <img
+                                src={imagePreview}
+                                alt="Preview"
+                                className="max-h-48 rounded object-contain"
+                              />
+                            ) : (
+                              <>
+                                <LuUpload
+                                  size={24}
+                                  className="text-muted-foreground"
+                                />
+                                <span className="text-sm text-muted-foreground">
+                                  Klik untuk upload foto bukti (JPG/PNG)
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            ref={fileInputRef}
+                            id="image"
+                            type="file"
+                            accept="image/jpeg,image/png,image/jpg"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                onChange(file);
+                                setImagePreview(URL.createObjectURL(file));
+                              }
+                            }}
+                            {...rest}
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </div>
+
+                  <Field orientation="vertical" className="col-span-2 mt-6">
+                    <Button
+                      type="submit"
+                      className="cursor-pointer mr-2 inline-flex items-center"
+                    >
+                      <LuSave size={16} className="mr-2" />
+                      Simpan
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="cursor-pointer inline-flex items-center"
+                      type="button"
+                      onClick={handleReset}
+                    >
+                      <RiResetRightLine size={16} className="mr-2" />
+                      Reset
+                    </Button>
+                  </Field>
+                </FieldGroup>
+              </FieldSet>
+            </form>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 

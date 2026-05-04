@@ -18,8 +18,10 @@ type PopupConfirmationProps = {
   type: "warning" | "info" | "success" | "error";
   onConfirm?: () => void;
   onCancel?: () => void;
-  children: React.ReactNode;
+  // children: React.ReactNode;
   isLoading?: boolean;
+  isOpen: boolean;
+  setOpen: (open: boolean) => void;
 };
 
 const PopupConfirmation = ({
@@ -29,9 +31,10 @@ const PopupConfirmation = ({
   onConfirm,
   onCancel,
   isLoading,
-  children,
+  // children,
+  setOpen,
+  isOpen,
 }: PopupConfirmationProps) => {
-  const [open, setOpen] = useState(false);
 
   const typeStyles = {
     warning: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
@@ -44,12 +47,11 @@ const PopupConfirmation = ({
     if (onConfirm) {
       await onConfirm();
     }
-    setOpen(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
+      {/* <DialogTrigger>{children}</DialogTrigger> */}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

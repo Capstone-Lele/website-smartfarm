@@ -142,10 +142,14 @@ export const API_ENDPOINTS = {
     GET: "/app/dashboard",
   },
   IOT: {
-    GET_ALL: "/iot/pool/data", // historical data untuk semua kolam
-    GET_BY_NODE: (nodeId: string) => `/iot/pool/${nodeId}`, // historical data untuk node tertentu
+    GET_ALL: "/iot/data", // historical data untuk semua kolam
+    GET_BY_NODE: (nodeId: string) => `/iot/data/${nodeId}`, // historical data untuk node tertentu
     GET_ALL_LIVE: "/iot/pool/data", // data real-time untuk semua kolam
-    GET_LIVE_BY_NODE: (nodeId: string) => `/iot/chart/${nodeId}`, // data real-time untuk node tertentu
+    GET_LIVE_BY_NODE: (nodeId: string) => `/iot/pool/${nodeId}`, // data real-time untuk node tertentu
   },
+  GUEST: {
+    GENERAL_INFO: "/app/general-info",
+  },
+  CLEAR_REDIS_CACHE: "/app/clear-cache",
 } as const;
 

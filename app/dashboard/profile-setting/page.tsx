@@ -35,17 +35,21 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import ProfileSettingSkeleton from "@/components/sekeleton/profile-setting-skeleton";
 import { toast } from "sonner";
 import { getCookieDecryptedSession } from "@/lib/session";
-import { useGetProfile, useUpdateProfile } from "@/lib/api/service/profile/useProfile";
+import {
+  useGetProfile,
+  useUpdateProfile,
+} from "@/lib/api/service/profile/useProfile";
 
 const formSchema = z
   .object({
     name: z.string().min(1, "Nama pengguna wajib diisi"),
     email: z.string().email("Format email tidak valid"),
-    password: z
+    newPassword: z
       .string()
+      .regex(/^\S*$/, { message: "Password tidak boleh mengandung spasi" })
       .optional()
-      .refine((val) => !val || val.length >= 6, {
-        message: "Password minimal 6 karakter",
+      .refine((val) => !val || val.length >= 8, {
+        message: "Password minimal 8 karakter",
       }),
     role: z.string(),
     image: z
@@ -57,9 +61,12 @@ const formSchema = z
           message: "Format file harus JPG atau PNG",
         },
       ),
-    confirmPassword: z.string().optional(),
+    confirmPassword: z
+      .string()
+      .regex(/^\S*$/, { message: "Password tidak boleh mengandung spasi" })
+      .optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords tidak cocok",
     path: ["confirmPassword"],
   });
@@ -79,7 +86,7 @@ const page = () => {
     defaultValues: {
       name: userData?.name || "",
       email: userData?.email || "",
-      password: "",
+      newPassword: "" as any,
       image: undefined,
       role: userData?.role || "",
       confirmPassword: "",
@@ -108,7 +115,7 @@ const page = () => {
       form.reset({
         name: userData?.name || "",
         email: userData?.email || "",
-        password: "",
+        newPassword: "",
         image: undefined,
         role: userData?.role || "",
         confirmPassword: "",
@@ -273,7 +280,7 @@ const page = () => {
                 {/* Kolom Kanan */}
                 <div className="space-y-6">
                   <Controller
-                    name="password"
+                    name="newPassword"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field>

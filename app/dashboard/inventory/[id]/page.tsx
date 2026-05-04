@@ -26,6 +26,9 @@ import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InventoryOverview } from "./_components/inventory-overview";
 import { FiPlusCircle } from "react-icons/fi";
+import { formatNumber } from "@/lib/utils/format-number";
+import InventoryReportTab from "./_report-tab";
+import { formatDateShort } from "@/lib/utils/format-date";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
@@ -63,6 +66,10 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     isLoadingInventoryDetailSubmissions ||
     isLoadingInventoryDetailConsumption;
 
+  const currentInventory = inventoryDetail?.data?.find(
+    (item) => item.id === id,
+  );
+
   // Merge tiga sumber data menjadi satu array InventoryDetail[]
   const mergedInventoryDetails: InventoryDetail[] = [
     // 1. Notes → kategori "Inventaris", gunakan reportDate sebagai createdAt
@@ -72,7 +79,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
       type: item.type,
       category: "Inventaris",
       source: "inventory-notes",
-      unit: "",
+      unit: currentInventory?.unit ?? "",
       quantity: item.quantity,
       pricePerItem: item.pricePerItem ?? null,
       transactionType: item.transactionType ?? "-",
@@ -89,7 +96,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         type: "in" as const,
         category: "Pengajuan Inventaris",
         source: "inventory-submission",
-        unit: "",
+        unit: currentInventory?.unit ?? "",
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
         transactionType: item.transactionType ?? "-",
@@ -105,7 +112,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         type: "out" as const,
         category: "Inventaris",
         source: "inventory-consumption",
-        unit: "",
+        unit: currentInventory?.unit ?? "",
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
         transactionType: item.transaction_type ?? "-",
@@ -137,10 +144,6 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     return () => removeLabel("inventory");
   }, [inventoryDetail?.data, id, setLabel, removeLabel]);
 
-  const currentInventory = inventoryDetail?.data?.find(
-    (item) => item.id === id,
-  );
-
   const totalIn = mergedInventoryDetails
     .filter((item) => item.type === "in")
     .reduce((sum, item) => sum + Number(item.quantity), 0);
@@ -152,7 +155,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const cardData = [
     {
       title: "Total Stok Saat Ini",
-      value: `${currentInventory?.totalQuantity ?? 0} ${currentInventory?.unit ?? ""}`,
+      value: `${formatNumber(currentInventory?.totalQuantity || "-") ?? 0} ${currentInventory?.unit ?? ""}`,
       icon: <LuPackage />,
     },
     {
@@ -203,6 +206,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         <TabsList>
           <TabsTrigger value="ringkasan">Ringkasan &amp; Grafik</TabsTrigger>
           <TabsTrigger value="tabel">Data Tabel</TabsTrigger>
+          <TabsTrigger value="laporan">Laporan</TabsTrigger>
         </TabsList>
 
         <TabsContent value="ringkasan" className="mt-4">
@@ -243,6 +247,17 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
               </div>
             </DefaultCard>
           </div>
+        </TabsContent>
+
+        <TabsContent value="laporan" className="mt-4">
+          <InventoryReportTab
+            data={filteredInventoryDetails}
+            rentang_tanggal={
+              dateRange.start && dateRange.end
+                ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`
+                : ""
+            }
+          />
         </TabsContent>
       </Tabs>
     </div>

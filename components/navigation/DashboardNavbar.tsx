@@ -139,12 +139,15 @@ const UserProfile = () => {
           <div className="flex items-center gap-3">
             <div>
               <Image
-                // src={userinfo.data?.data.image || getAvatarUrl(userinfo.data?.data.name || "User")}
-                src={getAvatarUrl(userinfo.data?.data.name || "User")}
+                src={
+                  userinfo.data?.data.image?.startsWith("http")
+                    ? userinfo.data.data.image
+                    : getAvatarUrl(userinfo.data?.data.name || "User")
+                }
                 alt="User Profile"
                 width={40}
                 height={40}
-                className=" rounded-full border border-primary"
+                className=" rounded-full border border-primary h-10 w-10 object-cover"
               />
             </div>
             <div className="text-left">

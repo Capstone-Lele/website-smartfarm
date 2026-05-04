@@ -1,6 +1,14 @@
+type PoolActor = {
+  role: string;
+  image: string;
+  userId: string;
+  userName: string;
+};
+
 export type Pool = {
-  acidityMax?: string | null;
-  acidityMin?: string | null;
+  acidityMax: number[] | null;
+  acidityMin: number[] | null;
+  acidityNormal: number[] | null;
   category: string;
   createdAt?: string | null;
   cycleEndDate?: string | null;
@@ -16,10 +24,12 @@ export type Pool = {
   mortality?: number | null;
   movedQuantity?: number | null;
   currentQuantity?: number | null;
-  temperatureMax?: string | null;
-  temperatureMin?: string | null;
+  temperatureMax: number[] | null;
+  temperatureNormal: number[] | null;
+  temperatureMin: number[] | null;
   updatedAt?: string | null;
   width?: string | null;
+  actor: PoolActor[] | null;
 };
 
 export type PoolRequest = {

@@ -9,6 +9,7 @@ export type Harvest = {
   poolName: string;
   poolCategory: string;
   amount: number;
+  totalKg: string;
   image: string;
 };
 

@@ -15,6 +15,7 @@ import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { CHART_COLORS } from "@/lib/constants/chart-color";
 import { LuTrendingUp } from "react-icons/lu";
 import { sourceLabelTranslation } from "@/lib/constants/type-finance";
+import { ImFileEmpty } from "react-icons/im";
 
 interface FinancePieChartsProps {
   data: Finance[];
@@ -118,7 +119,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
 
       {segments.length === 0 ? (
         <div className="flex h-[260px] flex-col items-center justify-center gap-3 text-muted-foreground">
-          <LuTrendingUp className="h-10 w-10 opacity-25" />
+          <ImFileEmpty className="h-10 w-10 opacity-25" />
           <span className="text-sm">{emptyMessage}</span>
         </div>
       ) : (

@@ -15,11 +15,12 @@ import { Badge } from "@/components/ui/badge";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
 import Image from "next/image";
 import { getAvatarUrl } from "@/lib/utils/avatar";
-import AssignPoolModal from "./assign";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 import { formatDate } from "@/lib/utils/format-date";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
+import { useIotLiveByNode } from "@/lib/api/service/iot/useIot";
+import { getWaterStatus } from "@/lib/utils/read-water-status";
 
 export const columnsPool: ColumnDef<Pool>[] = [
   {
@@ -39,7 +40,6 @@ export const columnsPool: ColumnDef<Pool>[] = [
       );
     },
   },
-
   {
     accessorKey: "category",
     header: ({ column }) => (
@@ -74,27 +74,30 @@ export const columnsPool: ColumnDef<Pool>[] = [
   {
     accessorKey: "petugas",
     cell: ({ row }) => {
-      const staff = [
-        {
-          name: "John Doe",
-        },
-        { name: "Jane Smith" },
-        { name: "Jane Smith" },
-        { name: "Jane Smith" },
-      ];
+      const staff = row.original.actor;
+      if (!staff || staff.length === 0) {
+        return <span>-</span>;
+      }
       return (
         <div className="flex flex-row items-center">
-          {staff.length > 0 &&
+          {staff &&
+            staff.length > 0 &&
             staff.map((member, index) => {
               if (index < 2) {
                 return (
                   <Image
-                    src={getAvatarUrl(member.name)}
-                    alt={member.name}
+                    src={
+                      member.image?.startsWith("http")
+                        ? member.image
+                        : getAvatarUrl(member.userName || "User")
+                    }
+                    alt={member.userName}
                     width={30}
                     height={30}
                     key={index}
-                    className={"rounded-full border border-primary"}
+                    className={
+                      "rounded-full border border-primary h-8 w-8 object-cover"
+                    }
                     style={
                       index === 0
                         ? { position: "relative", zIndex: staff.length }
@@ -166,27 +169,60 @@ export const columnsPool: ColumnDef<Pool>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="JUMLAH IKAN" />
     ),
+    cell: ({ row }) => {
+      const quantity = row.original.currentQuantity;
+      return quantity !== null && quantity !== undefined ? (
+        <div>
+          <div>{quantity}</div>
+          <div className="font-medium">ekor</div>
+        </div>
+      ) : (
+        <span>-</span>
+      );
+    },
   },
   {
     accessorKey: "mortality",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KEMATIAN" />
     ),
+    cell: ({ row }) => {
+      const mortality = row.original.mortality;
+      return mortality !== null && mortality !== undefined ? (
+        <div>
+          <div>{mortality}</div>
+          <div className="font-medium">ekor</div>
+        </div>
+      ) : (
+        <span>-</span>
+      );
+    },
   },
   {
     accessorKey: "movedQuantity",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="PINDAH KOLAM" />
     ),
+    cell: ({ row }) => {
+      const moved = row.original.movedQuantity;
+      return moved !== null && moved !== undefined ? (
+        <div>
+          <div>{moved}</div>
+          <div className="font-medium">ekor</div>
+        </div>
+      ) : (
+        <span>-</span>
+      );
+    },
   },
   {
     id: "umur",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="UMUR" />
+      <DataTableColumnHeader column={column} title="UMUR SIKLUS" />
     ),
     cell: ({ row }) => {
       const { cycleStartDate, cycleEndDate } = row.original;
-      
+
       if (!cycleStartDate) {
         return <span>-</span>;
       }
@@ -199,7 +235,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
 
       const diffTime = end.getTime() - start.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
+
       return <span>{diffDays >= 0 ? diffDays : 0} hari</span>;
     },
   },
@@ -208,38 +244,90 @@ export const columnsPool: ColumnDef<Pool>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS AIR" />
     ),
+    cell: ({ row }) => {
+      // node berasal dari nama kolam, misal "Kolam 1" -> node_id = 1
+      const node = parseInt(row.original.name.replace(/\D/g, ""));
+      const { data: iotData } = useIotLiveByNode(node.toString());
+      const ph = iotData?.[0]?.ph;
+      const temp = iotData?.[0]?.temp;
+
+      if (ph === undefined || temp === undefined || row.original.acidityMin === null || row.original.acidityMax === null || row.original.acidityNormal === null || row.original.temperatureMin === null || row.original.temperatureMax === null || row.original.temperatureNormal === null) {
+        return <span>-</span>;
+      }
+
+      const phStatus = getWaterStatus(
+        ph,
+        row.original.acidityMin,
+        row.original.acidityMax,
+        row.original.acidityNormal,
+      );
+
+      const tempStatus = getWaterStatus(
+        temp,
+        row.original.temperatureMin,
+        row.original.temperatureMax,
+        row.original.temperatureNormal
+      );
+
+      const statusColors = {
+        danger: "bg-red-50 text-red-600 border-red-200",
+        warning: "bg-yellow-50 text-yellow-600 border-yellow-200",
+        normal: "bg-green-50 text-green-600 border-green-200",
+        "invalid-parameter": "bg-gray-50 text-gray-500 border-gray-200",
+        unknown: "bg-gray-50 text-gray-500 border-gray-200",
+      };
+
+      return (
+        <div className="flex flex-col gap-1.5 min-w-[100px]">
+          <div
+            className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[phStatus]}`}
+          >
+            <span>pH</span>
+            <span>{ph}</span>
+          </div>
+          <div
+            className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[tempStatus]}`}
+          >
+            <span>Suhu</span>
+            <span>{temp}°C</span>
+          </div>
+        </div>
+      );
+    },
   },
   {
-      id: "isActive",
-      header: ({ column }) => (
-        <DataTableColumnHeader className="" column={column} title="STATUS" />
-      ),
-      cell: ({ row }) => {
-        const deletePoolMutation = useDeletePool();
-  
-        const handleCheckedChange = async () => {
-          try {
-            const res = await deletePoolMutation.mutateAsync(row.original.id);
-            toast.success(`Kolam ${row.original.name} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`);
-          } catch (error) {
-            toast.error("Gagal mengubah status kolam", {
-              description: "Silakan coba lagi.",
-            });
-          }
-        };
-  
-        const isDeleted = row.original.deletedAt !== null;
-        return (
-          <div>
-              <ButtonSwitchColumn
-                isActive={!isDeleted}
-                onCheckedChange={handleCheckedChange}
-                isLoading={deletePoolMutation.isPending}
-              />
-          </div>
-        );
-      },
+    id: "isActive",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="STATUS" />
+    ),
+    cell: ({ row }) => {
+      const deletePoolMutation = useDeletePool();
+
+      const handleCheckedChange = async () => {
+        try {
+          const res = await deletePoolMutation.mutateAsync(row.original.id);
+          toast.success(
+            `Kolam ${row.original.name} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`,
+          );
+        } catch (error) {
+          toast.error("Gagal mengubah status kolam", {
+            description: "Silakan coba lagi.",
+          });
+        }
+      };
+
+      const isDeleted = row.original.deletedAt !== null;
+      return (
+        <div>
+          <ButtonSwitchColumn
+            isActive={!isDeleted}
+            onCheckedChange={handleCheckedChange}
+            isLoading={deletePoolMutation.isPending}
+          />
+        </div>
+      );
     },
+  },
   {
     id: "actions",
     header: () => <span className="">Actions</span>,
@@ -250,10 +338,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
             href={`/dashboard/pools/${row.original.id}/${row.original.cycleId}`}
           />
           <Separator orientation="vertical" className="h-6" />
-          <AssignPoolModal pool={row.original} />
-          <Separator orientation="vertical" className="h-6" />
           <EditPoolModal pool={row.original} />
-         
         </div>
       );
     },

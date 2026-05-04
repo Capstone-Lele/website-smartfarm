@@ -14,6 +14,7 @@ import { columns } from "./column";
 import PostInventoryModal from "./post";
 import { useGetProductUsage } from "@/lib/api/service/master-data/product/useProduct";
 
+
 const Page = () => {
   const { setTabComponent } = useSubNavbarTab();
   const { data, isLoading } = useInventory();

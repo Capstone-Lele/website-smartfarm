@@ -10,6 +10,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
 import EditInventoryModal from "./edit";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
+import { formatNumber } from "@/lib/utils/format-number";
 
 export const columns: ColumnDef<Inventory>[] = [
   {
@@ -19,7 +20,7 @@ export const columns: ColumnDef<Inventory>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 hover:bg-primary-surface rounded-md px-2 py-1 w-fit cursor-pointer">
+        <div className="flex items-center gap-2">
           <span className="font-semibold">{row.original.product}</span>
         </div>
       );
@@ -37,6 +38,11 @@ export const columns: ColumnDef<Inventory>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL STOK" />
     ),
+    cell: ({ row }) => {
+      return (
+        <span className="">{formatNumber(row.original.totalQuantity)}</span>
+      );
+    },
   },
   {
     accessorKey: "minQuantity",
@@ -47,6 +53,9 @@ export const columns: ColumnDef<Inventory>[] = [
         title="STOK MINIMUM"
       />
     ),
+    cell: ({ row }) => {
+      return <span className="">{formatNumber(row.original.minQuantity)}</span>;
+    },
   },
   {
     accessorKey: "unit",
@@ -57,7 +66,11 @@ export const columns: ColumnDef<Inventory>[] = [
   {
     id: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="STATUS STOCK" />
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="STATUS STOCK"
+      />
     ),
     cell: ({ row }) => {
       const totalQuantity = Number(row.original.totalQuantity);
@@ -90,8 +103,12 @@ export const columns: ColumnDef<Inventory>[] = [
 
       const handleCheckedChange = async () => {
         try {
-          const res = await deleteInventoryMutation.mutateAsync(row.original.id);
-          toast.success(`Inventaris ${row.original.product} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`);
+          const res = await deleteInventoryMutation.mutateAsync(
+            row.original.id,
+          );
+          toast.success(
+            `Inventaris ${row.original.product} berhasil ${row.original.deletedAt ? "diaktifkan" : "dinonaktifkan"}`,
+          );
         } catch (error) {
           toast.error("Gagal mengubah status inventaris", {
             description: "Silakan coba lagi.",
@@ -102,11 +119,11 @@ export const columns: ColumnDef<Inventory>[] = [
       const isDeleted = row.original.deletedAt !== null;
       return (
         <div>
-            <ButtonSwitchColumn
-              isActive={!isDeleted}
-              onCheckedChange={handleCheckedChange}
-              isLoading={deleteInventoryMutation.isPending}
-            />
+          <ButtonSwitchColumn
+            isActive={!isDeleted}
+            onCheckedChange={handleCheckedChange}
+            isLoading={deleteInventoryMutation.isPending}
+          />
         </div>
       );
     },
@@ -115,7 +132,6 @@ export const columns: ColumnDef<Inventory>[] = [
     id: "action",
     header: () => <span>ACTION</span>,
     cell: ({ row }) => {
-     
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonTransactionColumn
@@ -123,7 +139,6 @@ export const columns: ColumnDef<Inventory>[] = [
           />
           <Separator orientation="vertical" className="h-6" />
           <EditInventoryModal inventory={row.original} />
-         
         </div>
       );
     },

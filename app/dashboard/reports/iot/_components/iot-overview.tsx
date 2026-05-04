@@ -2,12 +2,12 @@
 
 import React, { useMemo } from "react";
 import { format, parseISO } from "date-fns";
-import { IOTData } from "@/types/notes/iot";
+import { IOTData, IOTDataHistorical } from "@/types/notes/iot";
 import { IotTrendChart } from "./iot-trend-chart";
 import { id } from "date-fns/locale";
 
 interface IotOverviewProps {
-  data: IOTData[];
+  data: IOTDataHistorical[];
 }
 
 export const IotOverview: React.FC<IotOverviewProps> = ({ data }) => {
@@ -23,13 +23,13 @@ export const IotOverview: React.FC<IotOverviewProps> = ({ data }) => {
     // Urutkan data berdasarkan waktu agar chart rapi (kiri ke kanan)
     const sortedData = [...data].sort(
       (a, b) =>
-        new Date(a.receivedAt).getTime() - new Date(b.receivedAt).getTime(),
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     );
 
     sortedData.forEach((item) => {
       nodes.add(item.node_id);
 
-      const timeStr = format(parseISO(item.receivedAt), "dd MMM HH:mm", {
+      const timeStr = format(parseISO(item.createdAt), "dd MMM HH:mm", {
         locale: id,
       });
 

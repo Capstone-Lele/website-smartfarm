@@ -12,6 +12,7 @@ import {
 import DefaultCard from "@/components/card/default-card";
 import { Finance } from "@/types/finance/finance";
 import { LuTrendingUp } from "react-icons/lu";
+import { ImFileEmpty } from "react-icons/im";
 
 interface TransactionCountChartProps {
   data: Finance[];
@@ -75,7 +76,7 @@ const TransactionCountChart = ({ data }: TransactionCountChartProps) => {
 
       {countData.length === 0 ? (
         <div className="flex h-[280px] flex-col items-center justify-center gap-3 text-muted-foreground">
-          <LuTrendingUp className="h-10 w-10 opacity-25" />
+          <ImFileEmpty className="h-10 w-10 opacity-25" />
           <span className="text-sm">Belum ada data transaksi</span>
         </div>
       ) : (

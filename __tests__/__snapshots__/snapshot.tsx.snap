@@ -1,0 +1,803 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`renders homepage unchanged 1`] = `
+<div>
+  <main>
+    <main
+      class="fixed top-0 z-50 w-full"
+    >
+      <nav
+        class="mt-2"
+      >
+        <div
+          class="max-w-400 mx-auto px-4 sm:px-6 lg:px-8 "
+        >
+          <div
+            class="flex justify-between items-center h-16"
+          >
+            <div
+              class="flex"
+            >
+              <div
+                class="shrink-0 flex items-center"
+              >
+                <h1
+                  class="text-2xl font-semibold text-slate-700"
+                >
+                  Lele Farm
+                </h1>
+              </div>
+            </div>
+            <div
+              class="flex items-center rounded-full bg-slate-100/30 p-1 gap-1 backdrop-blur"
+            >
+              <button
+                class="rounded-full cursor-pointer px-5 py-2 text-sm font-medium transition-colors bg-primary-surface text-slate-900"
+                type="button"
+              >
+                Beranda
+              </button>
+              <button
+                class="rounded-full cursor-pointer px-5 py-2 text-sm font-medium transition-colors text-slate-600 hover:bg-white/70"
+                type="button"
+              >
+                Profile
+              </button>
+              <button
+                class="rounded-full cursor-pointer px-5 py-2 text-sm font-medium transition-colors text-slate-600 hover:bg-white/70"
+                type="button"
+              >
+                Kolam
+              </button>
+              <button
+                class="rounded-full cursor-pointer px-5 py-2 text-sm font-medium transition-colors text-slate-600 hover:bg-white/70"
+                type="button"
+              >
+                Populasi
+              </button>
+              <button
+                class="rounded-full cursor-pointer px-5 py-2 text-sm font-medium transition-colors text-slate-600 hover:bg-white/70"
+                type="button"
+              >
+                Panen
+              </button>
+            </div>
+            <a
+              class="flex items-center"
+              href="/login"
+            >
+              <button
+                class="rounded-full bg-primary-surface text-sm font-medium text-slate-700 transition-colors hover:bg-primary-surface/90 flex items-center pl-3 pr-1 py-1 cursor-pointer"
+              >
+                Login
+                <div
+                  class="bg-primary text-white rounded-full p-2 ml-2"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+                    />
+                    <polyline
+                      points="10 17 15 12 10 7"
+                    />
+                    <line
+                      x1="15"
+                      x2="3"
+                      y1="12"
+                      y2="12"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </main>
+    <main
+      id="beranda"
+    >
+      <section
+        class="relative h-187.5 min-h-105 bg-cover bg-center bg-no-repeat"
+        style="background-image: url("/images/home/pool-2.jpeg");"
+      >
+        <div
+          class="absolute inset-0 bg-black/10"
+        />
+        <div
+          class="pointer-events-none absolute inset-y-0 left-0 w-full bg-black/5 backdrop-blur-sm"
+          style="mask-image: linear-gradient(to right, black 5%, transparent);"
+        />
+        <div
+          class="relative z-10 flex h-full items-center justify-start px-4 text-start max-w-7xl mx-auto"
+        >
+          <div
+            class="max-w-3xl text-white"
+          >
+            <p
+              class="mt-4 text-base text-white/90 md:text-lg"
+            >
+              Menuju desa kebakalan yang maju, bersih, inovatif, demokratis, dan berkelanjutan
+            </p>
+            <h1
+              class="text-3xl font-medium leading-tight md:text-5xl"
+            >
+              Website Budidaya Lele Kelompok Tani Desa Kebakalan
+            </h1>
+            <div>
+              <button
+                class="mt-6 rounded-full bg-primary-surface text-sm font-medium text-slate-900 transition-colors hover:bg-primary-surface/90 flex items-center pl-3 pr-1 py-1 cursor-pointer"
+              >
+                Jelajahi Lebih Lanjut
+                <div
+                  class="bg-primary text-white rounded-full p-2 ml-2"
+                >
+                  <svg
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 5v14"
+                    />
+                    <path
+                      d="m19 12-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div
+          class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 items-center gap-8"
+        >
+          <div>
+            <h2
+              class="text-4xl font-semibold mb-2"
+            >
+              1
+              +
+            </h2>
+            <p
+              class="text-lg text-gray-600"
+            >
+              Tahun Pengalaman
+            </p>
+          </div>
+          <div>
+            <h2
+              class="text-4xl font-semibold mb-2"
+            >
+              -
+            </h2>
+            <p
+              class="text-lg text-gray-600"
+            >
+              Transaksi Penjualan
+            </p>
+          </div>
+          <div>
+            <h2
+              class="text-4xl font-semibold mb-2"
+            >
+              -
+            </h2>
+            <p
+              class="text-lg text-gray-600"
+            >
+              Panen
+            </p>
+          </div>
+          <div>
+            <h2
+              class="text-4xl font-semibold mb-2"
+            >
+              -
+            </h2>
+            <p
+              class="text-lg text-gray-600"
+            >
+              Kolam Budidaya
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <section
+      class="py-16 px-4 bg-gray-100"
+      id="profile"
+    >
+      <div
+        class="max-w-7xl mx-auto"
+      >
+        <div
+          class="mb-12 text-center"
+        >
+          <h2
+            class="text-3xl md:text-3xl font-semibold text-slate-900"
+          >
+            Profile Kelompok Tani Desa Kebakalan
+          </h2>
+          <p
+            class="mt-2 text-slate-600"
+          >
+            Dalam melakukan budidaya ikan lele
+          </p>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 h-96"
+        >
+          <div
+            class="md:col-span-1"
+          >
+            <img
+              alt="Profile Image"
+              class="rounded-lg object-cover w-full h-full"
+              data-nimg="1"
+              decoding="async"
+              height="400"
+              loading="lazy"
+              src="/_next/image?url=%2Fimages%2Fhome%2Fpool-3.jpeg&w=828&q=75"
+              srcset="/_next/image?url=%2Fimages%2Fhome%2Fpool-3.jpeg&w=640&q=75 1x, /_next/image?url=%2Fimages%2Fhome%2Fpool-3.jpeg&w=828&q=75 2x"
+              style="color: transparent;"
+              width="400"
+            />
+          </div>
+          <div
+            class="md:col-span-1 flex flex-col gap-6"
+          >
+            <iframe
+              allowfullscreen=""
+              class="rounded-lg w-full h-full min-h-50"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2235.2138477237313!2d112.6695056446088!3d-7.531116413899628!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7de34500ee8d9%3A0x4e5b1296468709e2!2sKebakalan%2C%20Kec.%20Porong%2C%20Kabupaten%20Sidoarjo%2C%20Jawa%20Timur!5e1!3m2!1sid!2sid!4v1774871474521!5m2!1sid!2sid"
+              style="border: 0px;"
+            />
+            <div
+              class="text-sm text-slate-600 mt-2"
+            >
+              <p>
+                Desa Kebakalan, Kecamatan Porong, Kabupaten Sidoarjo
+              </p>
+            </div>
+          </div>
+          <div
+            class="md:col-span-1 flex flex-col gap-6"
+          >
+            <div
+              class="flex-1 flex items-center"
+            >
+              <p
+                class="text-slate-700 leading-relaxed text-sm"
+              >
+                Masyarakatnya tergabung dalam kelompok tani yang mendapat dukungan pendanaan dari pemerintah desa untuk merealisisasikan kegiatan budidaya ikan lele. Melalui program ini, diharapkan masyarakat desa dapat meningkatkan kemandiran ekonomi melalui kegiatan perikanan air tawar.
+              </p>
+            </div>
+            <img
+              alt="Profile Image"
+              class="rounded-lg object-cover w-full h-full"
+              data-nimg="1"
+              decoding="async"
+              height="400"
+              loading="lazy"
+              src="/_next/image?url=%2Fimages%2Fhome%2Fpool-1.jpeg&w=828&q=75"
+              srcset="/_next/image?url=%2Fimages%2Fhome%2Fpool-1.jpeg&w=640&q=75 1x, /_next/image?url=%2Fimages%2Fhome%2Fpool-1.jpeg&w=828&q=75 2x"
+              style="color: transparent;"
+              width="400"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="py-16 px-4"
+      id="kolam"
+    >
+      <div
+        class="max-w-7xl mx-auto"
+      >
+        <div
+          class="mb-12 text-center flex justify-between items-center"
+        >
+          <h2
+            class="text-3xl md:text-3xl font-semibold text-slate-900"
+          >
+            Kolam Budidaya Ikan Lele
+          </h2>
+          <p
+            class="mt-2 text-slate-600 max-w-lg text-right"
+          >
+            Sistem kolam budidaya yang digunakan memiliki kategori dan kegunaan masing-masing
+          </p>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+        >
+          <div
+            class="bg-secondary-surface rounded-sm p-6 flex flex-col items-start"
+          >
+            <div
+              class="w-12 h-12 bg-secondary text-white flex items-center justify-center rounded-sm mb-6 shrink-0 text-slate-700"
+            >
+              <svg
+                fill="currentColor"
+                height="24"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 576 512"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M562.1 383.9c-21.5-2.4-42.1-10.5-57.9-22.9-14.1-11.1-34.2-11.3-48.2 0-37.9 30.4-107.2 30.4-145.7-1.5-13.5-11.2-33-9.1-46.7 1.8-38 30.1-106.9 30-145.2-1.7-13.5-11.2-33.3-8.9-47.1 2-15.5 12.2-36 20.1-57.7 22.4-7.9.8-13.6 7.8-13.6 15.7v32.2c0 9.1 7.6 16.8 16.7 16 28.8-2.5 56.1-11.4 79.4-25.9 56.5 34.6 137 34.1 192 0 56.5 34.6 137 34.1 192 0 23.3 14.2 50.9 23.3 79.1 25.8 9.1.8 16.7-6.9 16.7-16v-31.6c.1-8-5.7-15.4-13.8-16.3zm0-144c-21.5-2.4-42.1-10.5-57.9-22.9-14.1-11.1-34.2-11.3-48.2 0-37.9 30.4-107.2 30.4-145.7-1.5-13.5-11.2-33-9.1-46.7 1.8-38 30.1-106.9 30-145.2-1.7-13.5-11.2-33.3-8.9-47.1 2-15.5 12.2-36 20.1-57.7 22.4-7.9.8-13.6 7.8-13.6 15.7v32.2c0 9.1 7.6 16.8 16.7 16 28.8-2.5 56.1-11.4 79.4-25.9 56.5 34.6 137 34.1 192 0 56.5 34.6 137 34.1 192 0 23.3 14.2 50.9 23.3 79.1 25.8 9.1.8 16.7-6.9 16.7-16v-31.6c.1-8-5.7-15.4-13.8-16.3zm0-144C540.6 93.4 520 85.4 504.2 73 490.1 61.9 470 61.7 456 73c-37.9 30.4-107.2 30.4-145.7-1.5-13.5-11.2-33-9.1-46.7 1.8-38 30.1-106.9 30-145.2-1.7-13.5-11.2-33.3-8.9-47.1 2-15.5 12.2-36 20.1-57.7 22.4-7.9.8-13.6 7.8-13.6 15.7v32.2c0 9.1 7.6 16.8 16.7 16 28.8-2.5 56.1-11.4 79.4-25.9 56.5 34.6 137 34.1 192 0 56.5 34.6 137 34.1 192 0 23.3 14.2 50.9 23.3 79.1 25.8 9.1.8 16.7-6.9 16.7-16v-31.6c.1-8-5.7-15.4-13.8-16.3z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-lg font-medium text-slate-900 mb-2"
+            >
+              -
+               Kolam
+            </h3>
+            <p
+              class="text-sm text-slate-700"
+            >
+              Total kolam aktif budidaya dengan beberapa kategori
+            </p>
+          </div>
+          <div
+            class="p-6 flex flex-col items-start"
+          >
+            <div
+              class="w-12 h-12 bg-secondary-surface flex items-center justify-center rounded-sm mb-6 shrink-0 text-slate-700"
+            >
+              <svg
+                fill="currentColor"
+                height="24"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 576 512"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M327.1 96c-89.97 0-168.54 54.77-212.27 101.63L27.5 131.58c-12.13-9.18-30.24.6-27.14 14.66L24.54 256 .35 365.77c-3.1 14.06 15.01 23.83 27.14 14.66l87.33-66.05C158.55 361.23 237.13 416 327.1 416 464.56 416 576 288 576 256S464.56 96 327.1 96zm87.43 184c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24 13.26 0 24 10.74 24 24 0 13.25-10.75 24-24 24z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-lg font-medium text-slate-900 mb-2"
+            >
+              -
+               Kolam Pembenihan
+            </h3>
+            <p
+              class="text-sm text-slate-600 leading-relaxed"
+            >
+              Khusus perawatan benih fase awal hingga mencapai ukuran siap pindah ke kolam pembesaran.
+            </p>
+          </div>
+          <div
+            class="p-6 flex flex-col items-start"
+          >
+            <div
+              class="w-12 h-12 bg-secondary-surface flex items-center justify-center rounded-sm mb-6 shrink-0 text-slate-700"
+            >
+              <svg
+                fill="currentColor"
+                height="24"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M512 256c0-16.54-14.27-46.76-45.61-74a207.06 207.06 0 0 0-60.28-36.12 3.15 3.15 0 0 0-3.93 1.56c-.15.29-.3.57-.47.86l-9.59 15.9a183.24 183.24 0 0 0 .07 183.78l.23.39 8.74 16a4 4 0 0 0 4.94 1.82C479.63 337.42 512 281.49 512 256zm-93.92-.14a16 16 0 1 1 13.79-13.79 16 16 0 0 1-13.79 13.79z"
+                />
+                <path
+                  d="M335.45 256a214.8 214.8 0 0 1 29.08-108l.12-.21 4.62-7.67a4 4 0 0 0-2.59-6 284.29 284.29 0 0 0-39.26-5.39 7.94 7.94 0 0 1-4.29-1.6c-19.28-14.66-57.5-40.3-96.46-46.89a16 16 0 0 0-18 20.18l10.62 37.17a4 4 0 0 1-2.42 4.84c-36.85 13.69-68.59 38.75-91.74 57.85a8 8 0 0 1-10.06.06q-4.72-3.75-9.69-7.39c-39.64-28.95-86.21-32.76-88.17-32.9a16 16 0 0 0-16.83 19.4c.42 1.93 9.19 40.69 31.7 71.61a8.09 8.09 0 0 1 0 9.55C9.57 291.52.8 330.29.38 332.22a16 16 0 0 0 16.83 19.4c2-.14 48.53-4 88.12-32.88q4.85-3.56 9.47-7.22a8 8 0 0 1 10.06.07c23.25 19.19 55.05 44.28 92 58a4 4 0 0 1 2.42 4.83l-10.66 37.18a16 16 0 0 0 18 20.18c17.16-2.9 51.88-12.86 96.05-46.83a8.15 8.15 0 0 1 4.36-1.65 287.36 287.36 0 0 0 39.22-5.3 4 4 0 0 0 2.69-5.83l-4.51-8.29A214.81 214.81 0 0 1 335.45 256z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-lg font-medium text-slate-900 mb-2"
+            >
+              -
+               Kolam Pembesaran
+            </h3>
+            <p
+              class="text-sm text-slate-600 leading-relaxed"
+            >
+              Fokus pada pertumbuhan lele dari ukuran remaja hingga mencapai bobot siap panen (konsumsi).
+            </p>
+          </div>
+          <div
+            class="p-6 flex flex-col items-start"
+          >
+            <div
+              class="w-12 h-12 bg-secondary-surface flex items-center justify-center rounded-sm mb-6 shrink-0 text-slate-700"
+            >
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                />
+              </svg>
+            </div>
+            <h3
+              class="text-lg font-medium text-slate-900 mb-2"
+            >
+              -
+               Kolam Penangkaran
+            </h3>
+            <p
+              class="text-sm text-slate-600 leading-relaxed"
+            >
+              Area khusus untuk pemeliharaan indukan atau karantina guna menjaga kualitas budidaya.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="py-16 px-4 bg-gray-100"
+      id="populasi"
+    >
+      <div
+        class="max-w-7xl mx-auto"
+      >
+        <div
+          class="mb-12 text-center"
+        >
+          <h2
+            class="text-3xl md:text-3xl font-semibold text-slate-900"
+          >
+            Populasi Ikan Lele
+          </h2>
+          <p
+            class="mt-2 text-slate-600"
+          >
+            Informasi terkini mengenai jumlah populasi ikan lele yang sedang dibudidayakan
+          </p>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 w-full"
+        >
+          <div
+            class="flex flex-col items-start gap-4"
+          >
+            <div
+              class="bg-primary-surface rounded-sm p-6 flex flex-col items-start"
+            >
+              <h3
+                class="text-lg font-medium text-slate-900 mb-2"
+              >
+                Total Populasi
+              </h3>
+              <div
+                class="text-2xl font-semibold text-primary"
+              >
+                -
+                 
+                Ekor
+              </div>
+              <p
+                class="text-sm text-slate-700"
+              >
+                Jumlah total ikan lele yang sedang dibudidayakan di semua kolam
+              </p>
+            </div>
+            <div
+              class="bg-secondary-surface rounded-sm p-6 flex flex-col items-start"
+            >
+              <h3
+                class="text-lg font-medium text-slate-900 mb-2"
+              >
+                Rata Rata Populasi per Kolam
+              </h3>
+              <div
+                class="text-2xl font-semibold text-secondary"
+              >
+                -
+                 
+                Ekor
+              </div>
+              <p
+                class="text-sm text-slate-700"
+              >
+                Rata-rata jumlah ikan lele yang sedang dibudidayakan di setiap kolam
+              </p>
+            </div>
+          </div>
+          <div
+            class="col-span-3 w-full"
+          >
+            <div
+              class="bg-card text-card-foreground flex flex-col gap-6 border py-6 shadow-sm w-full rounded-sm"
+              data-slot="card"
+            >
+              <div
+                class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+                data-slot="card-header"
+              >
+                <div
+                  class="leading-none font-semibold"
+                  data-slot="card-title"
+                >
+                  Populasi Ikan Per Kolam
+                </div>
+                <div
+                  class="text-muted-foreground text-sm"
+                  data-slot="card-description"
+                >
+                  Jumlah ikan lele yang ada di masing-masing kolam
+                </div>
+              </div>
+              <div
+                class="px-6"
+                data-slot="card-content"
+              >
+                <div
+                  class="[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden h-75 w-full"
+                  data-chart="chart-_r_0_"
+                  data-slot="chart"
+                >
+                  <style>
+                    
+ [data-chart=chart-_r_0_] {
+  --color-total: var(--primary);
+}
+
+
+.dark [data-chart=chart-_r_0_] {
+  --color-total: var(--primary);
+}
+
+                  </style>
+                  <div
+                    class="recharts-responsive-container"
+                    style="width: 100%; height: 100%; min-width: 0;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="py-16 px-4"
+      id="panen"
+    >
+      <div
+        class="max-w-7xl mx-auto"
+      >
+        <div
+          class="mb-12 text-center"
+        >
+          <h2
+            class="text-3xl md:text-3xl font-semibold text-slate-900"
+          >
+            Panen Ikan Lele
+          </h2>
+          <p
+            class="mt-2 text-slate-600"
+          >
+            Informasi terkini (per tahun) mengenai panen ikan lele yang dibudidayakan
+          </p>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+        >
+          <div
+            class="col-span-3"
+          >
+            <div
+              class="bg-card text-card-foreground flex flex-col gap-6 border shadow-sm py-0 rounded-sm"
+              data-slot="card"
+            >
+              <div
+                class="@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-col items-stretch border-b p-0! sm:flex-row"
+                data-slot="card-header"
+              >
+                <div
+                  class="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:py-0!"
+                >
+                  <div
+                    class="leading-none font-semibold"
+                    data-slot="card-title"
+                  >
+                    Statistik Panen Ikan
+                  </div>
+                  <div
+                    class="text-muted-foreground text-sm"
+                    data-slot="card-description"
+                  >
+                    Menampilkan data total panen bulanan (Frekuensi dan Ekor)
+                  </div>
+                </div>
+                <div
+                  class="flex"
+                >
+                  <button
+                    class="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+                    data-active="true"
+                  >
+                    <span
+                      class="text-xs text-muted-foreground"
+                    >
+                      Frekuensi Panen (Kali)
+                    </span>
+                    <span
+                      class="text-lg leading-none font-bold sm:text-3xl"
+                    >
+                      0
+                    </span>
+                  </button>
+                  <button
+                    class="relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+                    data-active="false"
+                  >
+                    <span
+                      class="text-xs text-muted-foreground"
+                    >
+                      Panen (Ekor)
+                    </span>
+                    <span
+                      class="text-lg leading-none font-bold sm:text-3xl"
+                    >
+                      0
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="px-2 sm:p-6"
+                data-slot="card-content"
+              >
+                <div
+                  class="[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden aspect-auto h-62.5 w-full"
+                  data-chart="chart-_r_1_"
+                  data-slot="chart"
+                >
+                  <style>
+                    
+ [data-chart=chart-_r_1_] {
+  --color-frekuensi: var(--chart-2);
+  --color-ekor: var(--secondary);
+}
+
+
+.dark [data-chart=chart-_r_1_] {
+  --color-frekuensi: var(--chart-2);
+  --color-ekor: var(--secondary);
+}
+
+                  </style>
+                  <div
+                    class="recharts-responsive-container"
+                    style="width: 100%; height: 100%; min-width: 0;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-sm border border-slate-200 p-6 flex flex-col h-full shadow-sm"
+          >
+            <div
+              class="flex items-center justify-between mb-6"
+            >
+              <div>
+                <h3
+                  class="text-lg font-semibold text-slate-900"
+                >
+                  -
+                   
+                  Panen Terakhir
+                </h3>
+                <p
+                  class="text-xs text-slate-500 mt-1"
+                >
+                  Riwayat terbaru dari kolam
+                </p>
+              </div>
+              <div
+                class="bg-lime-100 text-lime-700 px-3 py-1 rounded-full text-xs font-semibold"
+              >
+                Terbaru
+              </div>
+            </div>
+            <div
+              class="flex flex-col gap-2 flex-1"
+            >
+              <p
+                class="text-sm text-slate-500"
+              >
+                Belum ada data panen terbaru.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="py-12 px-4"
+    >
+      <div
+        class="max-w-3xl mx-auto"
+      >
+        <div
+          class="text-center"
+        >
+          <h2
+            class="text-2xl md:text-3xl font-medium text-slate-900 mb-4"
+          >
+            Tertarik bergabung dengan Lele Farm?
+          </h2>
+          <p
+            class="text-slate-600 mb-8"
+          >
+            Dapatkan informasi terkini tentang budidaya ikan lele dan penawaran khusus.
+          </p>
+          <button
+            class="bg-primary cursor-pointer text-white px-8 py-2.5 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            Hubungi kami
+          </button>
+        </div>
+      </div>
+    </section>
+    <footer
+      class="py-6 px-4 bg-primary"
+    >
+      <div
+        class="max-w-7xl mx-auto text-center flex justify-between items-center"
+      >
+        <p
+          class="text-sm text-white font-medium"
+        >
+          © 
+          2026
+           Lele Farm. All rights reserved.
+        </p>
+        <p
+          class="text-sm text-white mt-2"
+        >
+          Dibuat dengan 🎀 oleh Tim Lele Farm
+        </p>
+      </div>
+    </footer>
+  </main>
+</div>
+`;

@@ -16,23 +16,10 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { GeneralInfoResponse } from "@/types/guest";
+import { ImFileEmpty } from "react-icons/im";
 
 export const description = "An interactive bar chart";
-
-const chartData = [
-  { date: "2024-01-01", frekuensi: 3, ekor: 6200 },
-  { date: "2024-02-01", frekuensi: 2, ekor: 7000 },
-  { date: "2024-03-01", frekuensi: 4, ekor: 5500 },
-  { date: "2024-04-01", frekuensi: 3, ekor: 8200 },
-  { date: "2024-05-01", frekuensi: 5, ekor: 10500 },
-  { date: "2024-06-01", frekuensi: 2, ekor: 9000 },
-  { date: "2024-07-01", frekuensi: 4, ekor: 11500 },
-  { date: "2024-08-01", frekuensi: 3, ekor: 9700 },
-  { date: "2024-09-01", frekuensi: 5, ekor: 12500 },
-  { date: "2024-10-01", frekuensi: 4, ekor: 14000 },
-  { date: "2024-11-01", frekuensi: 2, ekor: 11000 },
-  { date: "2024-12-01", frekuensi: 6, ekor: 15500 },
-];
 
 const chartConfig = {
   views: {
@@ -48,7 +35,22 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function PanenChartBarInteractive() {
+export function PanenChartBarInteractive({
+  data,
+}: {
+  data?: GeneralInfoResponse;
+}) {
+  const generalInfo = data?.data[0];
+  const chartHarvestData = generalInfo?.harvestSection.chartHarvest || [];
+
+  const chartData = React.useMemo(() => {
+    return chartHarvestData.map((item) => ({
+      month: item.month,
+      frekuensi: item.frequency,
+      ekor: item.total,
+    }));
+  }, [chartHarvestData]);
+
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("frekuensi");
 
@@ -57,7 +59,7 @@ export function PanenChartBarInteractive() {
       frekuensi: chartData.reduce((acc, curr) => acc + curr.frekuensi, 0),
       ekor: chartData.reduce((acc, curr) => acc + curr.ekor, 0),
     }),
-    [],
+    [chartData],
   );
 
   return (
@@ -91,49 +93,51 @@ export function PanenChartBarInteractive() {
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-62.5 w-full"
-        >
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+        {chartData.length === 0 ? (
+          <div className="flex h-[260px] flex-col items-center justify-center gap-3 text-muted-foreground">
+            <ImFileEmpty className="h-10 w-10 opacity-25" />
+            <span className="text-sm">Belum ada data populasi</span>
+          </div>
+        ) : (
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-62.5 w-full"
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={10}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("id-ID", {
-                  month: "short",
-                });
+            <BarChart
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
               }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-37.5"
-                  nameKey="views"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("id-ID", {
-                      month: "long",
-                      year: "numeric",
-                    });
-                  }}
-                />
-              }
-            />
-            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
-          </BarChart>
-        </ChartContainer>
+              maxBarSize={50}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={10}
+                tickFormatter={(value) => {
+                  return value.slice(0, 3);
+                }}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-37.5"
+                    nameKey="views"
+                    labelFormatter={(value) => {
+                      return value;
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );

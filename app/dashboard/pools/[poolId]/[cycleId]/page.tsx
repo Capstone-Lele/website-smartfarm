@@ -19,21 +19,27 @@ import { FeedingLineChart } from "./_feeding/chart";
 import MovePoolTable from "./_move-pool/table";
 import { MovePoolBarChart } from "./_move-pool/chart";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
-
-const waterQuality = {
-  suhu: { value: 28, status: "Aman", unit: "C" },
-  ph: { value: 1, status: "Bahaya", unit: "" },
-};
+import { SimpleStatus } from "./_water-quality/simple-status";
+import { ParamStatus } from "./_water-quality/param-status";
+import { WaterQualityChart } from "./_water-quality/chart";
+import { WaterQualityTable } from "./_water-quality/table";
+import { useIotByNode, useIotLiveByNode } from "@/lib/api/service/iot/useIot";
 
 const CycleDetailPage = () => {
   const params = useParams();
 
-  const cycleId = Array.isArray(params.cycleId)
+  const rawCycleId = Array.isArray(params.cycleId)
     ? params.cycleId[0]
     : params.cycleId;
-  const poolId = Array.isArray(params.poolId)
+  const cycleId =
+    rawCycleId !== "null" && rawCycleId !== "undefined" ? rawCycleId : "";
+
+  const rawPoolId = Array.isArray(params.poolId)
     ? params.poolId[0]
     : params.poolId;
+  const poolId =
+    rawPoolId !== "null" && rawPoolId !== "undefined" ? rawPoolId : "";
+
   const { data: poolData } = usePoolById(poolId || "");
   const { data: cycleDetailData } = useDetailCycle(cycleId || "");
   const { setLabel, removeLabel } = useBreadcrumbStore();
@@ -41,6 +47,15 @@ const CycleDetailPage = () => {
   const cycleData = cycleDetailData?.data?.[0];
   const startDate = cycleData?.startDate;
   const endDate = cycleData?.endDate;
+
+  const nodeStr = poolData?.name
+    ? parseInt(poolData.name.replace(/\D/g, "")).toString()
+    : "";
+  const { data: iotData, isLoading: isLoadingIot } = useIotByNode(nodeStr);
+  const { data: iotLiveData } = useIotLiveByNode(nodeStr);
+  const liveTemp = iotLiveData?.[0]?.temp || "-";
+  const livePh = iotLiveData?.[0]?.ph || "-";
+  const liveTime = iotLiveData?.[0]?.receivedAt || null;
 
   let umur = "-";
   if (startDate) {
@@ -69,7 +84,7 @@ const CycleDetailPage = () => {
       {/* Main Content */}
       <div className="flex-1 space-y-6">
         {/* Row 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Profil Siklus */}
           <DefaultCard className="md:col-span-2 px-0">
             <div className="flex flex-row items-center justify-between px-6 pb-4">
@@ -189,173 +204,286 @@ const CycleDetailPage = () => {
               </div>
             </div>
           </DefaultCard>
+
+          <DefaultCard className="px-0">
+            <div className="border-b px-6 pb-4">
+              <h3 className="text-base font-bold">Akses Pengguna</h3>
+            </div>
+            <div className="px-6 py-4 space-y-4 overflow-auto">
+              {poolData?.actor && poolData.actor.length > 0 ? (
+                poolData.actor.map((actor, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 border">
+                      {actor.image ? (
+                        <img
+                          src={actor.image}
+                          alt={actor.userName}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-sm font-medium text-slate-500">
+                          {actor.userName
+                            ? actor.userName.charAt(0).toUpperCase()
+                            : "U"}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {actor.userName}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {actor.role || "Tidak ada role"}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 text-center py-4">
+                  Belum ada pengguna
+                </p>
+              )}
+            </div>
+          </DefaultCard>
         </div>
 
-        {/* Row 2: Kualitas Air */}
-        <DefaultCard className="px-0">
-          <div className="pb-2 border-b px-6 pb-4">
-            <h3 className="text-base font-bold">Kualitas Air</h3>
+        {poolId && cycleId ? (
+          <div className="grid grid-cols-1 gap-6">
+            {/* Row 2: Kualitas Air */}
+            <DefaultCard className="px-0">
+              <Tabs defaultValue="ringkasan" className="gap-0">
+                <div className="border-b px-6 pb-4 flex items-center justify-between">
+                  <h3 className="text-base font-bold">Kualitas Air</h3>
+                  <TabsList>
+                    <TabsTrigger value="ringkasan">Status Saat Ini</TabsTrigger>
+                    <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                    <TabsTrigger value="tabel">Tabel</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="ringkasan" className="mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 w-full">
+                    <div className="flex gap-20">
+                      <SimpleStatus
+                        title="Suhu"
+                        value={liveTemp}
+                        unit="°C"
+                        minArr={poolData?.temperatureMin}
+                        maxArr={poolData?.temperatureMax}
+                        normalArr={poolData?.temperatureNormal}
+                        time={liveTime ? formatDate(liveTime) : "-"}
+                      />
+                      <SimpleStatus
+                        title="pH"
+                        value={livePh}
+                        unit=""
+                        minArr={poolData?.acidityMin}
+                        maxArr={poolData?.acidityMax}
+                        normalArr={poolData?.acidityNormal}
+                        time={liveTime ? formatDate(liveTime) : "-"}
+                      />
+                    </div>
+                    <div className="flex flex-row gap-6 ml-auto border-l pl-10 w-full">
+                      <ParamStatus
+                        title="Parameter Suhu (°C)"
+                        minArr={poolData?.temperatureMin}
+                        maxArr={poolData?.temperatureMax}
+                        normalArr={poolData?.temperatureNormal}
+                      />
+                      <ParamStatus
+                        title="Parameter pH"
+                        minArr={poolData?.acidityMin}
+                        maxArr={poolData?.acidityMax}
+                        normalArr={poolData?.acidityNormal}
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="grafik" className="mt-0">
+                  <div className="px-6 pt-6 pb-6 flex flex-col gap-10 max-h-[500px] overflow-y-auto">
+                    {iotData ? (
+                      <>
+                        <WaterQualityChart
+                          data={iotData}
+                          dataKey="temp"
+                          title="Suhu Air (°C)"
+                        />
+                        <WaterQualityChart
+                          data={iotData}
+                          dataKey="ph"
+                          title="pH Air"
+                        />
+                      </>
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Data grafik tidak tersedia
+                      </p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="tabel" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {iotData || isLoadingIot ? (
+                      <WaterQualityTable
+                        data={iotData || []}
+                        isLoading={isLoadingIot}
+                      />
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Data tabel tidak tersedia
+                      </p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DefaultCard>
+
+            {/* Row 3: Catatan Sampling */}
+            <DefaultCard className="px-0">
+              <Tabs defaultValue="grafik" className="gap-0">
+                <div className="border-b px-6 pb-4 flex items-center justify-between">
+                  <h3 className="text-base font-bold">Catatan Sampling</h3>
+                  <TabsList>
+                    <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                    <TabsTrigger value="tabel">Tabel</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="grafik" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId ? (
+                      <SamplingChartLineLabel cycleId={cycleId} />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="tabel" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId && poolData?.createdAt ? (
+                      <SamplingTable
+                        cycleId={cycleId}
+                        poolCreateDate={poolData?.createdAt}
+                      />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DefaultCard>
+
+            {/* Row 4: Catatan Mortalitas */}
+            <DefaultCard className="px-0">
+              <Tabs defaultValue="grafik" className="gap-0">
+                <div className="border-b px-6 pb-4 flex items-center justify-between">
+                  <h3 className="text-base font-bold">Catatan Mortalitas</h3>
+                  <TabsList>
+                    <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                    <TabsTrigger value="tabel">Tabel</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="grafik" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId ? (
+                      <MortalityBarChart cycleId={cycleId} />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="tabel" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId && poolData?.createdAt ? (
+                      <MortalityTable
+                        cycleId={cycleId}
+                        cycleStartDate={
+                          cycleDetailData?.data?.[0]?.startDate ||
+                          poolData.createdAt
+                        }
+                      />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DefaultCard>
+
+            {/* Row 5: Catatan Pemberian Pakan */}
+            <DefaultCard className="px-0">
+              <Tabs defaultValue="grafik" className="gap-0">
+                <div className="border-b px-6 pb-4 flex items-center justify-between">
+                  <h3 className="text-base font-bold">
+                    Catatan Pemberian Pakan
+                  </h3>
+                  <TabsList>
+                    <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                    <TabsTrigger value="tabel">Tabel</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="grafik" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId ? (
+                      <FeedingLineChart cycleId={cycleId} />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="tabel" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId && cycleData?.startDate ? (
+                      <FeedingTable
+                        cycleId={cycleId}
+                        cycleStartDate={cycleData.startDate}
+                      />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DefaultCard>
+
+            {/* Row 6: Catatan Pemindahan Kolam */}
+            <DefaultCard className="px-0">
+              <Tabs defaultValue="grafik" className="gap-0">
+                <div className="border-b px-6 pb-4 flex items-center justify-between">
+                  <h3 className="text-base font-bold">
+                    Catatan Pemindahan Kolam
+                  </h3>
+                  <TabsList>
+                    <TabsTrigger value="grafik">Grafik</TabsTrigger>
+                    <TabsTrigger value="tabel">Tabel</TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="grafik" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId ? (
+                      <MovePoolBarChart cycleId={cycleId} />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+                <TabsContent value="tabel" className="mt-0">
+                  <div className="px-6 pt-6 pb-6">
+                    {cycleId ? (
+                      <MovePoolTable cycleId={cycleId} />
+                    ) : (
+                      <p>Data tidak tersedia</p>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </DefaultCard>
           </div>
-          <div className="px-6 pt-6 pb-6">
-            <div className="flex gap-20">
-              <div>
-                <p className="text-sm font-semibold mb-1">
-                  Suhu ({waterQuality.suhu.unit})
-                </p>
-                <p className="text-lg">
-                  {waterQuality.suhu.value}{" "}
-                  <span className="text-green-500 text-sm font-semibold">
-                    ({waterQuality.suhu.status})
-                  </span>
-                </p>
-                <p className="text-xs text-gray-400 mt-1">1 Jam yang lalu</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold mb-1">pH</p>
-                <p className="text-lg">
-                  {waterQuality.ph.value}{" "}
-                  <span className="text-red-500 text-sm font-semibold">
-                    ({waterQuality.ph.status})
-                  </span>
-                </p>
-                <p className="text-xs text-gray-400 mt-1">1 Jam yang lalu</p>
-              </div>
-            </div>
+        ) : (
+          <div className="py-10">
+            <p className="text-center text-gray-500">
+              Kolam atau siklus tidak ditemukan
+            </p>
           </div>
-        </DefaultCard>
-
-        {/* Row 3: Catatan Sampling */}
-        <DefaultCard className="px-0">
-          <Tabs defaultValue="grafik" className="gap-0">
-            <div className="border-b px-6 pb-4 flex items-center justify-between">
-              <h3 className="text-base font-bold">Catatan Sampling</h3>
-              <TabsList>
-                <TabsTrigger value="grafik">Grafik</TabsTrigger>
-                <TabsTrigger value="tabel">Tabel</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="grafik" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId ? (
-                  <SamplingChartLineLabel cycleId={cycleId} />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="tabel" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId && poolData?.createdAt ? (
-                  <SamplingTable
-                    cycleId={cycleId}
-                    poolCreateDate={poolData?.createdAt}
-                  />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </DefaultCard>
-
-        {/* Row 4: Catatan Mortalitas */}
-        <DefaultCard className="px-0">
-          <Tabs defaultValue="grafik" className="gap-0">
-            <div className="border-b px-6 pb-4 flex items-center justify-between">
-              <h3 className="text-base font-bold">Catatan Mortalitas</h3>
-              <TabsList>
-                <TabsTrigger value="grafik">Grafik</TabsTrigger>
-                <TabsTrigger value="tabel">Tabel</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="grafik" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId ? (
-                  <MortalityBarChart cycleId={cycleId} />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="tabel" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId && poolData?.createdAt ? (
-                  <MortalityTable
-                    cycleId={cycleId}
-                    cycleStartDate={cycleDetailData?.data?.[0]?.startDate || poolData.createdAt}
-                  />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </DefaultCard>
-
-        {/* Row 5: Catatan Pemberian Pakan */}
-        <DefaultCard className="px-0">
-          <Tabs defaultValue="grafik" className="gap-0">
-            <div className="border-b px-6 pb-4 flex items-center justify-between">
-              <h3 className="text-base font-bold">Catatan Pemberian Pakan</h3>
-              <TabsList>
-                <TabsTrigger value="grafik">Grafik</TabsTrigger>
-                <TabsTrigger value="tabel">Tabel</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="grafik" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId ? (
-                  <FeedingLineChart cycleId={cycleId} />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="tabel" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId && cycleData?.startDate ? (
-                  <FeedingTable
-                    cycleId={cycleId}
-                    cycleStartDate={cycleData.startDate}
-                  />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </DefaultCard>
-
-        {/* Row 6: Catatan Pemindahan Kolam */}
-        <DefaultCard className="px-0">
-          <Tabs defaultValue="grafik" className="gap-0">
-            <div className="border-b px-6 pb-4 flex items-center justify-between">
-              <h3 className="text-base font-bold">Catatan Pemindahan Kolam</h3>
-              <TabsList>
-                <TabsTrigger value="grafik">Grafik</TabsTrigger>
-                <TabsTrigger value="tabel">Tabel</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="grafik" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId ? (
-                  <MovePoolBarChart cycleId={cycleId} />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="tabel" className="mt-0">
-              <div className="px-6 pt-6 pb-6">
-                {cycleId ? (
-                  <MovePoolTable cycleId={cycleId} />
-                ) : (
-                  <p>Data tidak tersedia</p>
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </DefaultCard>
+        )}
       </div>
     </div>
   );

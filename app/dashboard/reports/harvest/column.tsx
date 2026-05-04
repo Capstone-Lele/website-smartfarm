@@ -34,15 +34,15 @@ export const columns: ColumnDef<Harvest>[] = [
       );
     },
   },
-    {
-      accessorKey: "cycle",
-      header: ({ column }) => (
-        <DataTableColumnHeader className="" column={column} title="SIKLUS" />
-      ),
-      cell: ({ row }) => {
-        return formatDate(row.original.cycle);
-      },
+  {
+    accessorKey: "cycle",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.cycle);
     },
+  },
   {
     accessorKey: "amount",
     header: ({ column }) => (
@@ -50,6 +50,16 @@ export const columns: ColumnDef<Harvest>[] = [
         className=""
         column={column}
         title="JUMLAH PANEN (ekor)"
+      />
+    ),
+  },
+  {
+    accessorKey: "totalKg",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="BERAT PANEN (kg)"
       />
     ),
   },

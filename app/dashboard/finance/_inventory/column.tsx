@@ -122,5 +122,4 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
       );
     },
   },
-  ,
 ];

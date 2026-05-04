@@ -1,7 +1,9 @@
 import React from "react";
 import { PopulasiChartBarDefault } from "./populasi-chart";
+import { GeneralInfoResponse } from "@/types/guest";
 
-const HomePopulasi = () => {
+const HomePopulasi = ({ data }: { data?: GeneralInfoResponse }) => {
+  const generalInfo = data?.data[0];
   return (
     <section id="populasi" className="py-16 px-4 bg-gray-100">
       <div className="max-w-7xl mx-auto">
@@ -21,7 +23,9 @@ const HomePopulasi = () => {
                 Total Populasi
               </h3>
               <div className="text-2xl font-semibold text-primary">
-                250.000 Ekor
+                {generalInfo?.populationSection.totalExistingFishPopulation ||
+                  "-"}{" "}
+                Ekor
               </div>
               <p className="text-sm text-slate-700">
                 Jumlah total ikan lele yang sedang dibudidayakan di semua kolam
@@ -32,7 +36,9 @@ const HomePopulasi = () => {
                 Rata Rata Populasi per Kolam
               </h3>
               <div className="text-2xl font-semibold text-secondary">
-                20.833 Ekor
+                {generalInfo?.populationSection.totalAverageFishPopulation ||
+                  "-"}{" "}
+                Ekor
               </div>
               <p className="text-sm text-slate-700">
                 Rata-rata jumlah ikan lele yang sedang dibudidayakan di setiap
@@ -42,7 +48,9 @@ const HomePopulasi = () => {
           </div>
           {/* Chart */}
           <div className="col-span-3 w-full">
-            <PopulasiChartBarDefault />
+            <PopulasiChartBarDefault
+              chartData={generalInfo?.populationSection?.chartPopulation}
+            />
           </div>
         </div>
       </div>

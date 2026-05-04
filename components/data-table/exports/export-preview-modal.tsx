@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from "react";
 import { LuDownload, LuX } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { ExportPreviewTable } from "./export-preview-table";
-import { exportTableToPdf } from "./export-utils";
 import { usePathname } from "next/navigation";
 import dataPath from "@/lib/constants/path";
 
@@ -68,35 +67,84 @@ export function ExportPreviewModal({
     return "";
   };
 
-  async function handleDownload() {
-    setExporting(true);
-    console.log("pathname", pathName);
+  function handlePrint() {
+    if (!tableRef.current) return;
+    
+    // Buat iframe tersembunyi untuk mencetak khusus template ini
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
     const pathSegments = checkPathname();
-    const title = `${pathSegments || "Data"}`;
+    const reportTitle = `${pathSegments || "Data"}`;
 
-    // Generate timestamp untuk nama file
     const now = new Date();
-    const dateStr = now
-      .toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
-      .replace(/\//g, "-");
-    const timeStr = now
-      .toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      })
-      .replace(/:/g, "-");
+    const dateStr = now.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const timeStr = now.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-    const fileName = `${title.toLowerCase().replace(/\s+/g, "_")}_${dateStr}_${timeStr}.pdf`;
-    try {
-      await exportTableToPdf(tableRef, { title, fileName });
-    } finally {
-      setExporting(false);
+    const iframeDoc = iframe.contentWindow?.document;
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(`
+        <html>
+          <head>
+            <title>${reportTitle}</title>
+            <style>
+              @media print {
+                @page { size: landscape; margin: 10mm; }
+                body { font-family: sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                table { page-break-inside: auto; }
+                tr { page-break-inside: avoid; page-break-after: auto; }
+                thead { display: table-header-group; }
+                tfoot { display: table-footer-group; }
+              }
+              body { padding: 0; margin: 0; }
+              .header { display: flex; flex-direction: column; text-align: center; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; font-family: sans-serif;}
+              .header-title { font-size: 16px; font-weight: bold; margin: 0; text-transform: uppercase; }
+              .header-sub { font-size: 12px; margin-top: 10px; display: flex; justify-content: space-between; }
+              .system-info { text-align: left; }
+              .print-info { text-align: right; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h2 class="header-title">${reportTitle}</h2>
+              <div class="header-sub">
+                <div class="system-info">
+                  <strong>SmartFarm</strong><br/>
+                  <span style="font-size: 10px">Sistem Monitoring Budidaya Lele</span>
+                </div>
+                <div class="print-info">
+                  Dicetak: ${dateStr}<br/>
+                  <span style="font-size: 10px">${timeStr} WIB</span>
+                </div>
+              </div>
+            </div>
+            ${tableRef.current.outerHTML}
+          </body>
+        </html>
+      `);
+      iframeDoc.close();
+
+      setTimeout(() => {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      }, 250);
     }
   }
 
@@ -117,12 +165,11 @@ export function ExportPreviewModal({
           </div>
           <div className="flex items-center gap-2">
             <Button
-              onClick={handleDownload}
-              disabled={exporting}
+              onClick={handlePrint}
               className="cursor-pointer bg-primary hover:bg-primary/90 text-white"
             >
               <LuDownload className="mr-2 h-4 w-4" />
-              {exporting ? "Memproses..." : "Download PDF"}
+              Print Data
             </Button>
             <Button
               variant="outline"

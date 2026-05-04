@@ -14,6 +14,8 @@ import { INVENTORY_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { columns_out } from "./column-out";
+import CommodityReportTab from "./_report-tab";
+import { formatDateShort } from "@/lib/utils/format-date";
 
 const tableFilter: TableFacetedFilter = [
   {
@@ -110,22 +112,21 @@ const page = () => {
           ) : (
             <div>
               <div className="flex justify-end mb-4">
-                <PostSellCommodity />
+                <PostSellCommodity dataCommodity={data} />
               </div>
               <Tabs defaultValue="table-in" className="w-full">
                 <TabsList className="mb-4 flex-wrap">
-                  <TabsTrigger value="table-in">
-                    Tabel Masuk
-                  </TabsTrigger>
-                  <TabsTrigger value="table-out">
-                    Tabel Keluar
-                  </TabsTrigger>
+                  <TabsTrigger value="table-in">Tabel Masuk</TabsTrigger>
+                  <TabsTrigger value="table-out">Tabel Keluar</TabsTrigger>
+                  <TabsTrigger value="laporan">Laporan</TabsTrigger>
                 </TabsList>
                 <TabsContent value="table-in">
                   <div>
                     <DataTable
                       columns={columns}
-                      data={filteredCommodities.filter((item) => item.type === "in")}
+                      data={filteredCommodities.filter(
+                        (item) => item.type === "in",
+                      )}
                     />
                   </div>
                 </TabsContent>
@@ -133,11 +134,22 @@ const page = () => {
                   <div>
                     <DataTable
                       columns={columns_out}
-                      data={filteredCommodities.filter((item) => item.type === "out")}
+                      data={filteredCommodities.filter(
+                        (item) => item.type === "out",
+                      )}
                     />
                   </div>
                 </TabsContent>
-
+                <TabsContent value="laporan">
+                  <CommodityReportTab
+                    data={filteredCommodities}
+                    rentang_tanggal={
+                      dateRange.start && dateRange.end
+                        ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`
+                        : ""
+                    }
+                  />
+                </TabsContent>
               </Tabs>
             </div>
           )}

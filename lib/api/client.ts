@@ -5,7 +5,7 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from "axios";
-import { getCookiesToken } from "../session";
+import { getCookiesToken, clearSession } from "../session";
 
 export class ApiError extends Error {
   status: number;
@@ -34,6 +34,15 @@ axiosInstance.interceptors.request.use(
 
     if (token?.token) {
       config.headers.Authorization = `Bearer ${token.token}`;
+    } else {
+      if (typeof window !== "undefined") {
+        const pathname = window.location.pathname;
+        if (pathname !== "/login" && pathname !== "/") {
+          await clearSession();
+          window.location.href = "/login?message=Session expired, please log in again";
+          return Promise.reject(new Error("Unauthorized: Token not found"));
+        }
+      }
     }
 
     // Remove Content-Type for FormData and set by browser

@@ -114,5 +114,5 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
       );
     },
   },
-  ,
+  
 ];
