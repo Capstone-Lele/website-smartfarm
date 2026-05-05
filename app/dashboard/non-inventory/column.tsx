@@ -11,23 +11,12 @@ import { ButtonCopy } from "@/components/button-copy";
 
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   {
-    accessorKey: "id",
-    header: () => <span>ID TRANSAKSI</span>,
-    cell: ({ row }) => (
-      <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
-    ),
-  },
-  {
-    accessorKey: "transactionDate",
+    accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        className=""
-        column={column}
-        title="TANGGAL TRANSAKSI"
-      />
+      <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.transactionDate);
+      return formatDate(row.original.createdAt);
     },
   },
   {
@@ -82,15 +71,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
       return formatRupiah(row.original.totalPrice ?? 0);
     },
   },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="DIBUAT" />
-    ),
-    cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
-    },
-  },
+
   {
     id: "actions",
     header: () => <span className="">Actions</span>,
@@ -104,5 +85,4 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
       );
     },
   },
-  
 ];
