@@ -85,10 +85,19 @@ const DashboardSidebar = () => {
 
   return (
     <>
+      {/* Overlay when sidebar is open on mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={toggle}
+        ></div>
+      )}
       <main
-        className={`border-r bg-white w-full p-4 ${
-          isOpen ? "max-w-64" : "max-w-19"
-        } duration-300 ease-in-out overflow-y-auto`}
+        className={`border-r bg-white h-full z-40 absolute md:relative transition-all duration-300 ease-in-out overflow-y-auto ${
+          isOpen
+            ? "translate-x-0 w-64 p-4"
+            : "-translate-x-full md:translate-x-0 md:w-20 w-0 p-0 md:p-4"
+        }`}
       >
         {/* Logo */}
         <div className="flex items-center gap-4 my-2">
