@@ -248,8 +248,8 @@ export const columnsPool: ColumnDef<Pool>[] = [
       // node berasal dari nama kolam, misal "Kolam 1" -> node_id = 1
       const node = parseInt(row.original.name.replace(/\D/g, ""));
       const { data: iotData } = useIotLiveByNode(node.toString());
-      const ph = iotData?.[0]?.ph;
-      const temp = iotData?.[0]?.temp;
+      const ph = iotData?.ph;
+      const temp = iotData?.temp;
 
       if (ph === undefined || temp === undefined || row.original.acidityMin === null || row.original.acidityMax === null || row.original.acidityNormal === null || row.original.temperatureMin === null || row.original.temperatureMax === null || row.original.temperatureNormal === null) {
         return <span>-</span>;

@@ -35,6 +35,16 @@ const nextConfig: NextConfig = {
     mcpServer: true,
   },
   devIndicators: false,
+
+  // Rewrites untuk proxy API for prod only
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/proxy/:path*',
+  //       destination: 'http://72.62.120.189:3001/api/:path*',
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

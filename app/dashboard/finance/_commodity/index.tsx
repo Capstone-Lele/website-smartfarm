@@ -4,7 +4,6 @@ import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
 import React from "react";
 import { commodityColumns } from "./column";
-import PostFinance from "../post"; // Reuse post button from finance
 import { useFinanceCommodity } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";

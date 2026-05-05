@@ -13,6 +13,7 @@ import { MdOutlineStoreMallDirectory } from "react-icons/md";
 import { LuDatabase } from "react-icons/lu";
 import useToggleSidebar from "@/lib/hooks/useToggleSidebar";
 import { usePathname } from "next/navigation";
+import { MdInventory } from "react-icons/md";
 
 export const items = [
   { title: "Menu Utama", type: "title" },
@@ -32,6 +33,12 @@ export const items = [
     name: "Inventaris",
     icon: <MdOutlineInventory2 />,
     href: "/dashboard/inventory",
+    type: "menu",
+  },
+  {
+    name: "Non-Inventaris",
+    icon: <MdInventory />,
+    href: "/dashboard/non-inventory",
     type: "menu",
   },
   {

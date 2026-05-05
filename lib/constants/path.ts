@@ -82,6 +82,20 @@ const dataPath = [
     ],
   },
   {
+    path: "/dashboard/non-inventory",
+    name: "Non-Inventaris",
+    sub_paths: [
+      {
+        path: "/dashboard/non-inventory/[id]",
+        name: "Detail Non-Inventaris",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["nonInventory"] ?? `Produk #${params.id}`;
+        },
+      },
+    ]
+  },
+  {
     path: "/dashboard/inventory-submission",
     name: "Pengajuan Inventaris",
     sub_paths: [

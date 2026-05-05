@@ -53,9 +53,9 @@ const CycleDetailPage = () => {
     : "";
   const { data: iotData, isLoading: isLoadingIot } = useIotByNode(nodeStr);
   const { data: iotLiveData } = useIotLiveByNode(nodeStr);
-  const liveTemp = iotLiveData?.[0]?.temp || "-";
-  const livePh = iotLiveData?.[0]?.ph || "-";
-  const liveTime = iotLiveData?.[0]?.receivedAt || null;
+  const liveTemp = iotLiveData?.temp || "-";
+  const livePh = iotLiveData?.ph || "-";
+  const liveTime = iotLiveData?.receivedAt || null;
 
   let umur = "-";
   if (startDate) {

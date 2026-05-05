@@ -4,7 +4,6 @@ import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
 import React from "react";
 import { inventoryColumns } from "./column";
-import PostFinance from "../post";
 import { useFinanceInventory } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
