@@ -3,7 +3,7 @@ name: Deploy Next.js to aaPanel
 on:
   push:
     branches:
-      - main # Pastikan ini sesuai dengan branch utama di repository kamu
+      - production # Pastikan ini sesuai dengan branch utama di repository kamu
 
 jobs:
   deploy:
@@ -22,7 +22,7 @@ jobs:
             cd /www/wwwroot/web-smartfarm/
 
             # 2. Tarik update kode terbaru dari GitHub
-            git pull origin main
+            git pull origin production
 
             # 3. Install dependencies (package.json)
             npm install
