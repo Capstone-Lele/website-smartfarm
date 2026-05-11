@@ -14,7 +14,6 @@ import { columns } from "./column";
 import PostInventoryModal from "./post";
 import { useGetProductUsage } from "@/lib/api/service/master-data/product/useProduct";
 
-
 const Page = () => {
   const { setTabComponent } = useSubNavbarTab();
   const { data, isLoading } = useInventory();
@@ -32,11 +31,14 @@ const Page = () => {
       icon: <LuPackage />,
     },
     {
-      title: "Total Stok Keseluruhan",
+      title: "Produk di atas Stok Minimum",
       value:
         data?.data
-          .reduce((total, item) => total + parseInt(item.totalQuantity), 0)
-          .toString() || "0",
+          .filter(
+            (item) =>
+              parseInt(item.totalQuantity) >= parseInt(item.minQuantity),
+          )
+          .length.toString() || "0",
       icon: <LuPackage className="text-primary" />,
     },
     {
@@ -71,8 +73,11 @@ const Page = () => {
           />
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <ChartBarStacked data={data?.data.filter((item) => !item.deletedAt)} isLoading={isLoading} />
+      <div className="grid  sm:grid-cols-2 gap-4">
+        <ChartBarStacked
+          data={data?.data.filter((item) => !item.deletedAt)}
+          isLoading={isLoading}
+        />
         <ChartPie data={usageData?.data} isLoading={isUsageLoading} />
       </div>
       <DefaultCard>

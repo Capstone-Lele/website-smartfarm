@@ -21,7 +21,7 @@ const DetailCycleLayout = ({ children, params }: DetailCycleLayoutProps) => {
 
   return (
     <div className="flex flex-col w-full -m-4 h-[calc(100%+2rem)] ">
-      <div className="flex h-full -mr-8 rounded-lg bg-white shadow">
+      <div className="flex h-full -mr-8 rounded-lg bg-white">
         {/* <DashboardSubSidebarPoolDetail items={DETAIL_POOL_SIDEBAR_ITEMS} /> */}
         <div className="flex-1 h-full overflow-auto bg-slate-50 p-4 ">
           {children}

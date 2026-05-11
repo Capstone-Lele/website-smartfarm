@@ -7,6 +7,7 @@ import { ImagePopup } from "@/components/image-popup";
 import { Feed } from "@/types/notes/feed.types";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import DetailFeedingSheet from "./detail";
 
 export const columns: ColumnDef<Feed>[] = [
   {
@@ -80,5 +81,10 @@ export const columns: ColumnDef<Feed>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailFeedingSheet item={row.original} />,
   },
 ];

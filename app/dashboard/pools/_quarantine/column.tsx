@@ -18,6 +18,7 @@ import { getAvatarUrl } from "@/lib/utils/avatar";
 import AssignPoolModal from "./assign";
 import { useParams } from "next/navigation";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
+import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 
 export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   {
@@ -54,36 +55,51 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
       );
     },
   },
-  {
-    accessorKey: "condition",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="KONDISI" />
-    ),
-  },
+   {
+      accessorKey: "cycle",
+      header: ({ column }) => (
+        <DataTableColumnHeader className="" column={column} title="KONDISI" />
+      ),
+      cell: ({ row }) => {
+        const condition = ALL_CYCLE_CONDITIONS.find(
+          (cond) => cond.value === row.original.cycle,
+        );
+        return condition ? (
+          <Badge className="px-2" variant={"outline"}>
+            {condition.label}
+          </Badge>
+        ) : (
+          <span>-</span>
+        );
+      },
+    },
   {
     accessorKey: "petugas",
     cell: ({ row }) => {
-      const staff = [
-        {
-          name: "John Doe",
-        },
-        { name: "Jane Smith" },
-        { name: "Jane Smith" },
-        { name: "Jane Smith" },
-      ];
+      const staff = row.original.actor;
+      if (!staff || staff.length === 0) {
+        return <span>-</span>;
+      }
       return (
         <div className="flex flex-row items-center">
-          {staff.length > 0 &&
+          {staff &&
+            staff.length > 0 &&
             staff.map((member, index) => {
               if (index < 2) {
                 return (
                   <Image
-                    src={getAvatarUrl(member.name)}
-                    alt={member.name}
+                    src={
+                      member.image?.startsWith("http")
+                        ? member.image
+                        : getAvatarUrl(member.userName || "User")
+                    }
+                    alt={member.userName}
                     width={30}
                     height={30}
                     key={index}
-                    className={"rounded-full border border-primary"}
+                    className={
+                      "rounded-full border border-primary h-8 w-8 object-cover"
+                    }
                     style={
                       index === 0
                         ? { position: "relative", zIndex: staff.length }
@@ -181,11 +197,10 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
-      const params = useParams();
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonDetailColumn
-            href={`/dashboard/pools/quarantine?poolId=${params.poolId}&cycleId=${row.original.id}`}
+            href={`/dashboard/pools/quarantine?poolId=${row.original.id}&cycleId=${row.original.cycleId}`}
           />
           <Separator orientation="vertical" className="h-6" />
           <AssignPoolModal pool={row.original} />

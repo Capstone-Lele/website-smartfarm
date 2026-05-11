@@ -6,6 +6,7 @@ import { ImagePopup } from "@/components/image-popup";
 import { Cleaning } from "@/types/notes/cleaning";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import DetailCleaningSheet from "./detail";
 
 export const columns: ColumnDef<Cleaning>[] = [
   {
@@ -45,5 +46,10 @@ export const columns: ColumnDef<Cleaning>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailCleaningSheet item={row.original} />,
   },
 ];

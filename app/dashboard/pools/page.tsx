@@ -6,7 +6,12 @@ import { columnsPool } from "./column";
 import PostKolamModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import DefaultCard from "@/components/card/default-card";
-import { LuCheck, LuUserRound, LuUsersRound } from "react-icons/lu";
+import {
+  LuCheck,
+  LuUserRound,
+  LuUsersRound,
+  LuTriangleAlert,
+} from "react-icons/lu";
 import CardStatistic from "@/components/card/card-statistic";
 import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -166,6 +171,7 @@ const page = () => {
             <TabsList>
               <TabsTrigger value="cycle">Siklus Kolam</TabsTrigger>
               <TabsTrigger value="move">Peraturan Perpindahan</TabsTrigger>
+              <TabsTrigger value="density">Kepadatan Kolam</TabsTrigger>
             </TabsList>
             <Separator className="my-4" />
             <TabsContent value="cycle">
@@ -291,6 +297,44 @@ const page = () => {
                       Ikan di kolam karantina dapat berpindah ke kolam
                       pembesaran
                     </p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="density">
+              <div className="flex flex-col gap-4">
+                <div className="border border-gray-200 rounded-md p-4">
+                  <h3 className="font-semibold text-gray-800 text-lg border-b border-gray-200 pb-2 mb-3">
+                    Sistem Peringatan Kepadatan
+                  </h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-start p-2 gap-4">
+                      <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                        <LuCheck className="text-white w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-800">
+                          {`<=`} 250 Ekor/m³ (Batas Aman)
+                        </h3>
+                        <p className="text-gray-600 mt-1">
+                          Kepadatan dalam batas aman sistem intensif.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start p-2 gap-4">
+                      <div className="rounded-full bg-red-500 p-1.5 shrink-0 mt-0.5">
+                        <LuTriangleAlert className="text-white w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-800">
+                          {`>`} 250 Ekor/m³ (Overload)
+                        </h3>
+                        <p className="text-gray-600 mt-1">
+                          Peringatan: Kepadatan melebihi batas overload.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

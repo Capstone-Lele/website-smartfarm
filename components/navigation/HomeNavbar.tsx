@@ -56,16 +56,16 @@ const HomeNavbar = () => {
   return (
     <main className="fixed top-0 z-50 w-full">
       <nav className="mt-2">
-        <div className="max-w-400 mx-auto px-4 sm:px-6 lg:px-8 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex">
               <div className="shrink-0 flex items-center">
-                <h1 className="text-2xl font-semibold text-slate-700">
+                <h1 className="text-xl md:text-2xl font-semibold text-slate-700">
                   Lele Farm
                 </h1>
               </div>
             </div>
-            <div className="flex items-center rounded-full bg-slate-100/30 p-1 gap-1 backdrop-blur">
+            <div className="hidden md:flex items-center rounded-full bg-slate-100/30 p-1 gap-1 backdrop-blur">
               {navItems.map((item) => {
                 const isActive = activeId === item.id;
 

@@ -137,7 +137,7 @@ const UserProfile = () => {
           <SkeletonNavbarProfile />
         ) : (
           <div className="flex items-center gap-3">
-            <div>
+            <div className="hidden sm:block">
               <Image
                 src={
                   userinfo.data?.data.image?.startsWith("http")

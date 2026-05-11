@@ -45,6 +45,7 @@ import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { Textarea } from "@/components/ui/textarea";
 import { useListHarvest } from "@/lib/api/service/notes/harvest/useHarvest";
+import { DateTimePicker24h } from "@/components/date-picker/date-time-picker";
 import { formatDate } from "@/lib/utils/format-date";
 import { useCreateCommodity } from "@/lib/api/service/commodity/useCommodity";
 import { CommodityResponse } from "@/types/comodity";
@@ -389,53 +390,18 @@ const PostSellCommodity = ({
                             name="orderDate"
                             control={form.control}
                             render={({ field, fieldState }) => (
-                              <Field>
-                                <FieldLabel>Tanggal Order</FieldLabel>
-                                <Popover
-                                  open={calendarOpen}
-                                  onOpenChange={setCalendarOpen}
-                                >
-                                  <PopoverTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      type="button"
-                                      className="w-full justify-between font-normal text-left"
-                                    >
-                                      {field.value ? (
-                                        format(field.value, "dd MMMM yyyy", {
-                                          locale: localeId,
-                                        })
-                                      ) : (
-                                        <span className="text-muted-foreground">
-                                          Pilih tanggal...
-                                        </span>
-                                      )}
-                                      <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-                                    </Button>
-                                  </PopoverTrigger>
-                                  <PopoverContent
-                                    className="w-auto p-0"
-                                    align="start"
-                                  >
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={(date) => {
-                                        field.onChange(date);
-                                        setCalendarOpen(false);
-                                      }}
-                                      initialFocus
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                                {fieldState.invalid ? (
-                                  <FieldError errors={[fieldState.error]} />
-                                ) : (
-                                  <FieldDescription>
-                                    Tanggal transaksi penjualan.
-                                  </FieldDescription>
-                                )}
-                              </Field>
+                              <DateTimePicker24h
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                label="Tanggal Order"
+                                placeholder="Pilih tanggal order"
+                                description="Tanggal transaksi penjualan."
+                                error={
+                                  fieldState.invalid
+                                    ? fieldState.error
+                                    : undefined
+                                }
+                              />
                             )}
                           />
 
@@ -601,10 +567,10 @@ const PostSellCommodity = ({
               </form>
             </div>
 
-            <div className="border-t p-6 bg-muted/20 flex items-center justify-end gap-3">
+            <div className="border-t p-6 bg-muted/20 flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
               <Button
                 variant="outline"
-                className="cursor-pointer"
+                className="w-full sm:w-auto cursor-pointer"
                 type="button"
                 onClick={handleReset}
               >
@@ -612,14 +578,17 @@ const PostSellCommodity = ({
                 Reset Form
               </Button>
               {isPending ? (
-                <Button className="cursor-not-allowed" disabled>
+                <Button
+                  className="w-full sm:w-auto cursor-not-allowed"
+                  disabled
+                >
                   <span className="loading loading-spinner" />
                   Menyimpan...
                 </Button>
               ) : (
                 <Button
                   form="commodity-post-form"
-                  className="cursor-pointer"
+                  className="w-full sm:w-auto cursor-pointer"
                   type="submit"
                 >
                   <LuSave className="mr-1" />

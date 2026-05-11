@@ -50,6 +50,7 @@ import { transformFeedToTrendData } from "@/lib/utils/transform-feed-data";
 import { useGetInventorySubmissions } from "@/lib/api/service/inventory-submission/useInventorySubmission";
 import Link from "next/link";
 import { calculateFinanceSummary } from "@/lib/utils/get-finance-data-1month";
+import { useInventory } from "@/lib/api/service/inventory/useInventory";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -62,10 +63,16 @@ const DashboardPage = () => {
   const { data: nonInventoryData } = useFinanceNonInventory();
   const { data: feedData } = useListFeed();
   const { data: inventorySubmissionsData } = useGetInventorySubmissions();
+  const { data: allInventoryData } = useInventory();
 
   // Calculate pending count if not provided
   const calculatedPendingCount = inventorySubmissionsData?.data.filter(
     (item) => item.status === "pending",
+  ).length;
+
+  const calculatedLowStockCount = allInventoryData?.data?.filter(
+    (item) =>
+      Number(item.totalQuantity) <= Number(item.minQuantity) && !item.deletedAt,
   ).length;
 
   const biomassData = useMemo(() => {
@@ -163,6 +170,25 @@ const DashboardPage = () => {
                 className="inline-block text-sm font-medium text-amber-700 underline"
               >
                 Lihat Pengajuan
+              </Link>
+            </div>
+          )
+        : null}
+
+      {/* Low Stock Alert */}
+      {calculatedLowStockCount
+        ? calculatedLowStockCount > 0 && (
+            <div className="rounded-sm bg-red-100 text-red-800 p-4 flex flex-row items-start sm:items-center justify-between">
+              <p className="text-sm font-medium flex items-center gap-3">
+                <LuPackage />
+                Ada {calculatedLowStockCount} produk inventaris yang stoknya
+                rendah atau habis.
+              </p>
+              <Link
+                href="/dashboard/inventory"
+                className="inline-block text-sm font-medium text-red-700 underline"
+              >
+                Cek Inventaris
               </Link>
             </div>
           )

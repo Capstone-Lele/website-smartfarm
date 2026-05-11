@@ -23,12 +23,12 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "reportDate",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
+      return formatDate(row.original.reportDate);
     },
   },
   {

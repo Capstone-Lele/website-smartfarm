@@ -14,8 +14,8 @@ const HomeProfile = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 h-96">
-          <div className="md:col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:h-96">
+          <div className="lg:col-span-1 h-64 lg:h-full">
             <Image
               src="/images/home/pool-3.jpeg"
               alt="Profile Image"
@@ -25,10 +25,10 @@ const HomeProfile = () => {
             />
           </div>
 
-          <div className="md:col-span-1 flex flex-col gap-6">
+          <div className="lg:col-span-1 flex flex-col gap-6 h-64 lg:h-full">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2235.2138477237313!2d112.6695056446088!3d-7.531116413899628!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7de34500ee8d9%3A0x4e5b1296468709e2!2sKebakalan%2C%20Kec.%20Porong%2C%20Kabupaten%20Sidoarjo%2C%20Jawa%20Timur!5e1!3m2!1sid!2sid!4v1774871474521!5m2!1sid!2sid"
-              className="rounded-lg w-full h-full min-h-50"
+              className="rounded-lg w-full flex-1"
               style={{ border: 0 }}
               allowFullScreen={true}
               loading="lazy"
@@ -40,7 +40,7 @@ const HomeProfile = () => {
             </div>
           </div>
 
-          <div className="md:col-span-1 flex flex-col gap-6">
+          <div className="lg:col-span-1 flex flex-col gap-6 h-auto lg:h-full">
             <div className="flex-1 flex items-center">
               <p className="text-slate-700 leading-relaxed text-sm">
                 Masyarakatnya tergabung dalam kelompok tani yang mendapat
@@ -56,7 +56,7 @@ const HomeProfile = () => {
               alt="Profile Image"
               width={400}
               height={400}
-              className="rounded-lg object-cover w-full h-full"
+              className="rounded-lg object-cover w-full h-48 lg:h-full lg:flex-1"
             />
           </div>
         </div>

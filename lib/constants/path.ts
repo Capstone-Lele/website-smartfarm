@@ -16,6 +16,14 @@ const dataPath = [
         name: "Siklus Kolam",
       },
       {
+        path: "/dashboard/pools/quarantine",
+        name: "Karantina",
+        isDynamic: true,
+        dynamicName: (params: any, meta?: Record<string, string>) => {
+          return meta?.["quarantine"] ?? `Karantina #${params.poolId}`;
+        },
+      },
+      {
         path: "/dashboard/pools/[poolId]",
         name: "Detail Kolam",
         isDynamic: true,
@@ -93,7 +101,7 @@ const dataPath = [
           return meta?.["nonInventory"] ?? `Produk #${params.id}`;
         },
       },
-    ]
+    ],
   },
   {
     path: "/dashboard/inventory-submission",

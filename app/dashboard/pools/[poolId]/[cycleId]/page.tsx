@@ -24,6 +24,7 @@ import { ParamStatus } from "./_water-quality/param-status";
 import { WaterQualityChart } from "./_water-quality/chart";
 import { WaterQualityTable } from "./_water-quality/table";
 import { useIotByNode, useIotLiveByNode } from "@/lib/api/service/iot/useIot";
+import { calculatePoolVolume } from "@/lib/utils/volume-pool";
 
 const CycleDetailPage = () => {
   const params = useParams();
@@ -66,12 +67,25 @@ const CycleDetailPage = () => {
     umur = `${diffDays >= 0 ? diffDays : 0} Hari`;
   }
 
+  const volume = calculatePoolVolume({
+    height: poolData?.height,
+    diameter: poolData?.diameter,
+    length: poolData?.length,
+    width: poolData?.width,
+  });
+
+  const batasKepadatan = volume * 250;
+  const currentQuantity = cycleData?.currentQuantity || 0;
+  const isAman = currentQuantity <= batasKepadatan;
+
   // Sync pool name & cycle name ke breadcrumb store
   useEffect(() => {
     if (poolData?.name) setLabel("pool", poolData.name);
     const cycleDetail = cycleDetailData?.data?.[0];
     if (cycleDetail?.startDate) {
       setLabel("cycle", `Siklus ${formatDate(cycleDetail.startDate)}`);
+    } else {
+      setLabel("cycle", `Siklus -`);
     }
     return () => {
       removeLabel("pool");
@@ -140,6 +154,17 @@ const CycleDetailPage = () => {
                   {cycleData?.currentQuantity?.toLocaleString("id-ID") || "-"}
                 </span>
               </div>
+              <Separator />
+              <div className="flex justify-between py-1">
+                <span className="text-gray-500">Status Kepadatan</span>
+                <span
+                  className={`font-medium ${
+                    isAman ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {volume > 0 ? (isAman ? "Aman" : "Overload") : "-"}
+                </span>
+              </div>
             </div>
           </DefaultCard>
 
@@ -181,18 +206,18 @@ const CycleDetailPage = () => {
               </div>
               <Separator />
               <div className="flex justify-between py-1">
-                <span className="text-gray-500">Luas</span>
+                <span className="text-gray-500">Volume</span>
                 <span className="font-medium text-gray-700">
-                  {poolData?.diameter
-                    ? (
-                        Math.PI * Math.pow(parseFloat(poolData.diameter) / 2, 2)
-                      ).toFixed(2) + " m²"
-                    : poolData?.width && poolData?.length
-                      ? (
-                          parseFloat(poolData.width) *
-                          parseFloat(poolData.length)
-                        ).toFixed(2) + " m²"
-                      : "-"}
+                  {volume > 0 ? `${volume.toFixed(2)} m³` : "-"}
+                </span>
+              </div>
+              <Separator />
+              <div className="flex justify-between py-1">
+                <span className="text-gray-500">Batas Kepadatan Aman</span>
+                <span className="font-medium text-gray-700">
+                  {volume > 0
+                    ? `${Math.floor(batasKepadatan).toLocaleString("id-ID")} Ekor`
+                    : "-"}
                 </span>
               </div>
               <Separator />

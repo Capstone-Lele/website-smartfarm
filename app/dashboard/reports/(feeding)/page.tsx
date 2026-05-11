@@ -48,6 +48,10 @@ const page = () => {
     startDate?: Date | null,
     endDate?: Date | null,
   ) => {
+    console.log("Selected Date Range:", {
+      startDate: startDate ,
+      endDate: endDate ,
+    });
     setSelectedDateRange({
       startDate: startDate || null,
       endDate: endDate || null,

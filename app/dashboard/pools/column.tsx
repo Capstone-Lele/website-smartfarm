@@ -21,6 +21,8 @@ import { formatDate } from "@/lib/utils/format-date";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 import { useIotLiveByNode } from "@/lib/api/service/iot/useIot";
 import { getWaterStatus } from "@/lib/utils/read-water-status";
+import { formatNumber, formatNumberFloor } from "@/lib/utils/format-number";
+import { calculatePoolVolume } from "@/lib/utils/volume-pool";
 
 export const columnsPool: ColumnDef<Pool>[] = [
   {
@@ -129,26 +131,21 @@ export const columnsPool: ColumnDef<Pool>[] = [
       const nF = (value: any) => {
         return Number(value);
       };
+      
+      const volume = calculatePoolVolume({ height, diameter, length, width });
+
       if (diameter) {
-        const volumeCylinder = (
-          Math.PI *
-          Math.pow(nF(diameter) / 2, 2) *
-          nF(height)
-        ).toFixed(2);
         return (
           <div className="flex flex-col">
             <span>{`${nF(diameter)} x ${nF(height)}`}</span>
-            <span>{nF(volumeCylinder)} m³</span>
+            <span>{volume.toFixed(2)} m³</span>
           </div>
         );
       } else {
-        const volumeRectangular = (nF(length) * nF(width) * nF(height)).toFixed(
-          2,
-        );
         return (
           <div className="flex flex-col">
             <span>{`${nF(length)} x ${nF(width)} x ${nF(height)}`}</span>
-            <span>{nF(volumeRectangular)} m³</span>
+            <span>{volume.toFixed(2)} m³</span>
           </div>
         );
       }
@@ -178,6 +175,45 @@ export const columnsPool: ColumnDef<Pool>[] = [
         </div>
       ) : (
         <span>-</span>
+      );
+    },
+  },
+  {
+    id: "density",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="KEPADATAN" />
+    ),
+    cell: ({ row }) => {
+      const quantity = row.original.currentQuantity;
+      const { length, width, height, diameter } = row.original;
+
+      if (quantity === null || quantity === undefined || !height) {
+        return <span>-</span>;
+      }
+
+      const volume = calculatePoolVolume({ height, diameter, length, width });
+
+      if (volume <= 0) return <span>-</span>;
+
+      const batasKepadatan = volume * 250; // Batas kepadatan berdasarkan volume
+      const isAman = quantity <= batasKepadatan;
+
+      return (
+        <div className="flex flex-col gap-1.5">
+          <div
+            className={`w-fit px-2 py-0.5 rounded text-xs font-medium border ${
+              isAman
+                ? "bg-green-50 text-green-600 border-green-200"
+                : "bg-red-50 text-red-600 border-red-200"
+            }`}
+          >
+            {isAman ? "Aman" : "Overload"}
+          </div>
+          <span>
+            {formatNumberFloor(batasKepadatan)} / {formatNumberFloor(quantity)}{" "}
+            ekor
+          </span>
+        </div>
       );
     },
   },
@@ -251,7 +287,16 @@ export const columnsPool: ColumnDef<Pool>[] = [
       const ph = iotData?.ph;
       const temp = iotData?.temp;
 
-      if (ph === undefined || temp === undefined || row.original.acidityMin === null || row.original.acidityMax === null || row.original.acidityNormal === null || row.original.temperatureMin === null || row.original.temperatureMax === null || row.original.temperatureNormal === null) {
+      if (
+        ph === undefined ||
+        temp === undefined ||
+        row.original.acidityMin === null ||
+        row.original.acidityMax === null ||
+        row.original.acidityNormal === null ||
+        row.original.temperatureMin === null ||
+        row.original.temperatureMax === null ||
+        row.original.temperatureNormal === null
+      ) {
         return <span>-</span>;
       }
 
@@ -266,7 +311,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
         temp,
         row.original.temperatureMin,
         row.original.temperatureMax,
-        row.original.temperatureNormal
+        row.original.temperatureNormal,
       );
 
       const statusColors = {

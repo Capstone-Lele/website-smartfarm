@@ -3,7 +3,7 @@ import { redisService } from "./redis.service";
 
 export const useClearRedisCache = () => {
   return useQuery({
-    queryKey: ["clearRedisCache"],
+    queryKey: ['clearRedisCache'],
     queryFn: async () => {
       const response = await redisService.clearCache();
       return response;

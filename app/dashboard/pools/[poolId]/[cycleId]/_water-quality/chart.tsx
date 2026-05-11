@@ -17,7 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants/chart-color";
-import { formatDate } from "@/lib/utils/format-date";
+import { formatDate, formatDateShort } from "@/lib/utils/format-date";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -38,6 +38,7 @@ export const WaterQualityChart = ({ data, dataKey, title }: any) => {
     return data.map((item: any) => ({
       ...item,
       time: item.createdAt ? formatDate(item.createdAt) : "-",
+      shortTime: item.createdAt ? formatDateShort(item.createdAt) : "-",
     }));
   }, [data]);
 
@@ -72,7 +73,7 @@ export const WaterQualityChart = ({ data, dataKey, title }: any) => {
                 vertical={false}
               />
               <XAxis
-                dataKey="time"
+                dataKey="shortTime"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
@@ -85,7 +86,16 @@ export const WaterQualityChart = ({ data, dataKey, title }: any) => {
                 tick={{ fontSize: 11 }}
                 domain={dataKey === "ph" ? [0, 14] : ["auto", "auto"]}
               />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartTooltip
+                cursor={true}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(label, payload) =>
+                      payload?.[0]?.payload?.time || label
+                    }
+                  />
+                }
+              />
               <Legend className="mt-4" />
               <Line
                 type="monotone"

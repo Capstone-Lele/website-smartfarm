@@ -94,7 +94,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4 w-full">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 w-full">
         {cardData.map((card, index) => (
           <CardStatistic
             key={index}

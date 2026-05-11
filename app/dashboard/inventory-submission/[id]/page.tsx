@@ -217,7 +217,7 @@ const DetailInventorySubmissionNotes = () => {
                 label="Catatan Pengajuan"
                 value={
                   <span className="italic text-muted-foreground">
-                    {getRealOne?.notes || "-"}
+                    {submissionData?.data?.[0]?.notes || "-"}
                   </span>
                 }
               />

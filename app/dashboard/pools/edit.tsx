@@ -70,7 +70,7 @@ const formSchema = z.object({
 });
 
 const EditPoolModal = ({ pool }: { pool: Pool }) => {
-  const { data:dataPool, isLoading, error } = usePool();
+  const { data: dataPool, isLoading, error } = usePool();
   const poolMutation = useUpdatePool();
   const [isCirclePool, setIsCirclePool] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -108,7 +108,7 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // check if pool with the same name already exists    const nameExists = dataPool?.some(
-     const nameExists = dataPool?.data?.some(
+    const nameExists = dataPool?.data?.some(
       (p: Pool) =>
         p.name.toLowerCase() === data.name.toLowerCase() && p.id !== pool.id,
     );
@@ -209,7 +209,7 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
                 />
                 <div className="space-y-2">
                   <FieldLabel>Tipe Kolam</FieldLabel>
-                  <div className="grid grid-cols-2 gap-4 items-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                     <div
                       onClick={() => {
                         setIsCirclePool(true);
@@ -360,11 +360,20 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
                     </Field>
                   )}
                 />
-                <Field orientation="vertical">
+                <div className="flex flex-col-reverse justify-end sm:flex-row gap-2 mt-4">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
+                    type="button"
+                    onClick={() => form.reset()}
+                  >
+                    <RiResetRightLine className="mr-2" />
+                    Reset
+                  </Button>
                   {poolMutation.isPending ? (
                     <Button
                       disabled
-                      className=" cursor-not-allowed mr-1 flex items-center"
+                      className="w-full sm:w-auto cursor-not-allowed flex items-center justify-center"
                     >
                       <Spinner className="mr-2" />
                       Memproses...
@@ -372,22 +381,13 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
                   ) : (
                     <Button
                       type="submit"
-                      className=" cursor-pointer mr-1 flex items-center"
+                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
                     >
-                      <LuSave />
+                      <LuSave className="mr-2" />
                       Simpan Perubahan
                     </Button>
                   )}
-                  <Button
-                    variant="outline"
-                    className=" cursor-pointer flex items-center"
-                    type="button"
-                    onClick={() => form.reset()}
-                  >
-                    <RiResetRightLine />
-                    Reset
-                  </Button>
-                </Field>
+                </div>
               </FieldGroup>
             </FieldSet>
           </form>

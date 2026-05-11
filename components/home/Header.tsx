@@ -3,12 +3,12 @@ import { GeneralInfoResponse } from "@/types/guest";
 import React from "react";
 import { LuArrowDown } from "react-icons/lu";
 
-const HomeHeader = ({data}:{data?:GeneralInfoResponse}) => {
+const HomeHeader = ({ data }: { data?: GeneralInfoResponse }) => {
   const generalInfo = data?.data[0];
   return (
     <main id="beranda">
       <section
-        className="relative h-187.5 min-h-105 bg-cover bg-center bg-no-repeat"
+        className="relative h-[80vh] md:h-[600px] min-h-[500px] w-full bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/images/home/pool-2.jpeg')" }}
       >
         <div className="absolute inset-0 bg-black/10" />
@@ -40,22 +40,34 @@ const HomeHeader = ({data}:{data?:GeneralInfoResponse}) => {
         </div>
       </section>
       <section>
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 items-center gap-8">
-          <div>
-            <h2 className="text-4xl font-semibold mb-2">{new Date().getFullYear() - 2025}+</h2>
-            <p className="text-lg text-gray-600">Tahun Pengalaman</p>
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 items-center gap-8 text-center sm:text-left">
+          <div className="flex flex-col items-center sm:items-start">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-2">
+              {new Date().getFullYear() - 2025}+
+            </h2>
+            <p className="text-base md:text-lg text-gray-600">
+              Tahun Pengalaman
+            </p>
           </div>
-          <div>
-            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalExistingTransaction || "-"}</h2>
-            <p className="text-lg text-gray-600">Transaksi Penjualan</p>
+          <div className="flex flex-col items-center sm:items-start">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-2">
+              {generalInfo?.totalExistingTransaction || "-"}
+            </h2>
+            <p className="text-base md:text-lg text-gray-600">
+              Transaksi Penjualan
+            </p>
           </div>
-          <div>
-            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalSuccessHarvest || "-"}</h2>
-            <p className="text-lg text-gray-600">Panen</p>
+          <div className="flex flex-col items-center sm:items-start">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-2">
+              {generalInfo?.totalSuccessHarvest || "-"}
+            </h2>
+            <p className="text-base md:text-lg text-gray-600">Panen</p>
           </div>
-          <div>
-            <h2 className="text-4xl font-semibold mb-2">{generalInfo?.totalPools || "-"}</h2>
-            <p className="text-lg text-gray-600">Kolam Budidaya</p>
+          <div className="flex flex-col items-center sm:items-start">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-2">
+              {generalInfo?.totalPools || "-"}
+            </h2>
+            <p className="text-base md:text-lg text-gray-600">Kolam Budidaya</p>
           </div>
         </div>
       </section>

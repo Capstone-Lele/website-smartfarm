@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "./user.service";
 import { UserEditInput, UserFormInput } from "@/types/user.types";
 import { Variable } from "lucide-react";
+import { redisService } from "../redis/redis.service";
 
 export const useGetUsers = () => {
     const query = useQuery({
@@ -39,9 +40,10 @@ export const useCreateUser = () => {
             const response = await userService.create(data);
             return response;
         },
-        onSuccess: () => {
+        onSuccess: async () => {
+            await redisService.clearCache();
             queryClient.invalidateQueries({ queryKey: ['users'] });
-            queryClient.invalidateQueries({ queryKey: ["clearRedisCache"] });
+            
         }
     });
 };
@@ -68,9 +70,9 @@ export const useUpdateUser = () => {
             const response = await userService.update(id, data);
             return response;
         },
-        onSuccess: (_, variables) => {
+        onSuccess: async (_, variables) => {
+            await redisService.clearCache();
             queryClient.invalidateQueries({ queryKey: ['users' ] });
-            queryClient.invalidateQueries({ queryKey: ["clearRedisCache"] });
             queryClient.invalidateQueries({ queryKey: ['userInfo'] });
             queryClient.invalidateQueries({ queryKey: ['user', variables.id] });
         }

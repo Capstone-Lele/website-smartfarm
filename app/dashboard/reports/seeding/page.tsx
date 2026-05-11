@@ -1,6 +1,6 @@
 "use client";
 import { DataTable } from "@/components/data-table/data-table";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { columns } from "./column";
 import DefaultCard from "@/components/card/default-card";
 import { useListSeeding } from "@/lib/api/service/notes/seeding/useSeeding";
@@ -14,6 +14,8 @@ import { ResetFilterButton } from "@/components/button/reset-filter";
 import ComboboxMultiple from "@/components/combobox/multibple";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 import { formatDate } from "@/lib/utils/format-date";
+import { SeedingOverview } from "./_components/seeding-overview";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const page = () => {
   const { data, isLoading, error } = useListSeeding();
@@ -40,7 +42,12 @@ const page = () => {
     error: errorCycles,
   } = useListCycle(selectedPools || "");
   const [resetTrigger, setResetTrigger] = useState(0);
-  const [filteredData, setFilteredData] = useState(data?.data || []);
+
+  const dataWithOutCategory = useMemo(() => {
+    return data?.data?.filter((pool) => pool.poolCategory === "breeding");
+  }, [data?.data]);
+
+  const [filteredData, setFilteredData] = useState(dataWithOutCategory || []);
 
   const handleDateRangeChange = (
     startDate?: Date | null,
@@ -65,12 +72,12 @@ const page = () => {
   }, [selectedPools]);
 
   useEffect(() => {
-    if (!data?.data) {
+    if (!dataWithOutCategory) {
       setFilteredData([]);
       return;
     }
 
-    const filtered = data.data.filter((item) => {
+    const filtered = dataWithOutCategory?.filter((item) => {
       const itemDate = new Date(item.reportDate);
       const { startDate, endDate } = selectedDateRange;
 
@@ -100,7 +107,13 @@ const page = () => {
       return true;
     });
     setFilteredData(filtered);
-  }, [data, selectedDateRange, selectedPools, selectedCycles, selectedStaffs]);
+  }, [
+    dataWithOutCategory,
+    selectedDateRange,
+    selectedPools,
+    selectedCycles,
+    selectedStaffs,
+  ]);
 
   return (
     <>
@@ -125,10 +138,12 @@ const page = () => {
                 />
                 <SelectCombobox
                   data={
-                    dataPool?.data?.map((pool) => ({
-                      label: pool.name,
-                      value: pool.id,
-                    })) || []
+                    dataPool?.data
+                      ?.filter((pool) => pool.category === "breeding")
+                      .map((pool) => ({
+                        label: pool.name,
+                        value: pool.id,
+                      })) || []
                   }
                   onValueChange={setSelectedPools}
                   label="Kolam"
@@ -163,15 +178,30 @@ const page = () => {
             </div>
           )}
         </DefaultCard>
-        <DefaultCard>
-          <div className="w-full">
-            {isLoading ? (
-              <TableSkeleton />
-            ) : (
-              <DataTable columns={columns} data={filteredData} />
+        <Tabs defaultValue="visualisasi" className="w-full">
+          <TabsList className="mb-2">
+            <TabsTrigger value="visualisasi">Ringkasan & Grafik</TabsTrigger>
+            <TabsTrigger value="tabel">Data Tabel</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="visualisasi">
+            {!isLoading && !isLoadingPool && !isLoadingUsers && (
+              <SeedingOverview data={filteredData} />
             )}
-          </div>
-        </DefaultCard>
+          </TabsContent>
+
+          <TabsContent value="tabel">
+            <DefaultCard>
+              <div className="w-full">
+                {isLoading ? (
+                  <TableSkeleton />
+                ) : (
+                  <DataTable columns={columns} data={filteredData} />
+                )}
+              </div>
+            </DefaultCard>
+          </TabsContent>
+        </Tabs>
       </div>
     </>
   );

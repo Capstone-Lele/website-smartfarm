@@ -17,6 +17,21 @@ export const formatDate = (dateString: string) => {
   return `${day} ${month} ${year}, ${hours}:${minutes}`;
 };
 
+// format example: 25 Desember 2023
+export const formatDateLong = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  // const month = date.toLocaleDateString('id-ID', { month: 'long' });
+  const month = date.toLocaleDateString('id-ID', { month: 'short' });
+  const year = date.getFullYear();
+
+  if (isNaN(day) || isNaN(year)) {
+    return '-';
+  }
+
+  return `${day} ${month} ${year}`;
+};
+
 // format example: 25/12/2023
 export const formatDateShort = (dateString: string) => {
   const date = new Date(dateString);

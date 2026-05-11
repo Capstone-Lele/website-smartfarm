@@ -6,6 +6,7 @@ import { ImagePopup } from "@/components/image-popup";
 import { Sick } from "@/types/notes/sick.types";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import DetailSickSheet from "./detail";
 
 export const columns: ColumnDef<Sick>[] = [
   {
@@ -26,7 +27,9 @@ export const columns: ColumnDef<Sick>[] = [
       return (
         <div className="flex flex-col">
           <span className="font-semibold">{row.original.originPoolName}</span>
-          <span className="text-xs">{translateCategoryPool(row.original.originCategory)}</span>
+          <span className="text-xs">
+            {translateCategoryPool(row.original.originCategory)}
+          </span>
         </div>
       );
     },
@@ -59,7 +62,9 @@ export const columns: ColumnDef<Sick>[] = [
           <span className="font-semibold">
             {row.original.destinationPoolName}
           </span>
-          <span className="text-xs">{translateCategoryPool(row.original.destinationCategory)}</span>
+          <span className="text-xs">
+            {translateCategoryPool(row.original.destinationCategory)}
+          </span>
         </div>
       );
     },
@@ -100,5 +105,9 @@ export const columns: ColumnDef<Sick>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <DetailSickSheet item={row.original} />,
   },
 ];

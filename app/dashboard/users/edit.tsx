@@ -173,7 +173,7 @@ const EditUserModal = ({ user }: { user: User }) => {
               <div className="flex-1 min-w-0">
                 <FieldSet>
                   <FieldGroup>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
                       <Controller
                         name="name"
                         control={form.control}
@@ -331,7 +331,7 @@ const EditUserModal = ({ user }: { user: User }) => {
                         )}
                       />
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1 md:col-span-2">
                       <Controller
                         name="permission"
                         control={form.control}
@@ -422,10 +422,11 @@ const EditUserModal = ({ user }: { user: User }) => {
                                   </div>
                                 ) : filteredPools.length === 0 ? (
                                   <p className="text-center py-6 text-xs text-muted-foreground border-x border-b">
-                                    Tidak ada kolam yang ditemukan.
+                                    Tidak ada kolam yang ditemukan, Tambahkan
+                                    kolam dulu.
                                   </p>
                                 ) : (
-                                  <div className="grid grid-cols-2 gap-1 max-h-64 overflow-y-auto border-x border-b p-1">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-1 max-h-64 overflow-y-auto border-x border-b p-1">
                                     {filteredPools.map((pool) => {
                                       const checked = selectedIds.includes(
                                         pool.id,
@@ -469,11 +470,20 @@ const EditUserModal = ({ user }: { user: User }) => {
                       />
                     </div>
 
-                    <Field orientation="vertical">
+                    <div className="flex flex-col-reverse justify-end sm:flex-row gap-2 mt-4">
+                      <Button
+                        variant="outline"
+                        className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
+                        type="button"
+                        onClick={() => form.reset()}
+                      >
+                        <RiResetRightLine className="mr-2" />
+                        Reset
+                      </Button>
                       {userMutation.isPending ? (
                         <Button
                           disabled
-                          className="cursor-not-allowed mr-1 flex items-center"
+                          className="w-full sm:w-auto cursor-not-allowed flex items-center justify-center"
                         >
                           <Spinner className="mr-2" />
                           Memproses...
@@ -482,22 +492,13 @@ const EditUserModal = ({ user }: { user: User }) => {
                         <Button
                           type="submit"
                           disabled={!isDirty}
-                          className="cursor-pointer mr-1 flex items-center"
+                          className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
                         >
-                          <LuSave />
+                          <LuSave className="mr-2" />
                           Simpan Perubahan
                         </Button>
                       )}
-                      <Button
-                        variant="outline"
-                        className="cursor-pointer flex items-center"
-                        type="button"
-                        onClick={() => form.reset()}
-                      >
-                        <RiResetRightLine />
-                        Reset
-                      </Button>
-                    </Field>
+                    </div>
                   </FieldGroup>
                 </FieldSet>
               </div>

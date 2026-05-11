@@ -11,12 +11,12 @@ import { ButtonCopy } from "@/components/button-copy";
 
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   {
-    accessorKey: "createdAt",
+    accessorKey: "transactionDate",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
+      return formatDate(row.original.transactionDate);
     },
   },
   {

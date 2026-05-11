@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { z } from "zod";
+import { formatNumber } from "@/lib/utils/format-number";
 
 /* -------------------------------------------------------------------------- */
 /*  Zod Schema & Types                                                          */
@@ -52,7 +53,11 @@ export const formSchema = z.object({
         harvestNoteId: z.string().min(1, "Komoditas wajib dipilih"),
         quantity: z.coerce.number().min(1, "Jumlah minimal 1"),
         quantityKg: z.coerce.number().min(0.01, "Berat (kg) minimal 0.01"),
-        priceKg: z.coerce.number().min(1, "Harga per kg minimal Rp 1"),
+        priceKg: z.coerce
+          .number({
+            error: "Harga per kg wajib diisi dan harus berupa angka",
+          })
+          .positive({ message: "Harga harus berupa angka positif" }),
         subTotal: z.number(),
         notes: z.string().optional(),
       }),
@@ -160,7 +165,7 @@ export function OrderItemRow({
             control={control}
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Pilih Stok Komoditas (Tipe 'In')</FieldLabel>
+                <FieldLabel>Pilih Stok Komoditas (Laporan Panen)</FieldLabel>
                 <Combobox
                   data={harvestNotes || []}
                   onValueChange={field.onChange}
@@ -178,7 +183,7 @@ export function OrderItemRow({
             )}
           />
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Quantity (ekor) */}
             <Controller
               name={`items.${index}.quantity`}
@@ -192,7 +197,7 @@ export function OrderItemRow({
                     ?.amount ?? null;
                 const remainingForThisRow =
                   selectedHarvestId && stockMap
-                    ? stockMap[selectedHarvestId] ?? 0
+                    ? (stockMap[selectedHarvestId] ?? 0)
                     : null;
 
                 return (
@@ -225,7 +230,13 @@ export function OrderItemRow({
                           {remainingForThisRow.toLocaleString("id-ID")} ekor
                         </strong>
                         {originalStock !== null && (
-                          <> (stok awal: {originalStock.toLocaleString("id-ID")} ekor)</>
+                          <>
+                            {" "}
+                            (stok awal: {originalStock.toLocaleString(
+                              "id-ID",
+                            )}{" "}
+                            ekor)
+                          </>
                         )}
                       </FieldDescription>
                     ) : null}
@@ -277,10 +288,19 @@ export function OrderItemRow({
                     <Separator orientation="vertical" className="h-6" />
                   </InputGroupAddon>
                   <InputGroupInput
-                    type="number"
-                    placeholder="20000"
                     autoComplete="off"
+                    type="text"
+                    placeholder="Contoh: 50.000"
                     {...field}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "");
+                      field.onChange(val ? Number(val) : "");
+                    }}
+                    value={
+                      field.value
+                        ? formatNumber(field.value as number | string)
+                        : ""
+                    }
                   />
                 </InputGroup>
                 {fieldState.invalid && (

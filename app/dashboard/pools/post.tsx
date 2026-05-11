@@ -167,7 +167,8 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Nama kolam otomatis diisi berdasarkan jumlah kolam yang ada
+                          Nama kolam otomatis diisi berdasarkan jumlah kolam
+                          yang ada
                         </FieldDescription>
                       )}
                     </Field>
@@ -196,7 +197,7 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                 />
                 <div className="space-y-2">
                   <FieldLabel>Tipe Kolam</FieldLabel>
-                  <div className="grid grid-cols-2 gap-4 items-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                     <div
                       onClick={() => {
                         setIsCirclePool(true);
@@ -347,11 +348,20 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                     </Field>
                   )}
                 />
-                <Field orientation="vertical">
+                <div className="flex flex-col-reverse justify-end sm:flex-row gap-2 mt-4">
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
+                    type="button"
+                    onClick={() => form.reset()}
+                  >
+                    <RiResetRightLine className="mr-2" />
+                    Reset
+                  </Button>
                   {poolMutation.isPending ? (
                     <Button
                       disabled
-                      className=" cursor-not-allowed mr-1 flex items-center"
+                      className="w-full sm:w-auto cursor-not-allowed flex items-center justify-center"
                     >
                       <Spinner className="mr-2" />
                       Memproses...
@@ -359,22 +369,13 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                   ) : (
                     <Button
                       type="submit"
-                      className=" cursor-pointer mr-1 flex items-center"
+                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
                     >
-                      <LuSave />
+                      <LuSave className="mr-2" />
                       Simpan
                     </Button>
                   )}
-                  <Button
-                    variant="outline"
-                    className=" cursor-pointer flex items-center"
-                    type="button"
-                    onClick={() => form.reset()}
-                  >
-                    <RiResetRightLine />
-                    Reset
-                  </Button>
-                </Field>
+                </div>
               </FieldGroup>
             </FieldSet>
           </form>

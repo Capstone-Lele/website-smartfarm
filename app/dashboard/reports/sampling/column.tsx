@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { Sampling } from "@/types/notes/sampling.types";
 import { ColumnDef } from "@tanstack/react-table";
+import DetailSamplingSheet from "./detail";
 
 export const columns: ColumnDef<Sampling>[] = [
   {
@@ -74,5 +75,10 @@ export const columns: ColumnDef<Sampling>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailSamplingSheet item={row.original} />,
   },
 ];

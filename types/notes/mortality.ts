@@ -7,6 +7,7 @@ export type Mortality = {
   cycleId: string;
   cycle: string;
   poolId: string;
+  notes?: string | null;
   reportDate: string;
   quantity: number;
   image: string;

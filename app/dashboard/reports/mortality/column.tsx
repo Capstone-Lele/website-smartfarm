@@ -7,6 +7,7 @@ import { MovePool } from "@/types/notes/move";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { Mortality } from "@/types/notes/mortality";
+import DetailMortalitySheet from "./detail";
 
 export const columns: ColumnDef<Mortality>[] = [
   {
@@ -67,11 +68,20 @@ export const columns: ColumnDef<Mortality>[] = [
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
     ),
   },
-
+  {    accessorKey: "notes",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="CATATAN" />
+    ),
+  },
   {
     accessorKey: "user",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailMortalitySheet item={row.original} />,
   },
 ];

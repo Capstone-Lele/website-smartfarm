@@ -10,6 +10,7 @@ export const breedingCycleCondition = [
 
 export const ALL_CYCLE_CONDITIONS = [
   { label: "Aktif Budidaya", value: "active_cultivation" },
-  { label: "Panen", value: "harvest" },
-  { label: "Pindah ke Pembesaran", value: "transfer" },
+  { label: "Tutup (Panen)", value: "harvest" },
+  { label: "Tutup (Pindah ke Pembesaran)", value: "transfer" },
+  { label: "Perawatan", value: "treatment" },
 ];

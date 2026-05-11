@@ -7,6 +7,7 @@ import { ImagePopup } from "@/components/image-popup";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { Harvest } from "@/types/notes/harvest";
+import DetailHarvestSheet from "./detail";
 
 export const columns: ColumnDef<Harvest>[] = [
   {
@@ -76,5 +77,10 @@ export const columns: ColumnDef<Harvest>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailHarvestSheet item={row.original} />,
   },
 ];

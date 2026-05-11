@@ -186,7 +186,7 @@ const page = () => {
           </div>
         </div>
         <div>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-4 w-full">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 w-full">
             <FinanceStatCards income={totalIncome} expense={totalExpense} />
           </div>
           <div className="mb-4 text-xs text-muted-foreground px-2">
@@ -197,7 +197,7 @@ const page = () => {
         </div>
 
         <Tabs defaultValue="ringkasan-grafik" className="w-full">
-          <TabsList className="mb-4 flex-wrap">
+          <TabsList className="mb-4 flex w-full justify-start overflow-x-auto h-auto whitespace-nowrap flex-nowrap md:flex-wrap">
             <TabsTrigger value="ringkasan-grafik">
               Ringkasan & Grafik
             </TabsTrigger>

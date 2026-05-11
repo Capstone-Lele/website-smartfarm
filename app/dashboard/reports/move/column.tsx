@@ -6,6 +6,7 @@ import { ImagePopup } from "@/components/image-popup";
 import { MovePool } from "@/types/notes/move";
 import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import DetailMoveSheet from "./detail";
 
 export const columns: ColumnDef<MovePool>[] = [
   {
@@ -104,5 +105,10 @@ export const columns: ColumnDef<MovePool>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailMoveSheet item={row.original} />,
   },
 ];

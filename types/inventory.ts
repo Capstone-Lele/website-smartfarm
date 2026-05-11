@@ -34,6 +34,7 @@ export type InventoryDetail = {
   transactionType: string;
   source?: string;
   pricePerItem: string | null;
+  reportDate: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;

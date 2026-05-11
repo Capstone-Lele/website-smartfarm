@@ -16,4 +16,10 @@ export const sickService = {
     );
     return response;
   },
+  getAllWithParams: async (params: Record<string, string>): Promise<SickResponse> => {
+      const response = await API_CLIENT.get<SickResponse>(
+        API_ENDPOINTS.SICK_NOTES.GET_ALL_WITH_PARAMS(params),
+      );
+      return response;
+    }
 };

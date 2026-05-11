@@ -35,6 +35,7 @@ import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { DateTimePicker24h } from "@/components/date-picker/date-time-picker";
 import {
   Popover,
   PopoverContent,
@@ -47,6 +48,7 @@ import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-invento
 import { usePostNonInventory } from "@/lib/api/service/finance/useFinance";
 import { Product } from "@/types/master-data/product.types";
 import PopupConfirmation from "@/components/popup-confimation";
+import { formatNumber } from "@/lib/utils/format-number";
 
 const TRANSACTION_IN_OUT_OPTIONS = [
   { label: "Pemasukan", value: "in" },
@@ -251,7 +253,7 @@ const PostFinance = () => {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FieldSet>
                 <FieldGroup>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
                     <Controller
                       name="type"
                       control={form.control}
@@ -307,52 +309,16 @@ const PostFinance = () => {
                       name="transactionDate"
                       control={form.control}
                       render={({ field, fieldState }) => (
-                        <Field>
-                          <FieldLabel htmlFor="transactionDate">
-                            Tanggal Transaksi
-                          </FieldLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                id="transactionDate"
-                                variant="outline"
-                                className={cn(
-                                  "w-full justify-start text-left font-normal",
-                                  !field.value && "text-muted-foreground",
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {field.value ? (
-                                  format(field.value, "dd MMMM yyyy", {
-                                    locale: localeId,
-                                  })
-                                ) : (
-                                  <span>Pilih tanggal</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                captionLayout="dropdown"
-                                disabled={(date) => date > new Date()}
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          {fieldState.invalid ? (
-                            <FieldError errors={[fieldState.error]} />
-                          ) : (
-                            <FieldDescription>
-                              Tanggal transaksi terjadi.
-                            </FieldDescription>
-                          )}
-                        </Field>
+                        <DateTimePicker24h
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          label="Tanggal Transaksi"
+                          placeholder="Pilih tanggal"
+                          description="Tanggal transaksi terjadi."
+                          error={
+                            fieldState.invalid ? fieldState.error : undefined
+                          }
+                        />
                       )}
                     />
 
@@ -433,12 +399,18 @@ const PostFinance = () => {
                             </InputGroupAddon>
                             <InputGroupInput
                               id="pricePerItem"
-                              type="number"
-                              min={1}
-                              step={1}
-                              placeholder="Contoh: 50000"
+                              type="text"
+                              placeholder="Contoh: 50.000"
                               {...field}
-                              value={field.value as number | string}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, "");
+                                field.onChange(val ? Number(val) : "");
+                              }}
+                              value={
+                                field.value
+                                  ? formatNumber(field.value as number | string)
+                                  : ""
+                              }
                             />
                           </InputGroup>
                           {fieldState.invalid ? (
@@ -471,11 +443,15 @@ const PostFinance = () => {
                             </InputGroupAddon>
                             <InputGroupInput
                               id="totalPrice"
-                              type="number"
+                              type="text"
                               placeholder="Dihitung otomatis"
                               disabled
                               {...field}
-                              value={field.value as number | string}
+                              value={
+                                field.value
+                                  ? formatNumber(field.value as number | string)
+                                  : ""
+                              }
                             />
                           </InputGroup>
                           {fieldState.invalid ? (
@@ -493,7 +469,7 @@ const PostFinance = () => {
                       name="notes"
                       control={form.control}
                       render={({ field, fieldState }) => (
-                        <Field className="col-span-2">
+                        <Field className="col-span-1 md:col-span-2">
                           <FieldLabel htmlFor="notes">
                             Catatan Transaksi
                           </FieldLabel>
@@ -521,7 +497,7 @@ const PostFinance = () => {
                         field: { onChange, value, ref: _ref, ...rest },
                         fieldState,
                       }) => (
-                        <Field className="col-span-2">
+                        <Field className="col-span-1 md:col-span-2">
                           <FieldLabel htmlFor="image">
                             {transactionType !== "grant"
                               ? "Foto Bukti Transaksi / Nota"
@@ -572,24 +548,24 @@ const PostFinance = () => {
                     />
                   </div>
 
-                  <Field orientation="vertical" className="col-span-2 mt-6">
-                    <Button
-                      type="submit"
-                      className="cursor-pointer mr-2 inline-flex items-center"
-                    >
-                      <LuSave size={16} className="mr-2" />
-                      Simpan
-                    </Button>
+                  <div className="flex flex-col-reverse justify-end sm:flex-row gap-2 mt-6">
                     <Button
                       variant="outline"
-                      className="cursor-pointer inline-flex items-center"
+                      className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center"
                       type="button"
                       onClick={handleReset}
                     >
                       <RiResetRightLine size={16} className="mr-2" />
                       Reset
                     </Button>
-                  </Field>
+                    <Button
+                      type="submit"
+                      className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center"
+                    >
+                      <LuSave size={16} className="mr-2" />
+                      Simpan
+                    </Button>
+                  </div>
                 </FieldGroup>
               </FieldSet>
             </form>

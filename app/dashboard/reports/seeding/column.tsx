@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/utils/format-date";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { Mortality } from "@/types/notes/mortality";
 import { Seed } from "@/types/notes/seed";
+import DetailSeedingSheet from "./detail";
 
 export const columns: ColumnDef<Seed>[] = [
   {
@@ -35,15 +36,15 @@ export const columns: ColumnDef<Seed>[] = [
       );
     },
   },
-    {
-      accessorKey: "createdAt",
-      header: ({ column }) => (
-        <DataTableColumnHeader className="" column={column} title="SIKLUS" />
-      ),
-      cell: ({ row }) => {
-        return formatDate(row.original.createdAt);
-      },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="SIKLUS" />
+    ),
+    cell: ({ row }) => {
+      return formatDate(row.original.createdAt);
     },
+  },
   {
     accessorKey: "initialQuantity",
     header: ({ column }) => (
@@ -55,9 +56,7 @@ export const columns: ColumnDef<Seed>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className="font-semibold">
-          {row.original.initialQuantity}
-        </span>
+        <span className="font-semibold">{row.original.initialQuantity}</span>
       );
     },
   },
@@ -74,5 +73,10 @@ export const columns: ColumnDef<Seed>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span>ACTION</span>,
+    cell: ({ row }) => <DetailSeedingSheet item={row.original} />,
   },
 ];

@@ -52,6 +52,10 @@ export const API_ENDPOINTS = {
   SICK_NOTES: {
     GET_ALL: "/note/sick",
     GET_BY_ID: (id: string) => `/note/sick/${id}`,
+    GET_ALL_WITH_PARAMS: (params: Record<string, string>) => {
+      const query = new URLSearchParams(params).toString();
+      return `/note/sick?${query}`;
+    }
   },
   VITAMIN_NOTES: {
     GET_ALL: "/note/vitamin",

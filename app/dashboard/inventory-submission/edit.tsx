@@ -41,6 +41,7 @@ import { format } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { DateTimePicker24h } from "@/components/date-picker/date-time-picker";
 import {
   Popover,
   PopoverContent,
@@ -51,6 +52,7 @@ import { InventorySubmission } from "@/types/inventory";
 import { LuPackage, LuUser, LuClipboardList, LuHash } from "react-icons/lu";
 import { useUpdateInventorySubmission } from "@/lib/api/service/inventory-submission/useInventorySubmission";
 import PopupConfirmation from "@/components/popup-confimation";
+import { formatNumber } from "@/lib/utils/format-number";
 
 // ─── Zod Schema ──────────────────────────────────────────────────────────────
 
@@ -442,7 +444,7 @@ const EditSubmissionModal = ({
                   {isApproved && (
                     <div>
                       {/* Transaction type selector */}
-                      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 mb-4">
                         <Controller
                           name="transactionType"
                           control={form.control}
@@ -491,7 +493,7 @@ const EditSubmissionModal = ({
                       {/* Transaction fields */}
                       <div
                         className={cn(
-                          "rounded-sm border p-4 grid grid-cols-2 gap-x-4 gap-y-2 transition-colors",
+                          "rounded-sm border p-4 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 transition-colors",
                           isNonGrant
                             ? "bg-amber-50/50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800"
                             : "bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800",
@@ -502,52 +504,18 @@ const EditSubmissionModal = ({
                           name="transactionDate"
                           control={form.control}
                           render={({ field, fieldState }) => (
-                            <Field>
-                              <FieldLabel htmlFor="transactionDate">
-                                Tanggal Transaksi
-                              </FieldLabel>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    id="transactionDate"
-                                    variant="outline"
-                                    className={cn(
-                                      "w-full justify-start text-left font-normal",
-                                      !field.value && "text-muted-foreground",
-                                    )}
-                                  >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {field.value ? (
-                                      format(field.value, "dd MMMM yyyy", {
-                                        locale: localeId,
-                                      })
-                                    ) : (
-                                      <span>Pilih tanggal transaksi</span>
-                                    )}
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                  className="w-auto p-0"
-                                  align="start"
-                                >
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    captionLayout="dropdown"
-                                    disabled={(date) => date > new Date()}
-                                    initialFocus
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                              {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                              ) : (
-                                <FieldDescription>
-                                  Tanggal laporan transaksi.
-                                </FieldDescription>
-                              )}
-                            </Field>
+                            <DateTimePicker24h
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              label="Tanggal Transaksi"
+                              placeholder="Pilih tanggal transaksi"
+                              description="Tanggal laporan transaksi."
+                              error={
+                                fieldState.invalid
+                                  ? fieldState.error
+                                  : undefined
+                              }
+                            />
                           )}
                         />
 
@@ -575,11 +543,23 @@ const EditSubmissionModal = ({
                                 </InputGroupAddon>
                                 <InputGroupInput
                                   id="pricePerItem"
-                                  type="number"
-                                  min={0}
-                                  step={1}
-                                  placeholder="Contoh: 50000"
+                                  type="text"
+                                  placeholder="Contoh: 50.000"
                                   {...field}
+                                  onChange={(e) => {
+                                    const val = e.target.value.replace(
+                                      /\D/g,
+                                      "",
+                                    );
+                                    field.onChange(val ? Number(val) : "");
+                                  }}
+                                  value={
+                                    field.value
+                                      ? formatNumber(
+                                          field.value as number | string,
+                                        )
+                                      : ""
+                                  }
                                 />
                               </InputGroup>
                               {fieldState.invalid ? (
@@ -612,12 +592,17 @@ const EditSubmissionModal = ({
                                 </InputGroupAddon>
                                 <InputGroupInput
                                   id="totalPrice"
-                                  type="number"
-                                  min={0}
-                                  step={1}
+                                  type="text"
                                   placeholder="Dihitung otomatis"
                                   {...field}
                                   disabled
+                                  value={
+                                    field.value
+                                      ? formatNumber(
+                                          field.value as number | string,
+                                        )
+                                      : ""
+                                  }
                                 />
                               </InputGroup>
                               {fieldState.invalid ? (
@@ -735,24 +720,24 @@ const EditSubmissionModal = ({
                   )}
 
                   {/* Actions */}
-                  <Field orientation="vertical" className="col-span-2 mt-4">
-                    <Button
-                      type="submit"
-                      className="cursor-pointer mr-1 flex items-center"
-                    >
-                      <LuSave />
-                      Simpan
-                    </Button>
+                  <div className="flex flex-col-reverse justify-end sm:flex-row gap-2 mt-4">
                     <Button
                       variant="outline"
-                      className="cursor-pointer flex items-center"
+                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
                       type="button"
                       onClick={handleReset}
                     >
-                      <RiResetRightLine />
+                      <RiResetRightLine className="mr-2" />
                       Reset
                     </Button>
-                  </Field>
+                    <Button
+                      type="submit"
+                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
+                    >
+                      <LuSave className="mr-2" />
+                      Simpan
+                    </Button>
+                  </div>
                 </FieldGroup>
               </FieldSet>
             </form>
