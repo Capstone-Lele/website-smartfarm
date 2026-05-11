@@ -118,7 +118,7 @@ const page = () => {
                 </span>
                 <ResetFilterButton onReset={formReset} />
               </div>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <DatePickerWithRange
                   placeholder="Pilih rentang tanggal"
                   label="Tanggal"
@@ -165,6 +165,7 @@ const page = () => {
             </div>
           )}
         </DefaultCard>
+
         <Tabs defaultValue="visualisasi" className="w-full">
           <TabsList className="mb-2">
             <TabsTrigger value="visualisasi">Ringkasan & Grafik</TabsTrigger>

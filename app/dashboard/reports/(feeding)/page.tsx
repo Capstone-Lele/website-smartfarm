@@ -49,8 +49,8 @@ const page = () => {
     endDate?: Date | null,
   ) => {
     console.log("Selected Date Range:", {
-      startDate: startDate ,
-      endDate: endDate ,
+      startDate: startDate,
+      endDate: endDate,
     });
     setSelectedDateRange({
       startDate: startDate || null,
@@ -69,7 +69,7 @@ const page = () => {
   useEffect(() => {
     setSelectedCycles(undefined);
   }, [selectedPools]);
-  
+
   useEffect(() => {
     if (!data?.data) {
       setFilteredData([]);
@@ -122,7 +122,7 @@ const page = () => {
                 </span>
                 <ResetFilterButton onReset={formReset} />
               </div>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <DatePickerWithRange
                   placeholder="Pilih rentang tanggal"
                   label="Tanggal"
@@ -174,13 +174,13 @@ const page = () => {
             <TabsTrigger value="visualisasi">Ringkasan & Grafik</TabsTrigger>
             <TabsTrigger value="tabel">Data Tabel</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="visualisasi">
             {!isLoading && !isLoadingPool && !isLoadingUsers && (
               <FeedingOverview data={filteredData} />
             )}
           </TabsContent>
-          
+
           <TabsContent value="tabel">
             <DefaultCard>
               <div className="w-full">

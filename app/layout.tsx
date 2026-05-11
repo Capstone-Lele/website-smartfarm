@@ -24,9 +24,31 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     template: "%s | Lele Farm",
-    default: "Lele Farm",
+    default: "Lele Farm - Smart Fish Farming Dashboard",
   },
-  description: "A dashboard for monitoring and managing your Fish services.",
+  description:
+    "A comprehensive dashboard for monitoring and managing your Fish services, including pools, commodity, and inventory.",
+  keywords: [
+    "fish farming",
+    "aquaculture",
+    "lele farm",
+    "dashboard",
+    "monitoring",
+    "catfish",
+  ],
+  authors: [{ name: "Lele Farm" }],
+  openGraph: {
+    title: "Lele Farm - Smart Fish Farming",
+    description:
+      "A comprehensive dashboard for monitoring and managing your Fish services.",
+    siteName: "Lele Farm",
+    locale: "id_ID",
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

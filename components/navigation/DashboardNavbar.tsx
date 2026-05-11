@@ -82,7 +82,7 @@ const DashboardNavbar = () => {
             />
           </div>
           <div className="mx-4 h-6 w-0.5 bg-gray-300" />
-          <h1 className="text-xl text-gray-800 font-semibold">
+          <h1 className="text-base sm:text-xl text-gray-800 font-semibold">
             {checkPathname()}
           </h1>
         </div>
