@@ -27,7 +27,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         port: "",
         pathname: "/**",
-      }
+      },
+      {
+        protocol: 'http',
+        hostname: '72.62.120.189',
+        port: '9000',
+        pathname: '/smartfarm-storage/**', // Mengizinkan semua gambar di dalam path ini
+      },
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },
