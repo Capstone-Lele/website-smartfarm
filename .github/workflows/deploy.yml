@@ -1,0 +1,39 @@
+name: Deploy Next.js to aaPanel
+
+on:
+  push:
+    branches:
+      - main # Pastikan ini sesuai dengan branch utama di repository kamu
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute deployment commands via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            # 1. Masuk ke direktori project web smart farm kamu
+            cd /www/wwwroot/web-smartfarm/
+            
+            # 2. Tarik update kode terbaru dari GitHub
+            git pull origin main
+            
+            # 3. Install dependencies (package.json)
+            npm install
+            
+            # 4. Build aplikasi Next.js menjadi production-ready
+            npm run build
+            
+            # 5. Restart service Node.js di aaPanel
+            # Jika aaPanel menggunakan PM2 di belakang layar dengan nama "web_smartfarm":
+            pm2 restart web_smartfarm
+            
+            # Catatan: Jika perintah pm2 di atas error, kamu mungkin perlu merestartnya 
+            # secara manual dari tombol 'Service status' di menu Node.js aaPanel, atau
+            # mencari ID prosesnya menggunakan perintah 'pm2 list'.
