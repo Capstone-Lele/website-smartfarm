@@ -68,8 +68,8 @@ export async function createSession(token: string, expires_at: string) {
   const session = await encrypt({ token, expires_at });
 
   cookie.set(process.env.COOKIE_NAME as string, session, {
-    httpOnly: true,
-    secure: true,
+    httpOnly: false,
+    secure: false,
     expires: new Date(expires_at),
     sameSite: "lax",
     path: "/",
