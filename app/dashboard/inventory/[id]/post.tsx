@@ -158,9 +158,7 @@ const PostStockInOut = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const dataPrep = {
-      reportDate: data.transactionDate
-        ? format(data.transactionDate, "yyyy-MM-dd")
-        : undefined,
+      reportDate: data.transactionDate.toISOString(),
       quantity: data.quantity,
       transactionType: data.transactionType,
       notes: data.notes,
