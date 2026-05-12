@@ -65,8 +65,8 @@ const LoginForm = () => {
 
   return (
     <section className="w-full h-full overflow-auto">
-      <div className="mx-12 py-12 flex flex-col justify-between h-full">
-        <div className="flex items-center gap-4 -mx-6 -mt-4">
+      <div className="mx-4 sm:mx-12 py-12 flex flex-col justify-between h-full">
+        <div className="flex items-center gap-4 sm:-mx-6 -mt-4">
           <Image
             src="/images/logo.jpg"
             alt="Logo"
@@ -168,7 +168,7 @@ const LoginForm = () => {
             </Field>
           </FieldGroup>
         </form>
-        <div className=" -mx-6 -mb-6">
+        <div className=" sm:-mx-6 -mb-6">
           <span className="text-gray-400 text-sm">
             Copyright © {new Date().getFullYear()} Leleku. All rights reserved.
           </span>

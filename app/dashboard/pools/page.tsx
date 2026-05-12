@@ -111,7 +111,7 @@ const page = () => {
           <DefaultCard>
             <div className="w-full">
               <Tabs defaultValue="budidaya" className="">
-                <TabsList>
+                <TabsList className="flex flex-wrap h-auto justify-start">
                   <TabsTrigger value="budidaya">Kolam Budidaya</TabsTrigger>
                   <TabsTrigger value="karantina">Kolam Karantina</TabsTrigger>
                 </TabsList>
@@ -166,9 +166,9 @@ const page = () => {
               ikan.
             </span>
           </div>
-          <Tabs defaultValue="cycle" className="gap-1">
+          <Tabs defaultValue="cycle" className="gap-1 max-w-full">
             <Separator className="my-4" />
-            <TabsList>
+            <TabsList className="flex w-full justify-start overflow-x-auto h-auto whitespace-nowrap flex-nowrap md:flex-wrap">
               <TabsTrigger value="cycle">Siklus Kolam</TabsTrigger>
               <TabsTrigger value="move">Peraturan Perpindahan</TabsTrigger>
               <TabsTrigger value="density">Kepadatan Kolam</TabsTrigger>

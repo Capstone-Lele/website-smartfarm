@@ -82,7 +82,7 @@ const DashboardNavbar = () => {
             />
           </div>
           <div className="mx-4 h-6 w-0.5 bg-gray-300" />
-          <h1 className="text-base sm:text-xl text-gray-800 font-semibold">
+          <h1 className="text-base sm:text-xl text-gray-800 font-semibold truncate w-12 sm:w-auto">
             {checkPathname()}
           </h1>
         </div>
@@ -90,8 +90,8 @@ const DashboardNavbar = () => {
           <UserProfile />
         </div>
       </nav>
-      <nav className="border-b h-12 bg-white flex items-center px-4 justify-between">
-        <div>
+      <nav className="border-b min-h-[3rem] h-auto py-2 sm:py-0 bg-white flex flex-col sm:flex-row items-end sm:items-center px-4 justify-between gap-2 overflow-x-auto">
+        <div className="self-start sm:self-auto">
           <BreadCrumbPath />
         </div>
         {tabComponent && <div>{tabComponent}</div>}
