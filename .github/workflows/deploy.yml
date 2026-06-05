@@ -1,16 +1,45 @@
-name: Deploy Next.js to aaPanel
+name: Deploy Next.js to aaPanel (Build on GitHub)
 
 on:
   push:
     branches:
-      - production # Pastikan ini sesuai dengan branch utama di repository kamu
+      - production
 
 jobs:
-  deploy:
-    name: Deploy to Server
+  build-and-deploy:
+    name: Build on GitHub & Deploy to Server
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Mengambil kode dari repository GitHub kamu
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js di server GitHub
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Sesuaikan dengan versi Node.js project kamu
+
+      # 3. Install dependencies & Build aplikasi di server GitHub
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+
+      # 4. Mengirim file hasil build ke server aaPanel kamu
+      - name: Copy files to VPS via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # Daftar file/folder yang perlu dikirim untuk Next.js
+          source: ".next,public,package.json,next.config.js,next.config.mjs" 
+          target: "/www/wwwroot/web-smartfarm/"
+          overwrite: true
+
+      # 5. Eksekusi perintah di server aaPanel untuk restart
       - name: Execute deployment commands via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -18,20 +47,12 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 1. Masuk ke direktori project web smart farm kamu
             cd /www/wwwroot/web-smartfarm/
 
-            # 2. Bersihkan konflik lokal dan Tarik update kode terbaru dari GitHub
-            git reset --hard HEAD
-            git pull origin production
+            # Install HANYA module production agar cepat & hemat memori VPS
+            npm install --omit=dev
 
-            # 3. Install dependencies (package.json)
-            npm install
-
-            # 4. Build aplikasi Next.js menjadi production-ready
-            npm run build
-
-            # 5. Restart service Node.js di aaPanel
+            # Restart service Node.js di aaPanel
             pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
             echo "Deployment completed successfully!"
