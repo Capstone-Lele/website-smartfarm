@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Sesuaikan dengan versi Node.js project kamu
+          node-version: '20' # Sesuaikan dengan versi Node.js project kamu
 
       # 3. Install dependencies & Build aplikasi di server GitHub
       - name: Install and Build
