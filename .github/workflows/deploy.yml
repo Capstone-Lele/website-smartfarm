@@ -21,7 +21,8 @@ jobs:
             # 1. Masuk ke direktori project web smart farm kamu
             cd /www/wwwroot/web-smartfarm/
 
-            # 2. Tarik update kode terbaru dari GitHub
+            # 2. Bersihkan konflik lokal dan Tarik update kode terbaru dari GitHub
+            git reset --hard HEAD
             git pull origin production
 
             # 3. Install dependencies (package.json)
@@ -31,10 +32,6 @@ jobs:
             npm run build
 
             # 5. Restart service Node.js di aaPanel
-            # Jika aaPanel menggunakan PM2 di belakang layar dengan nama "web_smartfarm":
             pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
-
-            # Catatan: Jika perintah pm2 di atas error, kamu mungkin perlu merestartnya 
-            # secara manual dari tombol 'Service status' di menu Node.js aaPanel, atau
-            # mencari ID prosesnya menggunakan perintah 'pm2 list'.
+            echo "Deployment completed successfully!"
