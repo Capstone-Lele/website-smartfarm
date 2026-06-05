@@ -28,14 +28,14 @@ const HomeHeader = ({ data }: { data?: GeneralInfoResponse }) => {
             <h1 className="text-3xl font-medium leading-tight md:text-5xl">
               Website Budidaya Lele Kelompok Tani Desa Kebakalan
             </h1>
-            <div>
+            {/* <div>
               <button className="mt-6 rounded-full bg-primary-surface text-sm font-medium text-slate-900 transition-colors hover:bg-primary-surface/90 flex items-center pl-3 pr-1 py-1 cursor-pointer">
                 Jelajahi Lebih Lanjut
                 <div className="bg-primary text-white rounded-full p-2 ml-2">
                   <LuArrowDown />
                 </div>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

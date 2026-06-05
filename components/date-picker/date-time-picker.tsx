@@ -83,7 +83,7 @@ export function DateTimePicker24h({
             {value ? (
               format(value, "dd MMMM yyyy HH:mm")
             ) : (
-              <span>{placeholder ?? "Select date and time"}</span>
+              <span>{placeholder ?? "DD/MM/YYYY HH:MM"}</span>
             )}
           </Button>
         </PopoverTrigger>

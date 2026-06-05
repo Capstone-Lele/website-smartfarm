@@ -28,7 +28,7 @@ const dataPath = [
         name: "Detail Kolam",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["pool"] ?? `Kolam #${params.poolId}`;
+          return meta?.["pool"] ?? `Detail`;
         },
       },
       {
@@ -36,7 +36,7 @@ const dataPath = [
         name: "Detail Siklus",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["cycle"] ?? `Siklus #${params.cycleId}`;
+          return meta?.["cycle"] ?? `Detail`;
         },
       },
     ],
@@ -76,7 +76,7 @@ const dataPath = [
         name: "Detail Inventaris",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["inventory"] ?? `Produk #${params.id}`;
+          return meta?.["inventory"] ?? `Detail`;
         },
       },
       {
@@ -84,7 +84,7 @@ const dataPath = [
         name: "Detail Inventaris",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["inventory-notes"] ?? `Produk #${params.id}`;
+          return meta?.["inventory-notes"] ?? `Detail`;
         },
       },
     ],
@@ -98,7 +98,7 @@ const dataPath = [
         name: "Detail Non-Inventaris",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["nonInventory"] ?? `Produk #${params.id}`;
+          return meta?.["nonInventory"] ?? `Detail`;
         },
       },
     ],
@@ -112,7 +112,7 @@ const dataPath = [
         name: "Detail Pengajuan",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["submission"] ?? `Pengajuan #${params.id}`;
+          return meta?.["submission"] ?? `Detail`;
         },
       },
     ],
@@ -176,7 +176,7 @@ const dataPath = [
         name: "Detail Komoditas",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["commodity"] ?? `Komoditas #${params.id}`;
+          return meta?.["commodity"] ?? `Detail`;
         },
       },
     ],
@@ -190,7 +190,7 @@ const dataPath = [
         name: "Detail Transaksi",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["finance"] ?? `Transaksi #${params.id}`;
+          return meta?.["finance"] ?? `Detail`;
         },
       },
     ],

@@ -76,7 +76,7 @@ export function DatePickerWithRange({
           <Button
             variant="outline"
             id="date-picker-range"
-            className="justify-between h-auto min-h-8 px-2.5 font-normal mt-[-7]"
+            className="justify-between h-auto min-h-8 px-2.5 font-normal mt-[-7] overflow-hidden"
           >
             {date?.from ? (
               date.to ? (
@@ -89,7 +89,7 @@ export function DatePickerWithRange({
               )
             ) : (
               <span className="text-muted-foreground">
-                {placeholder ?? "Pick a date"}
+                {placeholder ?? "MM/DD/YYYY - MM/DD/YYYY"}
               </span>
             )}
             <CalendarIcon className="text-muted-foreground/80 shrink-0" />

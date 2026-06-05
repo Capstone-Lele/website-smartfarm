@@ -195,7 +195,7 @@ const DashboardPage = () => {
         : null}
 
       {/* Welcome banner */}
-      <div className="rounded-sm bg-gradient-to-r from-primary via-blue-500 to-secondary p-5 text-white shadow-md">
+      <div className="rounded-sm bg-gradient-to-r from-primary  to-secondary p-5 text-white shadow-md">
         <p className="text-sm font-medium opacity-80">Selamat datang kembali</p>
         <h1 className="text-2xl font-semibold mt-0.5">
           Dashboard SmartFarm Lele

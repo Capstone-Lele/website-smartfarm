@@ -116,8 +116,8 @@ const page = () => {
               </div>
               <Tabs defaultValue="table-in" className="w-full">
                 <TabsList className="mb-4 flex-wrap">
-                  <TabsTrigger value="table-in">Tabel Masuk</TabsTrigger>
-                  <TabsTrigger value="table-out">Tabel Keluar</TabsTrigger>
+                  <TabsTrigger value="table-in">Ikan Masuk</TabsTrigger>
+                  <TabsTrigger value="table-out">Ikan Keluar</TabsTrigger>
                   <TabsTrigger value="laporan">Laporan</TabsTrigger>
                 </TabsList>
                 <TabsContent value="table-in">
