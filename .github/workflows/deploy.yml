@@ -26,6 +26,7 @@ jobs:
         run: |
           npm install
           npm run build
+          rm -rf .next/cache # <--- Tambahkan baris ini untuk menghapus cache yang berat
 
       # 4. Mengirim file hasil build ke server aaPanel kamu
       - name: Copy files to VPS via SCP
