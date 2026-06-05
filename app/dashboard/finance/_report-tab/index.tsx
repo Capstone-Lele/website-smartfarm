@@ -219,7 +219,7 @@ const FinanceReportTab: React.FC<FinanceReportTabProps> = ({ data, rentang_tangg
           <Separator className="my-5" />
 
           <div className="flex items-center justify-between px-3 py-3 rounded-sm" style={{ backgroundColor: '#f3f4f6' }}>
-            <span className="font-bold text-base">Laba / Rugi Bersih</span>
+            <span className="font-bold text-base">Laba / Rugi</span>
             <span
               className={`font-semibold text-base ${
                 netProfit >= 0 ? "text-green-600" : "text-red-500"

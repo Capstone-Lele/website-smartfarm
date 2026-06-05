@@ -1,4 +1,8 @@
 import '@testing-library/jest-dom';
+
+// Mock URL.createObjectURL and revokeObjectURL since JSDOM does not support them
+global.URL.createObjectURL = jest.fn(() => 'blob:mock-url');
+global.URL.revokeObjectURL = jest.fn();
 import { TextEncoder, TextDecoder } from 'util';
 
 process.env.KEY_ENCRYPT_SESSION = process.env.KEY_ENCRYPT_SESSION || 'super-secret-key-at-least-32-characters-long';
