@@ -270,6 +270,7 @@ const EditUserModal = ({ user }: { user: User }) => {
                               onValueChange={field.onChange}
                               name="Role"
                               selectedValue={field.value}
+                              disable={true}
                             />
                             {fieldState.invalid ? (
                               <FieldError errors={[fieldState.error]} />

@@ -31,7 +31,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "@/components/ui/spinner";
 import z from "zod";
-import { useCreatePool } from "@/lib/api/service/pools/usePool";
+import { useCreatePool, usePool } from "@/lib/api/service/pools/usePool";
 import { toast } from "sonner";
 import { POOLS_CATEGORY } from "@/lib/constants/category";
 import { Combobox } from "@/components/combobox";
@@ -48,10 +48,14 @@ const optionalPositiveNumber = (fieldName: string) =>
   z.preprocess(
     (val) => {
       if (val === "" || val === null || val === undefined) return undefined;
-      return val;
+      const str = String(val).trim();
+      if (str === "") return undefined;
+      const num = Number(str);
+      if (isNaN(num)) return str; // kembalikan string agar zod bisa lempar error "harus berupa angka"
+      return num;
     },
     z.union([
-      z.coerce
+      z
         .number({ error: `${fieldName} harus berupa angka` })
         .positive({ message: `${fieldName} harus lebih besar dari 0` })
         .max(1000, { message: `${fieldName} terlalu besar` }),
@@ -59,19 +63,62 @@ const optionalPositiveNumber = (fieldName: string) =>
     ]),
   );
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Nama kolam wajib diisi" }),
-  category: z.string().min(1, { message: "Kategori wajib diisi" }),
-  length: optionalPositiveNumber("Panjang"),
-  width: optionalPositiveNumber("Lebar"),
-  height: optionalPositiveNumber("Tinggi"),
-  diameter: optionalPositiveNumber("Diameter"),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: "Nama kolam wajib diisi" }),
+    category: z.string().min(1, { message: "Kategori wajib diisi" }),
+    type: z.enum(["bundar", "persegi"]),
+    length: optionalPositiveNumber("Panjang"),
+    width: optionalPositiveNumber("Lebar"),
+    height: optionalPositiveNumber("Tinggi"),
+    diameter: optionalPositiveNumber("Diameter"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === "bundar") {
+      if (data.diameter === undefined) {
+        ctx.addIssue({
+          path: ["diameter"],
+          code: z.ZodIssueCode.custom,
+          message: "Diameter wajib diisi untuk kolam bundar",
+        });
+      }
+      if (data.height === undefined) {
+        ctx.addIssue({
+          path: ["height"],
+          code: z.ZodIssueCode.custom,
+          message: "Tinggi wajib diisi untuk kolam bundar",
+        });
+      }
+    } else if (data.type === "persegi") {
+      if (data.length === undefined) {
+        ctx.addIssue({
+          path: ["length"],
+          code: z.ZodIssueCode.custom,
+          message: "Panjang wajib diisi untuk kolam persegi",
+        });
+      }
+      if (data.width === undefined) {
+        ctx.addIssue({
+          path: ["width"],
+          code: z.ZodIssueCode.custom,
+          message: "Lebar wajib diisi untuk kolam persegi",
+        });
+      }
+      if (data.height === undefined) {
+        ctx.addIssue({
+          path: ["height"],
+          code: z.ZodIssueCode.custom,
+          message: "Tinggi wajib diisi untuk kolam persegi",
+        });
+      }
+    }
+  });
 
 const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
+  // const { data, isLoading, error } = usePool();
   const poolMutation = useCreatePool();
-  const [isCirclePool, setIsCirclePool] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  // const dataPool = data?.data || [];
   const nextPoolName = dataPool ? `Kolam ${dataPool.length + 1}` : "Kolam 1";
 
   const form = useForm({
@@ -79,6 +126,7 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
     defaultValues: {
       name: nextPoolName || "",
       category: "",
+      type: "bundar" as "bundar" | "persegi",
       length: "" as any,
       width: "" as any,
       height: "" as any,
@@ -86,14 +134,30 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
     },
   });
 
+  const poolType = form.watch("type");
+  const isCirclePool = poolType === "bundar";
+
   useEffect(() => {
     if (isCirclePool) {
       form.setValue("length", undefined);
       form.setValue("width", undefined);
+      form.clearErrors(["length", "width"]);
     } else {
       form.setValue("diameter", undefined);
+      form.clearErrors(["diameter"]);
     }
   }, [isCirclePool]);
+
+  // Tambahkan baris ini
+  useEffect(() => {
+    if (isOpen) {
+      // Hanya update/hitung ulang saat modal dibuka
+      const calculatedName = dataPool
+        ? `Kolam ${dataPool.length + 1}`
+        : "Kolam 1";
+      form.setValue("name", calculatedName);
+    }
+  }, [isOpen, dataPool, form]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // check if pool with the same name already exists
@@ -111,9 +175,9 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
       name: data.name,
       category: data.category,
       height: data.height,
-      diameter: isCirclePool ? data.diameter : undefined,
-      length: !isCirclePool ? data.length : undefined,
-      width: !isCirclePool ? data.width : undefined,
+      diameter: data.type === "bundar" ? data.diameter : undefined,
+      length: data.type === "persegi" ? data.length : undefined,
+      width: data.type === "persegi" ? data.width : undefined,
     };
     try {
       Object.entries(dataPrep).forEach(([key, value]) => {
@@ -200,7 +264,7 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                     <div
                       onClick={() => {
-                        setIsCirclePool(true);
+                        form.setValue("type", "bundar");
                       }}
                       className={`flex flex-col border rounded-md items-center gap-2 p-2 cursor-pointer hover:bg-primary-surface ${isCirclePool ? "bg-primary-surface" : ""}`}
                     >
@@ -209,7 +273,7 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                     </div>
                     <div
                       onClick={() => {
-                        setIsCirclePool(false);
+                        form.setValue("type", "persegi");
                       }}
                       className={`flex flex-col border rounded-md items-center gap-2 p-2 cursor-pointer hover:bg-primary-surface ${!isCirclePool ? "bg-primary-surface" : ""}`}
                     >
@@ -231,8 +295,8 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                         <InputGroup>
                           <InputGroupInput
                             id="diameter"
-                            type="number"
-                            step="0.01"
+                            type="text"
+                            inputMode="decimal"
                             placeholder="Contoh: 5.5"
                             {...field}
                           />
@@ -262,8 +326,8 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                           <InputGroup>
                             <InputGroupInput
                               id="length"
-                              type="number"
-                              step="0.01"
+                              type="text"
+                              inputMode="decimal"
                               placeholder="Contoh: 10.0"
                               {...field}
                             />
@@ -294,8 +358,8 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                           <InputGroup>
                             <InputGroupInput
                               id="width"
-                              type="number"
-                              step="0.01"
+                              type="text"
+                              inputMode="decimal"
                               placeholder="Contoh: 5.0"
                               {...field}
                             />
@@ -328,8 +392,8 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                       <InputGroup>
                         <InputGroupInput
                           id="height"
-                          type="number"
-                          step="0.01"
+                          type="text"
+                          inputMode="decimal"
                           placeholder="Contoh: 1.5"
                           {...field}
                         />
@@ -353,7 +417,17 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
                     variant="outline"
                     className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
                     type="button"
-                    onClick={() => form.reset()}
+                    onClick={() =>
+                      form.reset({
+                        name: form.getValues("name"),
+                        category: "",
+                        type: "bundar",
+                        length: "" as any,
+                        width: "" as any,
+                        height: "" as any,
+                        diameter: "" as any,
+                      })
+                    }
                   >
                     <RiResetRightLine className="mr-2" />
                     Reset

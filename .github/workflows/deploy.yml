@@ -1,66 +1,40 @@
-name: Deploy Next.js to aaPanel (Build on GitHub)
+name: Deploy Next.js to aaPanel
 
 on:
   push:
     branches:
-      - production
+      - production # Pastikan ini sesuai dengan branch utama di repository kamu
 
 jobs:
-  build-and-deploy:
-    name: Build on GitHub & Deploy to Server
+  deploy:
+    name: Deploy to Server
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Mengambil kode dari repository
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # 2. Setup Node.js v20
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      # 3. Install, Build, Hapus Cache, & BUNGKUS MANUAL
-      - name: Install, Build, and Compress
-        run: |
-          npm install
-          npm run build
-          rm -rf .next/cache
-          
-          # Kita jadikan satu file arsip bernama deploy.tar.gz agar pengiriman kilat
-          # (Gunakan || true di akhir next.config agar tidak error jika salah satu file tidak ada)
-          tar -czf deploy.tar.gz .next public package.json next.config.js next.config.mjs || true
-
-      # 4. Kirim HANYA file arsip deploy.tar.gz ke VPS
-      - name: Copy archive to VPS via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "deploy.tar.gz" 
-          target: "/www/wwwroot/web-smartfarm/"
-          overwrite: true
-
-      # 5. Ekstrak di VPS dan Restart
-      - name: Extract and restart via SSH
+      - name: Execute deployment commands via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            # 1. Masuk ke direktori project web smart farm kamu
             cd /www/wwwroot/web-smartfarm/
 
-            # Ekstrak file arsip yang baru dikirim, lalu hapus file arsipnya
-            tar -xzf deploy.tar.gz
-            rm deploy.tar.gz
+            # 2. Tarik update kode terbaru dari GitHub
+            git pull origin production
 
-            # Install module production
-            npm install --omit=dev
+            # 3. Install dependencies (package.json)
+            npm install
 
-            # Restart service
+            # 4. Build aplikasi Next.js menjadi production-ready
+            npm run build
+
+            # 5. Restart service Node.js di aaPanel
+            # Jika aaPanel menggunakan PM2 di belakang layar dengan nama "web_smartfarm":
             pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
-            echo "Deployment kilat selesai!"
+
+            # Catatan: Jika perintah pm2 di atas error, kamu mungkin perlu merestartnya 
+            # secara manual dari tombol 'Service status' di menu Node.js aaPanel, atau
+            # mencari ID prosesnya menggunakan perintah 'pm2 list'.

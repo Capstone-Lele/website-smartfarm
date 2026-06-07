@@ -73,7 +73,7 @@ const HomeNavbar = () => {
               </div>
               <div className="leading-tight text-left">
                 <p className="text-sm font-semibold tracking-wide ">
-                  Lele Farm
+                  Leleku
                 </p>
                 <p className="text-[10px] font-medium text-slate-500">
                   Desa Kebakalan

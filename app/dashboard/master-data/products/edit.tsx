@@ -209,6 +209,17 @@ const EditProductModal = ({ product }: { product: Product }) => {
                               )?.name || "kg",
                               { shouldDirty: true },
                             );
+                          } else if (val.toLowerCase() === "pendanaan") {
+                            form.setValue(
+                              "unit",
+                              filteredUnits.find(
+                                (unit: Unit) =>
+                                  unit.name.toLowerCase() === "uang",
+                              )?.name || "uang",
+                              { shouldDirty: true },
+                            );
+                          } else {
+                            form.setValue("unit", "", { shouldDirty: true });
                           }
                         }}
                         isLoading={productMutation.isPending}
@@ -243,6 +254,19 @@ const EditProductModal = ({ product }: { product: Product }) => {
                               ) {
                                 return false;
                               }
+                              if (
+                                watchCategory?.toLowerCase() === "pendanaan" &&
+                                unit.name.toLowerCase() !== "uang"
+                              ) {
+                                return false;
+                              }
+                              // Sembunyikan satuan "uang" jika kategori bukan "pendanaan"
+                              if (
+                                watchCategory?.toLowerCase() !== "pendanaan" &&
+                                unit.name.toLowerCase() === "uang"
+                              ) {
+                                return false;
+                              }
                               return true;
                             })
                             .map((unit: Unit) => ({
@@ -253,13 +277,15 @@ const EditProductModal = ({ product }: { product: Product }) => {
                         onValueChange={field.onChange}
                         isLoading={productMutation.isPending}
                         name="Satuan"
+                        disable={!watchCategory}
                         selectedValue={field.value}
                       />
                       {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan satuan produk.
+                          Masukkan satuan produk.{" "}
+                          {!watchCategory && "Pilih Kategori Produk terlebih dahulu."}
                         </FieldDescription>
                       )}
                     </Field>

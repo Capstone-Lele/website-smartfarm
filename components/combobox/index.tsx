@@ -43,7 +43,6 @@ export function Combobox({
     }
   }, [selectedValue]);
 
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -58,7 +57,9 @@ export function Combobox({
             ? data.find((framework) => framework.value === value)?.label
             : `Pilih ${name || ""}...`}
           {/* <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
-            <ChevronDown className={`ml-2 h-4 w-4 shrink-0 opacity-50 ${open ? "rotate-180" : ""}`} />
+          <ChevronDown
+            className={`ml-2 h-4 w-4 shrink-0 opacity-50 ${open ? "rotate-180" : ""}`}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent
