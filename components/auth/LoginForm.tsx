@@ -74,7 +74,7 @@ const LoginForm = () => {
             height={35}
             className=" rounded-md"
           />
-          <h3 className=" font-semibold text-xl ">LeleKu</h3>
+          <h3 className=" font-semibold text-xl ">Leleku</h3>
         </div>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
