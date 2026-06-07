@@ -22,21 +22,27 @@ jobs:
             cd /www/wwwroot/web-smartfarm/
 
             # 2. Ambil update terbaru dan paksa sinkronisasi dengan GitHub
-            # (Ini akan mencegah error konflik merge pada package.json / package-lock.json)
             git fetch --all
             git reset --hard origin/production
 
-            # 3. Install dependencies (package.json)
-            npm install
+            # 3. CLEAN INSTALL: Hapus node_modules, cache .next, dan lockfile yang corrupt
+            echo "Membersihkan cache build dan node_modules..."
+            rm -rf node_modules
+            rm -rf .next
+            rm -f package-lock.json
 
-            # 4. Build aplikasi Next.js menjadi production-ready
+            # 4. Install dependencies (Fresh Install)
+            echo "Menginstal ulang dependencies..."
+            npm install
+            
+            # (Opsional) Jika Turbopack masih bentrok dengan jose, uncomment baris di bawah ini:
+            # npm install jose@latest
+
+            # 5. Build aplikasi Next.js menjadi production-ready
+            echo "Memulai proses build..."
             npm run build
 
-            # 5. Restart service Node.js di aaPanel
-            # Jika aaPanel menggunakan PM2 di belakang layar dengan nama "web_smartfarm":
+            # 6. Restart service Node.js di aaPanel menggunakan PM2
+            echo "Merestart aplikasi..."
             pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
-
-            # Catatan: Jika perintah pm2 di atas error, kamu mungkin perlu merestartnya 
-            # secara manual dari tombol 'Service status' di menu Node.js aaPanel, atau
-            # mencari ID prosesnya menggunakan perintah 'pm2 list'.
