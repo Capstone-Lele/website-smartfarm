@@ -21,8 +21,10 @@ jobs:
             # 1. Masuk ke direktori project web smart farm kamu
             cd /www/wwwroot/web-smartfarm/
 
-            # 2. Tarik update kode terbaru dari GitHub
-            git pull origin production
+            # 2. Ambil update terbaru dan paksa sinkronisasi dengan GitHub
+            # (Ini akan mencegah error konflik merge pada package.json / package-lock.json)
+            git fetch --all
+            git reset --hard origin/production
 
             # 3. Install dependencies (package.json)
             npm install
