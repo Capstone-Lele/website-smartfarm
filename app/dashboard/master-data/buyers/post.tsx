@@ -45,7 +45,7 @@ const formSchema = z.object({
     .string()
     .max(15, { error: "Nomor telepon maksimal 15 karakter" })
     .optional(),
-  email: z.string().email({ error: "Email tidak valid" }).optional(),
+  email: z.union([z.string().email({ error: "Email tidak valid" }), z.literal("")]).optional(),
   address: z.string().min(1, { error: "Alamat wajib diisi" }),
 });
 

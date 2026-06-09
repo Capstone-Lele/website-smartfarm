@@ -33,7 +33,7 @@ export const formSchema = z.object({
   buyer: z.string().min(1, "Buyer wajib dipilih"),
   orderDate: z.date({ error: "Tanggal order wajib diisi" }),
   totalPrice: z.number(),
-  notes: z.string().optional(),
+  notes: z.string().min(1, "Keterangan minimal 1 karakter"),
   image: z
     .any()
     .refine((file) => file, { message: "Nota penjualan wajib diunggah" })
@@ -59,7 +59,7 @@ export const formSchema = z.object({
           })
           .positive({ message: "Harga harus berupa angka positif" }),
         subTotal: z.number(),
-        notes: z.string().optional(),
+        notes: z.string().min(1, "Keterangan minimal 1 karakter"),
       }),
     )
     .min(1, "Minimal 1 item wajib diisi"),
@@ -325,7 +325,7 @@ export function OrderItemRow({
           <Controller
             name={`items.${index}.notes`}
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Catatan</FieldLabel>
                 <Textarea
@@ -333,6 +333,9 @@ export function OrderItemRow({
                   className="min-h-16"
                   {...field}
                 />
+                 {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
               </Field>
             )}
           />

@@ -39,10 +39,13 @@ import ButtonEditColumn from "@/components/button-column/button-edit-column";
 
 const formSchema = z.object({
   productId: z.string().min(1, { message: "Produk wajib dipilih" }),
-  minQuantity: z.coerce
-    .number()
-    .int({ message: "Stok minimum harus berupa bilangan bulat" })
-    .min(0, { message: "Stok minimum tidak boleh negatif" }),
+  minQuantity: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
+    z
+      .number({ error: "Stok minimum wajib diisi" })
+      .int({ message: "Stok minimum harus berupa bilangan bulat" })
+      .min(0, { message: "Stok minimum tidak boleh negatif" })
+  ),
 });
 
 const EditInventoryModal = ({ inventory }: { inventory: Inventory }) => {

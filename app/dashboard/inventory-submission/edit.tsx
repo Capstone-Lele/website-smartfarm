@@ -77,6 +77,22 @@ const formSchema = z
     feedback: z.string().optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.status === "pending") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Status tidak boleh tetap 'Menunggu'. Pilih Disetujui atau Ditolak.",
+        path: ["status"],
+      });
+    }
+    if (data.status === "rejected") {
+      if (!data.feedback || data.feedback.trim().length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Alasan penolakan wajib diisi",
+          path: ["feedback"],
+        });
+      }
+    }
     if (data.status === "approved") {
       const price = Number(data.pricePerItem);
       if (!price || price <= 0) {
@@ -411,9 +427,14 @@ const EditSubmissionModal = ({
                       render={({ field, fieldState }) => (
                         <Field>
                           <FieldLabel htmlFor="feedback">
-                            {status === "rejected"
-                              ? "Catatan / Alasan Penolakan"
-                              : "Catatan Tambahan / Feedback"}
+                            {status === "rejected" ? (
+                              <>
+                                Catatan / Alasan Penolakan{" "}
+                                <span className="text-destructive">*</span>
+                              </>
+                            ) : (
+                              "Catatan Tambahan / Feedback"
+                            )}
                           </FieldLabel>
                           <Input
                             id="feedback"
@@ -732,7 +753,13 @@ const EditSubmissionModal = ({
                     </Button>
                     <Button
                       type="submit"
-                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center"
+                      disabled={status === "pending"}
+                      title={
+                        status === "pending"
+                          ? "Ubah status terlebih dahulu sebelum menyimpan"
+                          : undefined
+                      }
+                      className="w-full sm:w-auto cursor-pointer flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <LuSave className="mr-2" />
                       Simpan

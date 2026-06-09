@@ -9,6 +9,7 @@ import {
   LuCircleArrowUp,
   LuArrowUpDown,
 } from "react-icons/lu";
+import { RiResetRightLine } from "react-icons/ri";
 import {
   useGetInventoryByIdWithParams,
   useGetInventoryConsumptionByIdWithParams,
@@ -23,6 +24,12 @@ import PostStockInOut from "./post";
 import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
 import { InventoryDetail } from "@/types/inventory";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InventoryOverview } from "./_components/inventory-overview";
 import { FiPlusCircle } from "react-icons/fi";
@@ -38,6 +45,12 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     start: Date | null | undefined;
     end: Date | null | undefined;
   }>({ start: null, end: null });
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleResetDate = () => {
+    setDateRange({ start: null, end: null });
+    setResetKey((prev) => prev + 1);
+  };
 
   // const { data: inventoryData } = useInventory();
   const {
@@ -183,13 +196,29 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
       {/* Header — date range picker top-right */}
       <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mt-2">
         <h1 className="text-2xl font-semibold">Detail Inventaris</h1>
-        <div className="w-full md:w-72">
-          <DatePickerWithRange
-            label="Pilih Rentang Waktu"
-            onValueChange={(start, end) =>
-              setDateRange({ start: start ?? null, end: end ?? null })
-            }
-          />
+        <div className="flex items-end gap-2">
+          <div className="w-full md:w-72">
+            <DatePickerWithRange
+              label="Pilih Rentang Waktu"
+              resetValues={resetKey}
+              onValueChange={(start, end) =>
+                setDateRange({ start: start ?? null, end: end ?? null })
+              }
+            />
+          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleResetDate}
+                  className="flex items-center justify-center self-end h-9.5 w-9.5 cursor-pointer rounded-md border border-input bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors shrink-0"
+                >
+                  <RiResetRightLine className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Reset tanggal</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
