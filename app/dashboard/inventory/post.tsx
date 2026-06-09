@@ -38,14 +38,16 @@ import { Separator } from "@/components/ui/separator";
 import { Product } from "@/types/master-data/product.types";
 import { InventoryResponse } from "@/types/inventory";
 
-const formSchema = z
-  .object({
-    productId: z.string().min(1, { message: "Produk wajib dipilih" }),
-    minQuantity: z.coerce
-      .number()
+const formSchema = z.object({
+  productId: z.string().min(1, { message: "Produk wajib dipilih" }),
+  minQuantity: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? undefined : Number(val)),
+    z
+      .number({ error: "Stok minimum wajib diisi" })
       .int({ message: "Stok minimum harus berupa bilangan bulat" })
-      .min(0, { message: "Stok minimum tidak boleh negatif" }),
-  })
+      .min(0, { message: "Stok minimum tidak boleh negatif" })
+  ),
+});
 
 const PostInventoryModal = ({dataInventory} : {dataInventory?: InventoryResponse}) => {
   const inventoryMutation = useCreateInventory();

@@ -435,7 +435,7 @@ const PostSellCommodity = ({
                           <Controller
                             name="notes"
                             control={form.control}
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                               <Field>
                                 <FieldLabel>Catatan Transaksi</FieldLabel>
                                 <Textarea
@@ -443,6 +443,13 @@ const PostSellCommodity = ({
                                   className="min-h-16"
                                   {...field}
                                 />
+                                {fieldState.invalid ? (
+                                  <FieldError errors={[fieldState.error]} />
+                                ) : (
+                                  <FieldDescription>
+                                    Catatan transaksi wajib diisi.
+                                  </FieldDescription>
+                                )}
                               </Field>
                             )}
                           />

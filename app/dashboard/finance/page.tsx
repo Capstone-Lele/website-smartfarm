@@ -1,6 +1,7 @@
 "use client";
 import DefaultCard from "@/components/card/default-card";
 import React, { useMemo, useState } from "react";
+import { RiResetRightLine } from "react-icons/ri";
 import { columns } from "./column";
 import { Finance } from "@/types/finance/finance";
 import { DataTable } from "@/components/data-table/data-table";
@@ -9,6 +10,12 @@ import FinancePieCharts from "./_components/finance-pie-charts";
 import TransactionCountChart from "./_components/transaction-count-chart";
 import TransactionCountPie from "./_components/transaction-count-pie";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { SelectCombobox } from "@/components/combobox/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FinanceCommodityData from "./_commodity";
@@ -42,6 +49,12 @@ const page = () => {
     start: null,
     end: null,
   });
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleResetDate = () => {
+    setDateRange({ start: null, end: null });
+    setResetKey((prev) => prev + 1);
+  };
   const [txTypeFilter, setTxTypeFilter] = useState<string>("all");
 
   const memoizedValue: Finance[] = useMemo(() => {
@@ -176,13 +189,29 @@ const page = () => {
       <>
         <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4 mt-2">
           <h1 className="text-2xl font-semibold">Keuangan</h1>
-          <div className="w-full md:w-72">
-            <DatePickerWithRange
-              label="Pilih Rentang Waktu"
-              onValueChange={(start, end) =>
-                setDateRange({ start: start || null, end: end || null })
-              }
-            />
+          <div className="flex items-end gap-2">
+            <div className="w-full md:w-72">
+              <DatePickerWithRange
+                label="Pilih Rentang Waktu"
+                resetValues={resetKey}
+                onValueChange={(start, end) =>
+                  setDateRange({ start: start || null, end: end || null })
+                }
+              />
+            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={handleResetDate}
+                    className="flex items-center justify-center self-end h-9.5 w-9.5 cursor-pointer rounded-md border border-input bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors shrink-0"
+                  >
+                    <RiResetRightLine className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Reset tanggal</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
         <div>

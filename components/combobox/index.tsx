@@ -51,7 +51,7 @@ export function Combobox({
           role="combobox"
           aria-expanded={open}
           disabled={disable}
-          className={`w-full justify-between ${value ? "" : "text-muted-foreground "}`}
+          className={`w-full justify-between whitespace-nowrap overflow-hidden text-ellipsis ${value ? "" : "text-muted-foreground "}`}
         >
           {value
             ? data.find((framework) => framework.value === value)?.label

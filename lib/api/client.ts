@@ -1,11 +1,5 @@
 "use client";
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-} from "axios";
-import { getCookiesToken, clearSession } from "../session";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 export class ApiError extends Error {
   status: number;
@@ -18,6 +12,22 @@ export class ApiError extends Error {
   }
 }
 
+const CookieName = "session_token";
+
+/** Hapus cookie session di sisi client */
+function deleteClientCookie(name: string) {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+/** Ambil token dari cookie secara langsung di browser */
+function getTokenFromCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${CookieName}=`));
+  return match ? match.split("=")[1] : null;
+}
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -28,36 +38,29 @@ const axiosInstance: AxiosInstance = axios.create({
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
-    const token = await getCookiesToken();
-    console.log("Token Value:", token?.token);
+  (config) => {
+    // Cek token langsung di request, tidak perlu tunggu response
+    if (typeof window !== "undefined") {
+      const token = getTokenFromCookie();
+      const pathname = window.location.pathname;
 
-    if (token?.token) {
-      config.headers.Authorization = `Bearer ${token.token}`;
-    } else {
-      if (typeof window !== "undefined") {
-        const pathname = window.location.pathname;
-        if (pathname !== "/login" && pathname !== "/") {
-          await clearSession();
-          window.location.href = "/login?message=Session expired, please log in again";
-          return Promise.reject(new Error("Unauthorized: Token not found"));
-        }
+      if (!token && pathname !== "/login" && pathname !== "/") {
+        deleteClientCookie(CookieName);
+        window.location.href = "/login?message=Session expired, please log in again";
+        return Promise.reject(new Error("Unauthorized: Token not found"));
       }
     }
 
-    // Remove Content-Type for FormData and set by browser
+    // Remove Content-Type for FormData so browser sets it with boundary
     if (config.data instanceof FormData) {
       delete config.headers["Content-Type"];
     }
-
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  },
+  (error: AxiosError) => Promise.reject(error),
 );
 
-// Response Interceptor
+// Response Interceptor — handle 401 Unauthorized
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log("✅ API Success Response:", response);
@@ -65,9 +68,22 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response) {
+      const status = error.response.status;
       console.log("❌ API Error Response:", error.response.data);
+
+      if (status === 401 && typeof window !== "undefined") {
+        const pathname = window.location.pathname;
+        if (pathname !== "/login" && pathname !== "/") {
+          const cookieName = process.env.NEXT_PUBLIC_COOKIE_NAME;
+          if (cookieName) deleteClientCookie(cookieName);
+          window.location.href =
+            "/login?message=Session expired, please log in again";
+        }
+      }
+
       return Promise.reject(error.response.data);
     }
+    return Promise.reject(error);
   },
 );
 
