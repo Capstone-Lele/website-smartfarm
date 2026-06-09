@@ -106,6 +106,7 @@ const PostFinance = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nonInventoryMutation = usePostNonInventory();
+  const [selectedProductUnitName, setSelectedProductUnitName] = useState("");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -132,6 +133,16 @@ const PostFinance = () => {
     control: form.control,
     name: "pricePerItem",
   });
+  const selectedProductId = useWatch({
+    control: form.control,
+    name: "productId",
+  });
+
+  const selectedProduct = productsData?.data?.find(
+    (product: Product) => product.id === selectedProductId,
+  );
+  const isFundingCategory =
+    selectedProduct?.category?.toLowerCase() === "pendanaan";
 
   const productOptions =
     productsData?.data
@@ -289,7 +300,20 @@ const PostFinance = () => {
                           </FieldLabel>
                           <Combobox
                             data={productOptions}
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              const product = productsData?.data?.find(
+                                (p: Product) => p.id === value,
+                              );
+                              setSelectedProductUnitName(product?.unit || "");
+                              if (
+                                product?.category?.toLowerCase() === "pendanaan"
+                              ) {
+                                form.setValue("quantity", 1 as any, {
+                                  shouldValidate: true,
+                                });
+                              }
+                            }}
                             name="Produk"
                             selectedValue={field.value}
                             isLoading={isLoadingProducts}
@@ -354,40 +378,57 @@ const PostFinance = () => {
                       )}
                     />
 
-                    {/* Quantity */}
-                    <Controller
-                      name="quantity"
-                      control={form.control}
-                      render={({ field, fieldState }) => (
-                        <Field>
-                          <FieldLabel htmlFor="quantity">Jumlah</FieldLabel>
-                          <Input
-                            id="quantity"
-                            type="number"
-                            min={1}
-                            step={1}
-                            autoComplete="off"
-                            placeholder="Contoh: 10"
-                            {...field}
-                            value={field.value as number | string}
-                          />
-                          {fieldState.invalid ? (
-                            <FieldError errors={[fieldState.error]} />
-                          ) : (
-                            <FieldDescription>Jumlah item.</FieldDescription>
-                          )}
-                        </Field>
-                      )}
-                    />
+                    {/* Quantity — hidden when product is funding category */}
+                    {!isFundingCategory && (
+                      <Controller
+                        name="quantity"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field>
+                            <FieldLabel htmlFor="quantity">Jumlah</FieldLabel>
+                            <InputGroup>
+                              <InputGroupInput
+                                id="quantity"
+                                type="number"
+                                min={1}
+                                step={1}
+                                autoComplete="off"
+                                placeholder="Contoh: 10"
+                                {...field}
+                                value={field.value as number | string}
+                              />
+                              <InputGroupAddon align="inline-end">
+                                <Separator
+                                  orientation="vertical"
+                                  className="h-6"
+                                />
+                                {selectedProductUnitName || "Unit"}
+                              </InputGroupAddon>
+                            </InputGroup>
+                            {fieldState.invalid ? (
+                              <FieldError errors={[fieldState.error]} />
+                            ) : (
+                              <FieldDescription>Jumlah item.</FieldDescription>
+                            )}
+                          </Field>
+                        )}
+                      />
+                    )}
 
-                    {/* Price per item */}
+                    {/* Price per item — label changes to "Jumlah Pendanaan" for funding products */}
                     <Controller
                       name="pricePerItem"
                       control={form.control}
                       render={({ field, fieldState }) => (
-                        <Field>
+                        <Field
+                          className={
+                            isFundingCategory ? "col-span-1 md:col-span-2" : ""
+                          }
+                        >
                           <FieldLabel htmlFor="pricePerItem">
-                            Harga Per Unit
+                            {isFundingCategory
+                              ? "Jumlah Pendanaan"
+                              : "Harga Per Unit"}
                           </FieldLabel>
                           <InputGroup>
                             <InputGroupAddon align="inline-start">
@@ -400,7 +441,11 @@ const PostFinance = () => {
                             <InputGroupInput
                               id="pricePerItem"
                               type="text"
-                              placeholder="Contoh: 50.000"
+                              placeholder={
+                                isFundingCategory
+                                  ? "Masukkan jumlah pendanaan"
+                                  : "Contoh: 50.000"
+                              }
                               {...field}
                               onChange={(e) => {
                                 const val = e.target.value.replace(/\D/g, "");
@@ -417,7 +462,9 @@ const PostFinance = () => {
                             <FieldError errors={[fieldState.error]} />
                           ) : (
                             <FieldDescription>
-                              Harga unit produk.
+                              {isFundingCategory
+                                ? "Total dana yang diterima."
+                                : "Harga unit produk."}
                             </FieldDescription>
                           )}
                         </Field>
