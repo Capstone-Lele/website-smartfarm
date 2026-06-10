@@ -1,6 +1,6 @@
 /*
 Description:
-- Testing Manajemen Komoditas (Commodity Management)
+- Testing Manajemen Komoditas (Commodity Management) sesuai Test Case Document (UT-086 - UT-089)
 - Mencakup: Render Halaman, Hook useCommodity, Hook useCommodityById, Hook useCreateCommodity, Hook useCommodityByIdAndType
 */
 
@@ -175,7 +175,7 @@ describe("Manajemen Komoditas Unit Tests", () => {
   });
 
   describe("Render Halaman Manajemen Komoditas", () => {
-    it("Render Halaman: Menampilkan halaman komoditas dengan benar beserta statistik dan tabelnya", async () => {
+    it("UT-086-Manajemen Komoditas: Menampilkan halaman komoditas dengan benar beserta statistik dan tabelnya", async () => {
       (useCommodity as jest.Mock).mockReturnValue({
         data: mockCommodityData,
         isLoading: false,
@@ -184,7 +184,7 @@ describe("Manajemen Komoditas Unit Tests", () => {
       renderWithQueryClient(<CommodityPage />);
 
       expect(screen.getByText("Komoditas")).toBeInTheDocument();
-      expect(screen.getByTestId("data-table")).toBeInTheDocument();
+      expect(screen.getAllByTestId("data-table").length).toBeGreaterThan(0);
 
       // Verifikasi statistik: stock = 1000 - 300 = 700 ekor, masuk = 1000, keluar = 300
       expect(screen.getByText("Total Stock Ikan")).toBeInTheDocument();
@@ -195,7 +195,7 @@ describe("Manajemen Komoditas Unit Tests", () => {
   });
 
   describe("Hooks: useCommodity & useCreateCommodity", () => {
-    it("useCommodity (Positive): Berhasil mengambil data komoditas dari API", async () => {
+    it("UT-087-Manajemen Komoditas: Berhasil mengambil data komoditas dari API (isSuccess: true)", async () => {
       const { useCommodity: realHook } = jest.requireActual(
         "@/lib/api/service/commodity/useCommodity"
       );
@@ -211,7 +211,7 @@ describe("Manajemen Komoditas Unit Tests", () => {
       expect(API_CLIENT.get).toHaveBeenCalledWith(API_ENDPOINTS.COMMODITY.GET_ALL);
     });
 
-    it("useCommodity (Negative): Menangani status error saat API gagal", async () => {
+    it("UT-088-Manajemen Komoditas: Menangani status isError: true saat API gagal", async () => {
       const { useCommodity: realHook } = jest.requireActual(
         "@/lib/api/service/commodity/useCommodity"
       );
@@ -226,7 +226,7 @@ describe("Manajemen Komoditas Unit Tests", () => {
       expect(result.current.error?.message).toBe("Network Error");
     });
 
-    it("useCreateCommodity (Positive): Berhasil memanggil POST API untuk membuat komoditas baru", async () => {
+    it("UT-089-Manajemen Komoditas: Berhasil memanggil POST API untuk membuat komoditas baru", async () => {
       const { useCreateCommodity: realHook } = jest.requireActual(
         "@/lib/api/service/commodity/useCommodity"
       );

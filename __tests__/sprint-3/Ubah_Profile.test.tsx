@@ -1,6 +1,6 @@
 /*
 Description:
-- Testing Ubah Profile (Update Profile)
+- Testing Ubah Profile (Update Profile) sesuai Test Case Document (UT-052 - UT-056)
 - Mencakup: Render Halaman, Hook useGetProfile, Hook useUpdateProfile
 */
 
@@ -251,9 +251,9 @@ describe("Ubah Profile Unit Tests", () => {
 
   describe("Render Halaman Profile Setting", () => {
     /* -----------------------------------------------------------------------
-     * Test 1: Render halaman saat data berhasil dimuat
+     * UT-050-Ubah Profile | profile-setting/page.tsx | Render Halaman
      * ---------------------------------------------------------------------- */
-    it("Render Halaman (Positive): Halaman profile muncul dengan benar saat data berhasil dimuat", async () => {
+    it("UT-050-Ubah Profile: Halaman profile muncul dengan benar saat data berhasil dimuat", async () => {
       (useGetProfile as jest.Mock).mockReturnValue({
         data: mockProfileResponse,
         isLoading: false,
@@ -288,9 +288,9 @@ describe("Ubah Profile Unit Tests", () => {
 
 describe("Hook: useGetProfile", () => {
   /* -----------------------------------------------------------------------
-   * Test 15: (Positive) useGetProfile mengembalikan data berhasil
+   * UT-051-Ubah Profile | useProfile.ts | useGetProfile (Positive)
    * ---------------------------------------------------------------------- */
-  it("useGetProfile (Positive): API_CLIENT.get dipanggil dengan endpoint yang benar dan isSuccess = true", async () => {
+  it("UT-051-Ubah Profile: API_CLIENT.get dipanggil dengan endpoint yang benar dan isSuccess = true", async () => {
     const { useGetProfile: realUseGetProfile } = jest.requireActual(
       "@/lib/api/service/profile/useProfile",
     );
@@ -311,9 +311,9 @@ describe("Hook: useGetProfile", () => {
   });
 
   /* -----------------------------------------------------------------------
-   * Test 16: (Negative) useGetProfile menangani error API
+   * UT-052-Ubah Profile | useProfile.ts | useGetProfile (Negative)
    * ---------------------------------------------------------------------- */
-  it("useGetProfile (Negative): isError = true dan error message sesuai saat API gagal", async () => {
+  it("UT-052-Ubah Profile: isError = true dan error message sesuai saat API gagal (Get Profile)", async () => {
     const { useGetProfile: realUseGetProfile } = jest.requireActual(
       "@/lib/api/service/profile/useProfile",
     );
@@ -340,9 +340,9 @@ describe("Hook: useGetProfile", () => {
 
 describe("Hook: useUpdateProfile", () => {
   /* -----------------------------------------------------------------------
-   * Test 18: (Positive) useUpdateProfile berhasil melakukan mutasi
+   * UT-053-Ubah Profile | useProfile.ts | useUpdateProfile (Positive)
    * ---------------------------------------------------------------------- */
-  it("useUpdateProfile (Positive): API_CLIENT.put dipanggil dengan endpoint dan data yang benar", async () => {
+  it("UT-053-Ubah Profile: API_CLIENT.put dipanggil dengan endpoint dan data yang benar", async () => {
     const { useUpdateProfile: realUseUpdateProfile } = jest.requireActual(
       "@/lib/api/service/profile/useProfile",
     );
@@ -375,9 +375,9 @@ describe("Hook: useUpdateProfile", () => {
   });
 
   /* -----------------------------------------------------------------------
-   * Test 19: (Negative) useUpdateProfile menangani error dari API
+   * UT-054-Ubah Profile | useProfile.ts | useUpdateProfile (Negative)
    * ---------------------------------------------------------------------- */
-  it("useUpdateProfile (Negative): isError = true saat API_CLIENT.put gagal", async () => {
+  it("UT-054-Ubah Profile: isError = true saat API_CLIENT.put gagal", async () => {
     const { useUpdateProfile: realUseUpdateProfile } = jest.requireActual(
       "@/lib/api/service/profile/useProfile",
     );

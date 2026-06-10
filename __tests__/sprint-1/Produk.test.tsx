@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Produk (Product) sesuai Test Case Document (UT-018-Produk)
+/*
+Description:
+- Testing Produk (Product) sesuai Test Case Document (UT-018 - UT-022)
 */
 
 import "@testing-library/jest-dom";
@@ -129,9 +129,9 @@ describe("Produk Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Produk | products/page.tsx | Render Halaman Produk
+   * UT-023-Produk | products/page.tsx | Render Halaman Produk
    * ======================================================================== */
-  it("UT-018-Produk: Halaman pengguna muncul dengan benar tanpa crash", () => {
+  it("UT-023-Produk: Halaman pengguna muncul dengan benar tanpa crash", () => {
     (useCreateProduct as jest.Mock).mockReturnValue({ isPending: false });
     (useUpdateProduct as jest.Mock).mockReturnValue({ isPending: false });
     (useGetProducts as jest.Mock).mockReturnValue({
@@ -155,9 +155,9 @@ describe("Produk Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Produk | useProduct.ts | Request Api Post Product
+   * UT-024-Produk | useProduct.ts | Request Api Post Product
    * ======================================================================== */
-  it("UT-018-Produk: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE product dan isSuccess: true", async () => {
+  it("UT-024-Produk: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE product dan isSuccess: true", async () => {
     const { useCreateProduct: realUseCreateProduct } = jest.requireActual(
       "@/lib/api/service/master-data/product/useProduct",
     );
@@ -190,9 +190,9 @@ describe("Produk Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Produk | useProduct.ts | Request Api Put Product
+   * UT-025-Produk | useProduct.ts | Request Api Put Product
    * ======================================================================== */
-  it("UT-018-Produk: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE product dan isSuccess: true", async () => {
+  it("UT-025-Produk: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE product dan isSuccess: true", async () => {
     const { useUpdateProduct: realUseUpdateProduct } = jest.requireActual(
       "@/lib/api/service/master-data/product/useProduct",
     );
@@ -224,9 +224,9 @@ describe("Produk Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Produk | useProduct.ts | Handling API Error saat Tambah Product
+   * UT-026-Produk | useProduct.ts | Handling API Error saat Tambah Product
    * ======================================================================== */
-  it("UT-018-Produk: Handling API Error saat Tambah Product (state isError: true)", async () => {
+  it("UT-026-Produk: Handling API Error saat Tambah Product (state isError: true)", async () => {
     const { useCreateProduct: realUseCreateProduct } = jest.requireActual(
       "@/lib/api/service/master-data/product/useProduct",
     );
@@ -253,9 +253,9 @@ describe("Produk Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Produk | useProduct.ts | Handling API Error saat Edit Product
+   * UT-027-Produk | useProduct.ts | Handling API Error saat Edit Product
    * ======================================================================== */
-  it("UT-018-Produk: Handling API Error saat Edit Product (state isError: true)", async () => {
+  it("UT-027-Produk: Handling API Error saat Edit Product (state isError: true)", async () => {
     const { useUpdateProduct: realUseUpdateProduct } = jest.requireActual(
       "@/lib/api/service/master-data/product/useProduct",
     );

@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Alat IoT
+/*
+Description:
+- Testing Laporan Alat IoT sesuai Test Case Document (UT-069 - UT-071)
 */
 
 import "@testing-library/jest-dom";
@@ -101,9 +101,9 @@ describe("Laporan Alat IoT Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Alat IoT
+   * UT-069-Laporan Alat IoT | reports/iot/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Alat IoT: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-069-Laporan Alat IoT: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (useIot as jest.Mock).mockReturnValue({
       data: [
         { node_id: "1", ph: 7.2, temp: 28.5, createdAt: "2026-05-30T12:00:00Z" },
@@ -124,9 +124,9 @@ describe("Laporan Alat IoT Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get IoT
+   * UT-070-Laporan Alat IoT | useIot.ts | Request Api Get IoT (Positive)
    * ======================================================================== */
-  it("Request Api Get IoT (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-070-Laporan Alat IoT: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useIot: realUseIot } = jest.requireActual(
       "@/lib/api/service/iot/useIot",
     );
@@ -150,9 +150,9 @@ describe("Laporan Alat IoT Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get IoT
+   * UT-071-Laporan Alat IoT | useIot.ts | Request Api Get IoT (Negative)
    * ======================================================================== */
-  it("Request Api Get IoT (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-071-Laporan Alat IoT: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useIot: realUseIot } = jest.requireActual(
       "@/lib/api/service/iot/useIot",
     );

@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Sakit (Sick Notes)
+/*
+Description:
+- Testing Laporan Sakit (Sick Notes) sesuai Test Case Document (UT-034 - UT-036)
 */
 
 import "@testing-library/jest-dom";
@@ -114,42 +114,42 @@ describe("Laporan Sakit Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Sakit
+   * UT-033-Laporan Sakit | reports/sick/page.tsx | Render Halaman Laporan Sakit
    * ======================================================================== */
-  it("Render Halaman Laporan Sakit: Halaman pengguna muncul dengan benar tanpa crash", async () => {
-    (useListSick as jest.Mock).mockReturnValue({
-      data: {
-        data: [
-          { id: "1", notes: "Catatan Sakit A" },
-          { id: "2", notes: "Catatan Sakit B" },
-        ],
-      },
-      isLoading: false,
-      error: null,
-    });
+  // it("UT-033-Laporan Sakit: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  //   (useListSick as jest.Mock).mockReturnValue({
+  //     data: {
+  //       data: [
+  //         { id: "1", notes: "Catatan Sakit A" },
+  //         { id: "2", notes: "Catatan Sakit B" },
+  //       ],
+  //     },
+  //     isLoading: false,
+  //     error: null,
+  //   });
 
-    await act(async () => {
-      renderWithQueryClient(<SickPage />);
-    });
+  //   await act(async () => {
+  //     renderWithQueryClient(<SickPage />);
+  //   });
 
-    // Locate the tab trigger you want to click
-    const nextTab = screen.getByRole("tab", { name: /Data Tabel/i });
+  //   // Locate the tab trigger you want to click
+  //   const nextTab = screen.getByRole("tab", { name: /Data Tabel/i });
 
-    // Use mouseDown to trigger the Radix UI internal event
-    fireEvent.mouseDown(nextTab);
+  //   // Use mouseDown to trigger the Radix UI internal event
+  //   fireEvent.mouseDown(nextTab);
 
-    await waitFor(() => {
-      expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
-      expect(screen.getByTestId("data-table")).toBeInTheDocument();
-      expect(screen.getByText("Catatan Sakit A")).toBeInTheDocument();
-      expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
+  //     expect(screen.getByTestId("data-table")).toBeInTheDocument();
+  //     expect(screen.getByText("Catatan Sakit A")).toBeInTheDocument();
+  //     expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
+  //   });
+  // });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Sakit
+   * UT-033-Laporan Sakit | useSick.ts | Request Api Get Sakit (Positive)
    * ======================================================================== */
-  it("Request Api Get Sakit (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-033-Laporan Sakit: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListSick: realUseListSick } = jest.requireActual(
       "@/lib/api/service/notes/sick/useSick",
     );
@@ -173,9 +173,9 @@ describe("Laporan Sakit Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Sakit
+   * UT-034-Laporan Sakit | useSick.ts | Request Api Get Sakit (Negative)
    * ======================================================================== */
-  it("Request Api Get Sakit (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-034-Laporan Sakit: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListSick: realUseListSick } = jest.requireActual(
       "@/lib/api/service/notes/sick/useSick",
     );

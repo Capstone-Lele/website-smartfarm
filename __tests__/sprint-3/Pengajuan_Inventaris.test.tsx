@@ -1,6 +1,6 @@
 /*
 Description:
-- Testing Pengajuan Inventaris (Inventory Submission)
+- Testing Pengajuan Inventaris (Inventory Submission) sesuai Test Case Document (UT-063 - UT-068)
 - Mencakup: Render Halaman (List & Detail), Hook useGetInventorySubmissions, Hook useGetInventorySubmissionById, Hook useUpdateInventorySubmission, Hook usePostInventoryTransaction
 */
 
@@ -350,9 +350,9 @@ describe("Inventory Submission Unit Tests", () => {
 
   describe("Render Halaman & Get Data", () => {
     /* -----------------------------------------------------------------------
-     * Test 1: Render Halaman List Pengajuan Inventaris
+     * UT-061-Pengajuan Inventaris | inventory-submission/page.tsx | Render List
      * ---------------------------------------------------------------------- */
-    it("Render Halaman List: Menampilkan list pengajuan inventaris dengan benar", async () => {
+    it("UT-061-Pengajuan Inventaris: Menampilkan list pengajuan inventaris dengan benar", async () => {
       (useGetInventorySubmissions as jest.Mock).mockReturnValue({
         data: mockSubmissionsList,
         isLoading: false,
@@ -372,9 +372,9 @@ describe("Inventory Submission Unit Tests", () => {
 
 
     /* -----------------------------------------------------------------------
-     * Test 3: Render Halaman Detail Pengajuan
+     * UT-062-Pengajuan Inventaris | inventory-submission/[id]/page.tsx | Render Detail
      * ---------------------------------------------------------------------- */
-    it("Render Halaman Detail: Menampilkan detail pengajuan dengan benar saat data berhasil dimuat", async () => {
+    it("UT-062-Pengajuan Inventaris: Menampilkan detail pengajuan dengan benar saat data berhasil dimuat", async () => {
       (useGetInventorySubmissionById as jest.Mock).mockReturnValue({
         data: mockSubmissionDetail,
         isLoading: false,
@@ -396,9 +396,9 @@ describe("Inventory Submission Unit Tests", () => {
 
   describe("API Mutations & Error Handling", () => {
     /* -----------------------------------------------------------------------
-     * Test 4: (Positive) Hook useUpdateInventorySubmission (PUT)
+     * UT-063-Pengajuan Inventaris | useInventorySubmission.ts | useUpdateInventorySubmission (PUT) Positive
      * ---------------------------------------------------------------------- */
-    it("useUpdateInventorySubmission (PUT) - Positive: Berhasil memanggil API PUT", async () => {
+    it("UT-063-Pengajuan Inventaris: Berhasil memanggil API PUT untuk update pengajuan", async () => {
       const { useUpdateInventorySubmission: realHook } = jest.requireActual(
         "@/lib/api/service/inventory-submission/useInventorySubmission",
       );
@@ -427,9 +427,9 @@ describe("Inventory Submission Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 5: (Negative) Hook useUpdateInventorySubmission (PUT) Error Handling
+     * UT-064-Pengajuan Inventaris | useInventorySubmission.ts | useUpdateInventorySubmission (PUT) Negative
      * ---------------------------------------------------------------------- */
-    it("useUpdateInventorySubmission (PUT) - Negative: Menangani error saat API PUT gagal", async () => {
+    it("UT-064-Pengajuan Inventaris: Menangani error saat API PUT gagal", async () => {
       const { useUpdateInventorySubmission: realHook } = jest.requireActual(
         "@/lib/api/service/inventory-submission/useInventorySubmission",
       );
@@ -459,9 +459,9 @@ describe("Inventory Submission Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 6: (Positive) Hook usePostInventoryTransaction (POST)
+     * UT-065-Pengajuan Inventaris | useInventory.ts | usePostInventoryTransaction (POST) Positive
      * ---------------------------------------------------------------------- */
-    it("usePostInventoryTransaction (POST) - Positive: Berhasil memanggil API POST untuk mencatat transaksi", async () => {
+    it("UT-065-Pengajuan Inventaris: Berhasil memanggil API POST untuk mencatat transaksi", async () => {
       const { usePostInventoryTransaction: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );
@@ -491,9 +491,9 @@ describe("Inventory Submission Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 7: (Negative) Hook usePostInventoryTransaction (POST) Error Handling
+     * UT-066-Pengajuan Inventaris | useInventory.ts | usePostInventoryTransaction (POST) Negative
      * ---------------------------------------------------------------------- */
-    it("usePostInventoryTransaction (POST) - Negative: Menangani error saat API POST gagal", async () => {
+    it("UT-066-Pengajuan Inventaris: Menangani error saat API POST transaksi gagal", async () => {
       const { usePostInventoryTransaction: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );

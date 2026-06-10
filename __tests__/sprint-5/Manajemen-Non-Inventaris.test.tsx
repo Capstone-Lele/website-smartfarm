@@ -1,6 +1,6 @@
 /*
 Description:
-- Testing Manajemen Non-Inventaris (Non-Inventory Management)
+- Testing Manajemen Non-Inventaris (Non-Inventory Management) sesuai Test Case Document (UT-090 - UT-092)
 - Mencakup: Render Halaman, Hook useNonInventory, Hook useFinanceNonInventory
 */
 
@@ -143,7 +143,7 @@ describe("Manajemen Non-Inventaris Unit Tests", () => {
   });
 
   describe("Render Halaman Manajemen Non-Inventaris", () => {
-    it("Render Halaman: Menampilkan halaman non-inventaris dengan benar beserta statistik dan tabelnya", async () => {
+    it("UT-090-Non-Inventaris: Menampilkan halaman non-inventaris dengan benar beserta statistik dan tabelnya", async () => {
       (useFinanceNonInventory as jest.Mock).mockReturnValue({
         data: mockNonInventoryData,
         isLoading: false,
@@ -163,7 +163,7 @@ describe("Manajemen Non-Inventaris Unit Tests", () => {
   });
 
   describe("Hooks: useNonInventory", () => {
-    it("useNonInventory (Positive): Berhasil mengambil data detail non-inventaris dari API", async () => {
+    it("UT-091-Non-Inventaris: Berhasil mengambil data detail non-inventaris dari API (isSuccess: true)", async () => {
       const { useNonInventory: realHook } = jest.requireActual(
         "@/lib/api/service/non-inventory/useNonInventory"
       );
@@ -185,7 +185,7 @@ describe("Manajemen Non-Inventaris Unit Tests", () => {
       );
     });
 
-    it("useNonInventory (Negative): Menangani status error saat API gagal", async () => {
+    it("UT-092-Non-Inventaris: Menangani status isError: true saat API gagal", async () => {
       const { useNonInventory: realHook } = jest.requireActual(
         "@/lib/api/service/non-inventory/useNonInventory"
       );

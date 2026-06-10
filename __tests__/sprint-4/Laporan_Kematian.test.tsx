@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Kematian
+/*
+Description:
+- Testing Laporan Kematian sesuai Test Case Document (UT-072 - UT-074)
 */
 
 import "@testing-library/jest-dom";
@@ -113,9 +113,9 @@ describe("Laporan Kematian Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Kematian
+   * UT-072-Laporan Kematian | reports/mortality/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Kematian: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-072-Laporan Kematian: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (useListMortality as jest.Mock).mockReturnValue({
       data: {
         data: [
@@ -151,9 +151,9 @@ describe("Laporan Kematian Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Mortality
+   * UT-073-Laporan Kematian | useMortality.ts | Request Api Get Mortality (Positive)
    * ======================================================================== */
-  it("Request Api Get Mortality (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-073-Laporan Kematian: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListMortality: realUseListMortality } = jest.requireActual(
       "@/lib/api/service/notes/mortality/useMortality",
     );
@@ -177,9 +177,9 @@ describe("Laporan Kematian Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Mortality
+   * UT-074-Laporan Kematian | useMortality.ts | Request Api Get Mortality (Negative)
    * ======================================================================== */
-  it("Request Api Get Mortality (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-074-Laporan Kematian: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListMortality: realUseListMortality } = jest.requireActual(
       "@/lib/api/service/notes/mortality/useMortality",
     );

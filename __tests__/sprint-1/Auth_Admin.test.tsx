@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Auth Admin sesuai Test Case Document (UT-001 - UT-006)
+/*
+Description:
+- Testing Auth Admin sesuai Test Case Document (UT-001 - UT-004)
 */
 
 import "@testing-library/jest-dom";
@@ -97,7 +97,6 @@ describe("Auth Admin Unit Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
 
   /* =========================================================================
    * UT-001-Auth Admin | login/page.tsx | Render Halaman Login

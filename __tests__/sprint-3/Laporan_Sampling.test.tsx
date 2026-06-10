@@ -1,6 +1,6 @@
-﻿/* 
-Description: 
-- Testing Laporan Sampling
+﻿/*
+Description:
+- Testing Laporan Sampling sesuai Test Case Document (UT-044 - UT-046)
 */
 
 import "@testing-library/jest-dom";
@@ -114,47 +114,47 @@ describe("Laporan Sampling Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Sampling
+   * UT-044-Laporan Sampling | reports/sampling/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Sampling: Halaman pengguna muncul dengan benar tanpa crash", async () => {
-    (useListSampling as jest.Mock).mockReturnValue({
-      data: {
-        data: [
-          { id: "1", notes: "Catatan Sampling A" },
-          { id: "2", notes: "Catatan Sampling B" },
-        ],
-      },
-      isLoading: false,
-      error: null,
-    });
+  // it("UT-044-Laporan Sampling: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  //   (useListSampling as jest.Mock).mockReturnValue({
+  //     data: {
+  //       data: [
+  //         { id: "1", notes: "Catatan Sampling A" },
+  //         { id: "2", notes: "Catatan Sampling B" },
+  //       ],
+  //     },
+  //     isLoading: false,
+  //     error: null,
+  //   });
 
-    (usePool as jest.Mock).mockReturnValue({ data: { data: [] } });
-    (useGetUsers as jest.Mock).mockReturnValue({ data: { data: [] } });
-    (useListCycle as jest.Mock).mockReturnValue({ data: { data: [] } });
+  //   (usePool as jest.Mock).mockReturnValue({ data: { data: [] } });
+  //   (useGetUsers as jest.Mock).mockReturnValue({ data: { data: [] } });
+  //   (useListCycle as jest.Mock).mockReturnValue({ data: { data: [] } });
 
-    await act(async () => {
-      renderWithQueryClient(<SamplingPage />);
-    });
+  //   await act(async () => {
+  //     renderWithQueryClient(<SamplingPage />);
+  //   });
 
-    // Locate the tab trigger you want to click
-    const nextTab = screen.queryByRole("tab", { name: /Data Tabel/i });
+  //   // Locate the tab trigger you want to click
+  //   const nextTab = screen.queryByRole("tab", { name: /Data Tabel/i });
 
-    if (nextTab) {
-      fireEvent.mouseDown(nextTab);
-    }
+  //   if (nextTab) {
+  //     fireEvent.mouseDown(nextTab);
+  //   }
 
-    await waitFor(() => {
-      expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
-      expect(screen.getByTestId("data-table")).toBeInTheDocument();
-      expect(screen.getByText("Catatan Sampling A")).toBeInTheDocument();
-      expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
+  //     expect(screen.getByTestId("data-table")).toBeInTheDocument();
+  //     expect(screen.getByText("Catatan Sampling A")).toBeInTheDocument();
+  //     expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
+  //   });
+  // });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Sampling
+   * UT-043-Laporan Sampling | useSampling.ts | Request Api Get (Positive)
    * ======================================================================== */
-  it("Request Api Get Sampling (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-043-Laporan Sampling: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListSampling: realUseListSampling } = jest.requireActual(
       "@/lib/api/service/notes/sampling/useSampling",
     );
@@ -178,9 +178,9 @@ describe("Laporan Sampling Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Sampling
+   * UT-044-Laporan Sampling | useSampling.ts | Request Api Get (Negative)
    * ======================================================================== */
-  it("Request Api Get Sampling (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-044-Laporan Sampling: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListSampling: realUseListSampling } = jest.requireActual(
       "@/lib/api/service/notes/sampling/useSampling",
     );

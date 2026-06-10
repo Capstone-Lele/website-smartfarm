@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Panen
+/*
+Description:
+- Testing Laporan Panen sesuai Test Case Document (UT-078 - UT-080)
 */
 
 import "@testing-library/jest-dom";
@@ -113,9 +113,9 @@ describe("Laporan Panen Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Panen
+   * UT-078-Laporan Panen | reports/harvest/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Panen: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-078-Laporan Panen: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (useListHarvest as jest.Mock).mockReturnValue({
       data: {
         data: [
@@ -151,9 +151,9 @@ describe("Laporan Panen Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Harvest
+   * UT-079-Laporan Panen | useHarvest.ts | Request Api Get Harvest (Positive)
    * ======================================================================== */
-  it("Request Api Get Harvest (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-079-Laporan Panen: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListHarvest: realUseListHarvest } = jest.requireActual(
       "@/lib/api/service/notes/harvest/useHarvest",
     );
@@ -177,9 +177,9 @@ describe("Laporan Panen Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Harvest
+   * UT-080-Laporan Panen | useHarvest.ts | Request Api Get Harvest (Negative)
    * ======================================================================== */
-  it("Request Api Get Harvest (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-080-Laporan Panen: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListHarvest: realUseListHarvest } = jest.requireActual(
       "@/lib/api/service/notes/harvest/useHarvest",
     );
