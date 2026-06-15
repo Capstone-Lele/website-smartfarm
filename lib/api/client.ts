@@ -5,6 +5,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { getCookiesToken, clearSession } from "../session";
+import { SessionPayload } from "@/types/session.types";
 
 export class ApiError extends Error {
   status: number;
@@ -17,6 +18,27 @@ export class ApiError extends Error {
   }
 }
 
+let isRedirecting = false;
+
+function redirectToLogin() {
+  if (isRedirecting || typeof window === "undefined") return;
+  isRedirecting = true;
+  clearSession().finally(() => {
+    window.location.href = "/login?message=expired";
+  });
+}
+
+function isSessionExpired(token: SessionPayload): boolean {
+  const expiresAt = new Date(token.expires_at.replace(" ", "T")).getTime();
+  return Date.now() >= expiresAt;
+}
+
+function isProtectedRoute(): boolean {
+  if (typeof window === "undefined") return false;
+  const pathname = window.location.pathname;
+  return pathname !== "/login" && pathname !== "/";
+}
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -25,24 +47,20 @@ const axiosInstance: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Request Interceptor
+// Request Interceptor — validasi session sebelum kirim request
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = await getCookiesToken();
-    console.log("Token Value:", token?.token);
 
-    if (token?.token) {
-      config.headers.Authorization = `Bearer ${token.token}`;
-    } else {
-      if (typeof window !== "undefined") {
-        const pathname = window.location.pathname;
-        if (pathname !== "/login" && pathname !== "/") {
-          await clearSession();
-          window.location.href = "/login?message=expired";
-          return Promise.reject(new Error("Unauthorized: Token not found"));
-        }
+    if (!token?.token || isSessionExpired(token)) {
+      if (isProtectedRoute()) {
+        redirectToLogin();
+        return Promise.reject(new Error("Session expired"));
       }
+      return config;
     }
+
+    config.headers.Authorization = `Bearer ${token.token}`;
 
     // Remove Content-Type for FormData so browser sets it with boundary
     if (config.data instanceof FormData) {
@@ -53,15 +71,14 @@ axiosInstance.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
-// Response Interceptor — handle 401 Unauthorized
+// Response Interceptor — tangkap 401 dari backend sebagai safety net
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log("✅ API Success Response:", response);
-    return response;
-  },
-  (error: AxiosError) => {
+  (response) => response,
+  async (error: AxiosError) => {
+    if (error.response?.status === 401 && isProtectedRoute()) {
+      redirectToLogin();
+    }
     if (error.response) {
-      console.log("❌ API Error Response:", error.response.data);
       return Promise.reject(error.response.data);
     }
     return Promise.reject(error);

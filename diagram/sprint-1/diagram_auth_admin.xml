@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diagram_auth_admin">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Login Admin / Penanggung Jawab" vertex="1">
+          <mxGeometry height="1050" width="1100" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Penanggung Jawab / Petugas" vertex="1">
+          <mxGeometry height="1020" width="540" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start node -->
+        <mxCell id="6" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="255" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Buka halaman Login -->
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman Login (/login)" vertex="1">
+          <mxGeometry height="50" width="220" x="155" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Isi Email dan Password -->
+        <mxCell id="10" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Memasukkan Email&#xa;dan Password" vertex="1">
+          <mxGeometry height="50" width="200" x="165" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Klik tombol Sign In -->
+        <mxCell id="11" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Sign In" vertex="1">
+          <mxGeometry height="50" width="200" x="165" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="3" source="10" style="edgeStyle=orthogonalEdgeStyle;" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Navigasi ke dashboard -->
+        <mxCell id="12" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Navigasi ke halaman /dashboard" vertex="1">
+          <mxGeometry height="50" width="220" x="155" y="830" as="geometry" />
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="13" parent="3" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="258" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="263" y="925" as="geometry" />
+        </mxCell>
+        <mxCell id="e12_end" edge="1" parent="3" source="12" style="edgeStyle=orthogonalEdgeStyle;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cek session expired (pesan dari query param) -->
+        <mxCell id="note_expired" parent="3" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Jika ada ?message=expired,&#xa;  tampilkan toast: &quot;Sesi kedaluwarsa&quot;" vertex="1">
+          <mxGeometry height="40" width="240" x="130" y="155" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="28" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1020" width="560" x="540" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- End node dalam Sistem -->
+        <mxCell id="29" parent="28" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="430" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="28" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="435" y="835" as="geometry" />
+        </mxCell>
+
+        <!-- Validasi input form -->
+        <mxCell id="15" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi input form&#xa;(email valid &amp; password min 8 karakter)" vertex="1">
+          <mxGeometry height="50" width="240" x="150" y="320" as="geometry" />
+        </mxCell>
+
+        <!-- Decision: Input valid? -->
+        <mxCell id="40" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Input valid?" vertex="1">
+          <mxGeometry height="60" width="150" x="195" y="415" as="geometry" />
+        </mxCell>
+        <mxCell id="e15_40" edge="1" parent="28" source="15" style="edgeStyle=orthogonalEdgeStyle;" target="40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error validasi form -->
+        <mxCell id="5" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;pada field terkait" vertex="1">
+          <mxGeometry height="50" width="160" x="370" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="5" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Kirim request login ke API -->
+        <mxCell id="41" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Kirim request login ke API&#xa;(email &amp; password)" vertex="1">
+          <mxGeometry height="50" width="220" x="160" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="e41" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="41" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision: Kredensial cocok? -->
+        <mxCell id="42" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Kredensial cocok?" vertex="1">
+          <mxGeometry height="60" width="160" x="190" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="e41_42" edge="1" parent="28" source="41" style="edgeStyle=orthogonalEdgeStyle;" target="42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error login gagal (toast) -->
+        <mxCell id="err_login" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast error:&#xa;&quot;Login Gagal&quot;" vertex="1">
+          <mxGeometry height="50" width="160" x="370" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="e_err_login" edge="1" parent="28" source="42" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err_login" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan token / sesi -->
+        <mxCell id="43" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan token sesi pengguna&#xa;(cookie / session)" vertex="1">
+          <mxGeometry height="50" width="220" x="160" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e42_43" edge="1" parent="28" source="42" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="43" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toast sukses -->
+        <mxCell id="44" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses:&#xa;&quot;Login berhasil!&quot;" vertex="1">
+          <mxGeometry height="50" width="200" x="30" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e43_44" edge="1" parent="28" source="42" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="44" value="YES">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="710" />
+              <mxPoint x="130" y="710" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e44_end" edge="1" parent="28" source="44" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="442" y="775" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <!-- Klik Sign In -> Validasi -->
+        <mxCell id="e_signin_val" edge="1" parent="2" source="11" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error form -> kembali ke form -->
+        <mxCell id="e_err_form" edge="1" parent="2" source="5" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error login -> kembali ke form -->
+        <mxCell id="e_err_api" edge="1" parent="2" source="err_login" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan token -> Navigasi dashboard -->
+        <mxCell id="e_token_nav" edge="1" parent="2" source="43" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

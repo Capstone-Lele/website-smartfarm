@@ -25,7 +25,7 @@ const dataPath = [
       },
       {
         path: "/dashboard/pools/[poolId]",
-        name: "Detail Kolam",
+        name: "List Siklus",
         isDynamic: true,
         dynamicName: (params: any, meta?: Record<string, string>) => {
           return meta?.["pool"] ?? `Detail`;

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diagram_produk_masterdata">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Manajemen Produk (Master Data)" vertex="1">
+          <mxGeometry height="1700" width="1500" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="1670" width="720" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start node -->
+        <mxCell id="6" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="340" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Buka halaman produk -->
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman Master Data Produk" vertex="1">
+          <mxGeometry height="50" width="230" x="228" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="8" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision CRUD -->
+        <mxCell id="16" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih aksi" vertex="1">
+          <mxGeometry height="60" width="150" x="278" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="17" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;" target="16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- TAMBAH branch -->
+        <mxCell id="9" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Tambah Produk" vertex="1">
+          <mxGeometry height="50" width="180" x="490" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl9" connectable="0" parent="e9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Tambah" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="10" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengisi form:&#xa;Nama Produk, Tipe Produk,&#xa;Kategori Produk, Satuan Produk" vertex="1">
+          <mxGeometry height="70" width="180" x="490" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="3" source="9" style="edgeStyle=orthogonalEdgeStyle;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Catatan: Tipe dipilih dulu sebelum Kategori -->
+        <mxCell id="note1" parent="3" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Kategori aktif setelah Tipe dipilih&#xa;* Satuan aktif setelah Kategori dipilih&#xa;* Kategori Pakan → Satuan otomatis kg&#xa;* Kategori Pendanaan → Satuan otomatis uang" vertex="1">
+          <mxGeometry height="70" width="230" x="460" y="510" as="geometry" />
+        </mxCell>
+
+        <!-- EDIT branch -->
+        <mxCell id="5" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih data Produk&#xa;yang akan diedit" vertex="1">
+          <mxGeometry height="50" width="175" x="490" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="245" />
+              <mxPoint x="680" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl5" connectable="0" parent="e5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ubah" vertex="1">
+          <mxGeometry relative="1" x="-0.3" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="25" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengubah form:&#xa;Nama Produk, Tipe Produk,&#xa;Kategori Produk, Satuan Produk" vertex="1">
+          <mxGeometry height="70" width="180" x="490" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="e25" edge="1" parent="3" source="5" style="edgeStyle=orthogonalEdgeStyle;" target="25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- TOGGLE STATUS branch -->
+        <mxCell id="21" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih data Produk&#xa;yang akan diubah statusnya" vertex="1">
+          <mxGeometry height="50" width="175" x="30" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="30" y="245" />
+              <mxPoint x="30" y="505" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl21" connectable="0" parent="e21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Toggle Status" vertex="1">
+          <mxGeometry relative="1" x="-0.6" y="-2" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="20" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Toggle&#xa;Aktif / Nonaktif" vertex="1">
+          <mxGeometry height="50" width="170" x="32" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="3" source="21" style="edgeStyle=orthogonalEdgeStyle;" target="20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Exit arrow -->
+        <mxCell id="endArrowToggle" edge="1" parent="3" source="20" style="edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="117" y="1440" />
+            </Array>
+            <mxPoint x="750" y="1440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="28" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1670" width="780" x="720" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="29" parent="28" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="600" y="1395" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="28" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="605" y="1400" as="geometry" />
+        </mxCell>
+
+        <!-- Tampilkan daftar produk -->
+        <mxCell id="34" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan daftar Produk&#xa;(Nama, Kategori, Unit, Tipe, Status)" vertex="1">
+          <mxGeometry height="50" width="230" x="34" y="120" as="geometry" />
+        </mxCell>
+
+        <!-- Validasi form tambah -->
+        <mxCell id="31" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi form&#xa;(Nama, Tipe, Kategori, Satuan wajib diisi)" vertex="1">
+          <mxGeometry height="50" width="230" x="34" y="440" as="geometry" />
+        </mxCell>
+
+        <!-- Data valid? -->
+        <mxCell id="40" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Data valid?" vertex="1">
+          <mxGeometry height="60" width="150" x="74" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="e40" edge="1" parent="28" source="31" style="edgeStyle=orthogonalEdgeStyle;" target="40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error tambah -->
+        <mxCell id="32" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;pada field terkait" vertex="1">
+          <mxGeometry height="50" width="170" x="310" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="e32" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="32" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan produk baru -->
+        <mxCell id="41" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan Produk baru&#xa;ke database" vertex="1">
+          <mxGeometry height="50" width="220" x="39" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="e41" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="41" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toast sukses tambah -->
+        <mxCell id="43" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses,&#xa;tutup sheet, refresh daftar" vertex="1">
+          <mxGeometry height="50" width="220" x="39" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="e43" edge="1" parent="28" source="41" style="edgeStyle=orthogonalEdgeStyle;" target="43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e43end" edge="1" parent="28" source="43" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="640" y="765" />
+              <mxPoint x="640" y="1407" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Validasi form edit -->
+        <mxCell id="44" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi form&#xa;(Nama, Tipe, Kategori, Satuan wajib diisi)" vertex="1">
+          <mxGeometry height="50" width="230" x="34" y="850" as="geometry" />
+        </mxCell>
+
+        <!-- Perubahan valid? -->
+        <mxCell id="45" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Perubahan valid?" vertex="1">
+          <mxGeometry height="60" width="160" x="69" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="e44_45" edge="1" parent="28" source="44" style="edgeStyle=orthogonalEdgeStyle;" target="45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error edit -->
+        <mxCell id="35" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;pada field terkait" vertex="1">
+          <mxGeometry height="50" width="170" x="320" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="e35" edge="1" parent="28" source="45" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="35" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan perubahan -->
+        <mxCell id="46" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan perubahan&#xa;Produk ke database" vertex="1">
+          <mxGeometry height="50" width="220" x="39" y="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="e46" edge="1" parent="28" source="45" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="46" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toast sukses edit -->
+        <mxCell id="48" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses,&#xa;tutup sheet, refresh daftar" vertex="1">
+          <mxGeometry height="50" width="220" x="39" y="1160" as="geometry" />
+        </mxCell>
+        <mxCell id="e48" edge="1" parent="28" source="46" style="edgeStyle=orthogonalEdgeStyle;" target="48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e48end" edge="1" parent="28" source="48" style="edgeStyle=orthogonalEdgeStyle;" target="29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toggle status produk di sistem -->
+        <mxCell id="50" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Cek: produk bukan produk&#xa;sistem (pendanaan desa)" vertex="1">
+          <mxGeometry height="50" width="210" x="490" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="51" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Boleh diubah?" vertex="1">
+          <mxGeometry height="60" width="150" x="520" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="e51" edge="1" parent="28" source="50" style="edgeStyle=orthogonalEdgeStyle;" target="51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="52" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Nonaktif / Aktifkan&#xa;Produk (soft delete)" vertex="1">
+          <mxGeometry height="50" width="175" x="520" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="e52" edge="1" parent="28" source="51" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="52" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="53" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses&#xa;status produk berubah" vertex="1">
+          <mxGeometry height="50" width="180" x="517" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="e53" edge="1" parent="28" source="52" style="edgeStyle=orthogonalEdgeStyle;" target="53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e53end" edge="1" parent="28" source="53" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="607" y="1070" />
+              <mxPoint x="607" y="1407" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Disabled: produk sistem -->
+        <mxCell id="54" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan tombol edit&#xa;dan toggle dinonaktifkan" vertex="1">
+          <mxGeometry height="50" width="190" x="570" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="e54" edge="1" parent="28" source="51" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" target="54" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <!-- Buka halaman -> Tampilkan daftar -->
+        <mxCell id="e_load" edge="1" parent="2" source="7" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mengisi form -> Validasi tambah -->
+        <mxCell id="e_tambah_val" edge="1" parent="2" source="10" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error dashed back to form tambah -->
+        <mxCell id="e_err_tambah" edge="1" parent="2" source="32" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mengubah form -> Validasi edit -->
+        <mxCell id="e_edit_val" edge="1" parent="2" source="25" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error dashed back to form edit -->
+        <mxCell id="e_err_edit" edge="1" parent="2" source="35" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;dashed=1;" target="25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toggle -> Cek sistem -->
+        <mxCell id="e_toggle_cek" edge="1" parent="2" source="20" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

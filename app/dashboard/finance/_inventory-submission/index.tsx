@@ -2,14 +2,18 @@
 
 import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
-import React from "react";
+import React, { useMemo } from "react";
 import { inventorySubmissionColumns } from "./column";
 import { useFinanceInventorySubmission } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import { LuExternalLink } from "react-icons/lu";
 import Link from "next/link";
 
-const FinanceInventorySubmissionData = () => {
+interface Props {
+  dateRange: { start: Date | null; end: Date | null };
+}
+
+const FinanceInventorySubmissionData = ({ dateRange }: Props) => {
   const {
     data: inventorySubmissionData,
     isLoading,
@@ -36,6 +40,17 @@ const FinanceInventorySubmissionData = () => {
     );
   }
 
+  const filteredData = useMemo(() => {
+    if (!inventorySubmissionData) return [];
+    if (!dateRange.start || !dateRange.end) return inventorySubmissionData;
+    const start = dateRange.start.getTime();
+    const end = dateRange.end.getTime();
+    return inventorySubmissionData.filter((item) => {
+      const t = new Date(item.transactionDate).getTime();
+      return t >= start && t <= end;
+    });
+  }, [inventorySubmissionData, dateRange]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -46,7 +61,7 @@ const FinanceInventorySubmissionData = () => {
       </div>
       <DataTable
         columns={inventorySubmissionColumns}
-        data={inventorySubmissionData || []}
+        data={filteredData}
       />
     </DefaultCard>
   );

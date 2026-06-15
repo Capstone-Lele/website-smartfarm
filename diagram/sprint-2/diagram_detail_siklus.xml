@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diagram_detail_siklus">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Detail Siklus Kolam" vertex="1">
+          <mxGeometry height="2600" width="1500" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="2570" width="730" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start node -->
+        <mxCell id="6" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="345" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Navigasi dari daftar siklus -->
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Detail siklus&#xa;dari halaman daftar siklus" vertex="1">
+          <mxGeometry height="50" width="230" x="240" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Halaman terbuka -->
+        <mxCell id="page_open" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Halaman detail siklus terbuka&#xa;(/pools/[poolId]/[cycleId])&#xa;Nav tab: Detail Kolam + Siklus Kolam" vertex="1">
+          <mxGeometry height="60" width="240" x="240" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_page" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;" target="page_open">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Melihat info ringkasan atas -->
+        <mxCell id="info_top" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat 3 kartu ringkasan:&#xa;Profil Siklus, Detail Kolam,&#xa;Akses Pengguna" vertex="1">
+          <mxGeometry height="60" width="230" x="245" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="e_page_info" edge="1" parent="3" source="page_open" style="edgeStyle=orthogonalEdgeStyle;" target="info_top">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision pilih section -->
+        <mxCell id="sec_dec" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih section&#xa;yang dilihat" vertex="1">
+          <mxGeometry height="70" width="160" x="280" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="e_info_dec" edge="1" parent="3" source="info_top" style="edgeStyle=orthogonalEdgeStyle;" target="sec_dec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 1: Kualitas Air -->
+        <mxCell id="s1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat section&#xa;Kualitas Air" vertex="1">
+          <mxGeometry height="50" width="150" x="30" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1" edge="1" parent="3" source="sec_dec" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="50" y="535" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_s1" connectable="0" parent="e_s1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Kualitas Air" vertex="1">
+          <mxGeometry relative="1" x="-0.6" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Tab Kualitas Air -->
+        <mxCell id="tab_s1" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="55" width="130" x="40" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1_tab" edge="1" parent="3" source="s1" style="edgeStyle=orthogonalEdgeStyle;" target="tab_s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s1_t1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Status Saat Ini:&#xa;Suhu &amp; pH live&#xa;+ parameter normal" vertex="1">
+          <mxGeometry height="55" width="130" x="0" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1t1" edge="1" parent="3" source="tab_s1" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s1_t1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s1_t2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Grafik:&#xa;Grafik Suhu &amp; pH&#xa;historis" vertex="1">
+          <mxGeometry height="55" width="120" x="145" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1t2" edge="1" parent="3" source="tab_s1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s1_t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 2: Sampling -->
+        <mxCell id="s2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat section&#xa;Catatan Sampling" vertex="1">
+          <mxGeometry height="50" width="150" x="255" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2" edge="1" parent="3" source="sec_dec" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_s2" connectable="0" parent="e_s2" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Sampling" vertex="1">
+          <mxGeometry relative="1" x="-0.4" y="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tab_s2" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="55" width="130" x="265" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2_tab" edge="1" parent="3" source="s2" style="edgeStyle=orthogonalEdgeStyle;" target="tab_s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s2_t1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Grafik:&#xa;Grafik berat&#xa;sampling" vertex="1">
+          <mxGeometry height="50" width="115" x="225" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2t1" edge="1" parent="3" source="tab_s2" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s2_t1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s2_t2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Tabel:&#xa;Riwayat data&#xa;sampling" vertex="1">
+          <mxGeometry height="50" width="115" x="355" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2t2" edge="1" parent="3" source="tab_s2" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s2_t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 3: Mortalitas -->
+        <mxCell id="s3" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat section&#xa;Catatan Mortalitas" vertex="1">
+          <mxGeometry height="50" width="150" x="500" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3" edge="1" parent="3" source="sec_dec" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="535" />
+              <mxPoint x="690" y="615" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_s3" connectable="0" parent="e_s3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Mortalitas" vertex="1">
+          <mxGeometry relative="1" x="0.3" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tab_s3" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="55" width="130" x="505" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_tab" edge="1" parent="3" source="s3" style="edgeStyle=orthogonalEdgeStyle;" target="tab_s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3_t1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Grafik:&#xa;Grafik batang&#xa;kematian" vertex="1">
+          <mxGeometry height="50" width="115" x="465" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3t1" edge="1" parent="3" source="tab_s3" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s3_t1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3_t2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Tabel:&#xa;Riwayat data&#xa;kematian" vertex="1">
+          <mxGeometry height="50" width="115" x="595" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3t2" edge="1" parent="3" source="tab_s3" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s3_t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section Pakan & Pindah (row bawah) -->
+        <mxCell id="s4" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat section&#xa;Catatan Pemberian Pakan" vertex="1">
+          <mxGeometry height="50" width="175" x="30" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4" edge="1" parent="3" source="sec_dec" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="30" y="535" />
+              <mxPoint x="30" y="1045" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_s4" connectable="0" parent="e_s4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Pakan" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tab_s4" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="55" width="130" x="52" y="1190" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4_tab" edge="1" parent="3" source="s4" style="edgeStyle=orthogonalEdgeStyle;" target="tab_s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s4_t1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Grafik:&#xa;Tren pemberian&#xa;pakan" vertex="1">
+          <mxGeometry height="50" width="115" x="10" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4t1" edge="1" parent="3" source="tab_s4" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s4_t1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s4_t2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Tabel:&#xa;Riwayat data&#xa;pakan" vertex="1">
+          <mxGeometry height="50" width="115" x="140" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4t2" edge="1" parent="3" source="tab_s4" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s4_t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 5: Pindah Kolam -->
+        <mxCell id="s5" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat section&#xa;Catatan Pemindahan Kolam" vertex="1">
+          <mxGeometry height="50" width="185" x="490" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5" edge="1" parent="3" source="sec_dec" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="535" />
+              <mxPoint x="690" y="1045" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_s5" connectable="0" parent="e_s5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Pindah Kolam" vertex="1">
+          <mxGeometry relative="1" x="0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tab_s5" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="55" width="130" x="515" y="1190" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_tab" edge="1" parent="3" source="s5" style="edgeStyle=orthogonalEdgeStyle;" target="tab_s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s5_t1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Grafik:&#xa;Grafik batang&#xa;pemindahan" vertex="1">
+          <mxGeometry height="50" width="115" x="475" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5t1" edge="1" parent="3" source="tab_s5" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s5_t1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s5_t2" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Tabel:&#xa;Riwayat data&#xa;pemindahan" vertex="1">
+          <mxGeometry height="50" width="115" x="605" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5t2" edge="1" parent="3" source="tab_s5" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="s5_t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="endN" parent="3" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="348" y="2480" as="geometry" />
+        </mxCell>
+        <mxCell id="endN2" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="353" y="2485" as="geometry" />
+        </mxCell>
+
+        <!-- exit arrows semua sub-tab ke end -->
+        <mxCell id="e_s1t1_end" edge="1" parent="3" source="s1_t1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="65" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s1t2_end" edge="1" parent="3" source="s1_t2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="205" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s2t1_end" edge="1" parent="3" source="s2_t1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="282" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s2t2_end" edge="1" parent="3" source="s2_t2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="412" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s3t1_end" edge="1" parent="3" source="s3_t1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="522" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s3t2_end" edge="1" parent="3" source="s3_t2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="652" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s4t1_end" edge="1" parent="3" source="s4_t1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="67" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s4t2_end" edge="1" parent="3" source="s4_t2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="197" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s5t1_end" edge="1" parent="3" source="s5_t1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="532" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s5t2_end" edge="1" parent="3" source="s5_t2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="662" y="2480" /></Array>
+            <mxPoint x="760" y="2480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="28" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="2570" width="770" x="730" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- End node Sistem -->
+        <mxCell id="29" parent="28" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="650" y="2480" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="28" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="655" y="2485" as="geometry" />
+        </mxCell>
+
+        <!-- Load data awal -->
+        <mxCell id="load_all" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Load data paralel dari API:&#xa;- usePoolById(poolId)&#xa;- useDetailCycle(cycleId)&#xa;- useIotByNode (historis)&#xa;- useIotLiveByNode (live)" vertex="1">
+          <mxGeometry height="90" width="240" x="255" y="130" as="geometry" />
+        </mxCell>
+
+        <!-- Render kartu ringkasan -->
+        <mxCell id="render_top" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render 3 kartu atas:&#xa;1. Profil Siklus (kondisi, tanggal,&#xa;   pembuat, jml ikan, kepadatan)&#xa;2. Detail Kolam (tipe, dimensi,&#xa;   volume, batas kepadatan)&#xa;3. Akses Pengguna (daftar aktor)" vertex="1">
+          <mxGeometry height="100" width="250" x="250" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e_load_render" edge="1" parent="28" source="load_all" style="edgeStyle=orthogonalEdgeStyle;" target="render_top">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Note kepadatan -->
+        <mxCell id="note_pad" parent="28" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Kepadatan Aman: ≤ 250 ekor/m³&#xa;* Overload: &gt; 250 ekor/m³&#xa;* Volume dihitung dari dimensi kolam" vertex="1">
+          <mxGeometry height="50" width="220" x="510" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Section Kualitas Air sistem -->
+        <mxCell id="sys_s1" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render Kualitas Air:&#xa;Tab Status: suhu &amp; pH live,&#xa;status normal/bahaya/peringatan,&#xa;parameter batas min/max/normal&#xa;Tab Grafik: chart suhu &amp; pH&#xa;Tab Tabel: data historis IoT" vertex="1">
+          <mxGeometry height="100" width="230" x="30" y="630" as="geometry" />
+        </mxCell>
+
+        <!-- Section Sampling sistem -->
+        <mxCell id="sys_s2" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render Sampling:&#xa;Tab Grafik: line chart&#xa;berat sampling per waktu&#xa;Tab Tabel: riwayat catatan&#xa;sampling beserta tanggal" vertex="1">
+          <mxGeometry height="90" width="220" x="270" y="640" as="geometry" />
+        </mxCell>
+
+        <!-- Section Mortalitas sistem -->
+        <mxCell id="sys_s3" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render Mortalitas:&#xa;Tab Grafik: bar chart&#xa;kematian per periode&#xa;Tab Tabel: riwayat catatan&#xa;kematian beserta tanggal" vertex="1">
+          <mxGeometry height="90" width="220" x="510" y="640" as="geometry" />
+        </mxCell>
+
+        <!-- Section Pakan sistem -->
+        <mxCell id="sys_s4" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render Pemberian Pakan:&#xa;Tab Grafik: line chart&#xa;tren jumlah pakan&#xa;Tab Tabel: riwayat catatan&#xa;pakan, produk, jumlah, petugas" vertex="1">
+          <mxGeometry height="90" width="220" x="30" y="1080" as="geometry" />
+        </mxCell>
+
+        <!-- Section Pindah Kolam sistem -->
+        <mxCell id="sys_s5" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render Pemindahan Kolam:&#xa;Tab Grafik: bar chart&#xa;jumlah ikan pindah&#xa;Tab Tabel: riwayat pemindahan,&#xa;asal-tujuan, jumlah, petugas" vertex="1">
+          <mxGeometry height="90" width="220" x="510" y="1080" as="geometry" />
+        </mxCell>
+
+        <!-- End arrows sistem -->
+        <mxCell id="e_sys_s1_end" edge="1" parent="28" source="sys_s1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="145" y="2492" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sys_s2_end" edge="1" parent="28" source="sys_s2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="380" y="2492" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sys_s3_end" edge="1" parent="28" source="sys_s3" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="620" y="2492" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sys_s4_end" edge="1" parent="28" source="sys_s4" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="140" y="2492" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_sys_s5_end" edge="1" parent="28" source="sys_s5" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <!-- Klik detail siklus -> load data -->
+        <mxCell id="e_click_load" edge="1" parent="2" source="7" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="load_all">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render kartu -> user lihat kartu -->
+        <mxCell id="e_render_view" edge="1" parent="2" source="render_top" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="info_top">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem render section -> user lihat section -->
+        <mxCell id="e_sys1_usr" edge="1" parent="2" source="sys_s1" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys2_usr" edge="1" parent="2" source="sys_s2" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys3_usr" edge="1" parent="2" source="sys_s3" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys4_usr" edge="1" parent="2" source="sys_s4" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sys5_usr" edge="1" parent="2" source="sys_s5" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

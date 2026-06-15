@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diag-laporan-sakit-main">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="cell-0" />
+        <mxCell id="cell-1" parent="cell-0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="ls-outer" parent="cell-1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Laporan Ikan Sakit (Karantina)" vertex="1">
+          <mxGeometry height="1400" width="1400" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="ls-swim-petugas" parent="ls-outer" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="1370" width="690" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start -->
+        <mxCell id="ls-start" parent="ls-swim-petugas" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="320" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Buka halaman -->
+        <mxCell id="ls-buka" parent="ls-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman&#xa;Laporan Ikan Sakit" vertex="1">
+          <mxGeometry height="50" width="220" x="225" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-start-buka" edge="1" parent="ls-swim-petugas" source="ls-start" style="edgeStyle=orthogonalEdgeStyle;" target="ls-buka">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Filter section -->
+        <mxCell id="ls-filter" parent="ls-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengatur filter:&#xa;Tanggal, Kolam Asal,&#xa;Kolam Tujuan, Petugas" vertex="1">
+          <mxGeometry height="60" width="200" x="235" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-buka-filter" edge="1" parent="ls-swim-petugas" source="ls-buka" style="edgeStyle=orthogonalEdgeStyle;" target="ls-filter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- note filter -->
+        <mxCell id="ls-note-filter" parent="ls-swim-petugas" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Filter Kolam Asal &amp; Tujuan&#xa;  dipilih dari daftar semua kolam&#xa;* Semua filter dapat direset" vertex="1">
+          <mxGeometry height="50" width="200" x="235" y="290" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Tab -->
+        <mxCell id="ls-tabdec" parent="ls-swim-petugas" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="60" width="150" x="260" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-filter-tab" edge="1" parent="ls-swim-petugas" source="ls-filter" style="edgeStyle=orthogonalEdgeStyle;" target="ls-tabdec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Tab Visualisasi -->
+        <mxCell id="ls-tab-vis" parent="ls-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat ringkasan&#xa;&amp; grafik laporan sakit" vertex="1">
+          <mxGeometry height="50" width="165" x="28" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-tab-vis" edge="1" parent="ls-swim-petugas" source="ls-tabdec" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ls-tab-vis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ls-lbl-vis" connectable="0" parent="ls-e-tab-vis" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ringkasan" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Tab Tabel -->
+        <mxCell id="ls-tab-tabel" parent="ls-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat data tabel&#xa;laporan sakit" vertex="1">
+          <mxGeometry height="50" width="160" x="455" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-tab-tabel" edge="1" parent="ls-swim-petugas" source="ls-tabdec" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ls-tab-tabel">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="590" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ls-lbl-tabel" connectable="0" parent="ls-e-tab-tabel" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Tabel" vertex="1">
+          <mxGeometry relative="1" x="0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Detail dari tabel -->
+        <mxCell id="ls-det" parent="ls-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih data laporan&#xa;untuk dilihat detailnya" vertex="1">
+          <mxGeometry height="50" width="175" x="448" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-tabel-det" edge="1" parent="ls-swim-petugas" source="ls-tab-tabel" style="edgeStyle=orthogonalEdgeStyle;" target="ls-det">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="ls-end-outer" parent="ls-swim-petugas" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="328" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-end-inner" parent="ls-swim-petugas" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="333" y="1285" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-vis-end" edge="1" parent="ls-swim-petugas" source="ls-tab-vis" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="1280" />
+            </Array>
+            <mxPoint x="720" y="1280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ls-e-det-end" edge="1" parent="ls-swim-petugas" source="ls-det" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="535" y="1280" />
+            </Array>
+            <mxPoint x="720" y="1280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="ls-swim-sistem" parent="ls-outer" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1370" width="710" x="690" y="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-sys-end-outer" parent="ls-swim-sistem" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="580" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-sys-end-inner" parent="ls-swim-sistem" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="585" y="1285" as="geometry" />
+        </mxCell>
+
+        <!-- Ambil data -->
+        <mxCell id="ls-load" parent="ls-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Ambil semua data laporan&#xa;ikan sakit dari API" vertex="1">
+          <mxGeometry height="50" width="220" x="235" y="120" as="geometry" />
+        </mxCell>
+
+        <!-- Terapkan filter -->
+        <mxCell id="ls-apply" parent="ls-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Terapkan filter:&#xa;Tanggal, Kolam Asal,&#xa;Kolam Tujuan, Petugas&#xa;pada data yang ada" vertex="1">
+          <mxGeometry height="70" width="220" x="235" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-load-apply" edge="1" parent="ls-swim-sistem" source="ls-load" style="edgeStyle=orthogonalEdgeStyle;" target="ls-apply">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render visualisasi -->
+        <mxCell id="ls-vis-sys" parent="ls-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Render ringkasan &amp; grafik:&#xa;jumlah kasus, trend sakit,&#xa;distribusi per kolam" vertex="1">
+          <mxGeometry height="70" width="220" x="35" y="480" as="geometry" />
+        </mxCell>
+
+        <!-- Render tabel -->
+        <mxCell id="ls-tabel-sys" parent="ls-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Render tabel:&#xa;Tanggal, Kolam Asal,&#xa;Siklus Asal, Kolam Tujuan,&#xa;Siklus Tujuan, Jumlah,&#xa;Foto, Petugas, Action" vertex="1">
+          <mxGeometry height="90" width="220" x="430" y="470" as="geometry" />
+        </mxCell>
+
+        <!-- Detail sheet -->
+        <mxCell id="ls-det-sys" parent="ls-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan sheet detail:&#xa;Foto, Jumlah Ikan,&#xa;Tanggal, Petugas,&#xa;Info Kolam Asal &amp; Siklus,&#xa;Info Kolam Tujuan (Karantina)" vertex="1">
+          <mxGeometry height="80" width="230" x="420" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ls-e-tabel-det-sys" edge="1" parent="ls-swim-sistem" source="ls-tabel-sys" style="edgeStyle=orthogonalEdgeStyle;" target="ls-det-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-det-sys-end" edge="1" parent="ls-swim-sistem" source="ls-det-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ls-sys-end-outer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="650" />
+              <mxPoint x="660" y="1292" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ls-e-vis-end2" edge="1" parent="ls-swim-sistem" source="ls-vis-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="ls-sys-end-outer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="145" y="1292" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <mxCell id="ls-e-load-cross" edge="1" parent="ls-outer" source="ls-buka" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ls-load">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-filter-cross" edge="1" parent="ls-outer" source="ls-filter" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ls-apply">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-vis-cross" edge="1" parent="ls-outer" source="ls-vis-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="ls-tab-vis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-tabel-cross" edge="1" parent="ls-outer" source="ls-tabel-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="ls-tab-tabel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-det-cross" edge="1" parent="ls-outer" source="ls-det" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="ls-det-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-apply-vis" edge="1" parent="ls-outer" source="ls-apply" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ls-vis-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ls-e-apply-tabel" edge="1" parent="ls-outer" source="ls-apply" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ls-tabel-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

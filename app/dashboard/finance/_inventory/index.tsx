@@ -2,14 +2,18 @@
 
 import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
-import React from "react";
+import React, { useMemo } from "react";
 import { inventoryColumns } from "./column";
 import { useFinanceInventory } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { LuExternalLink } from "react-icons/lu";
 
-const FinanceInventoryData = () => {
+interface Props {
+  dateRange: { start: Date | null; end: Date | null };
+}
+
+const FinanceInventoryData = ({ dateRange }: Props) => {
   const { data: inventoryData, isLoading, isError } = useFinanceInventory();
 
   if (isLoading) {
@@ -32,6 +36,17 @@ const FinanceInventoryData = () => {
     );
   }
 
+  const filteredData = useMemo(() => {
+    if (!inventoryData) return [];
+    if (!dateRange.start || !dateRange.end) return inventoryData;
+    const start = dateRange.start.getTime();
+    const end = dateRange.end.getTime();
+    return inventoryData.filter((item) => {
+      const t = new Date(item.transactionDate).getTime();
+      return t >= start && t <= end;
+    });
+  }, [inventoryData, dateRange]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -43,7 +58,7 @@ const FinanceInventoryData = () => {
           Catatan Inventaris
         </Link>
       </div>
-      <DataTable columns={inventoryColumns} data={inventoryData || []} />
+      <DataTable columns={inventoryColumns} data={filteredData} />
     </DefaultCard>
   );
 };
