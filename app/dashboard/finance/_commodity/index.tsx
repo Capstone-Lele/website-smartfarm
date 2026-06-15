@@ -2,14 +2,18 @@
 
 import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
-import React from "react";
+import React, { useMemo } from "react";
 import { commodityColumns } from "./column";
 import { useFinanceCommodity } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { LuExternalLink } from "react-icons/lu";
 
-const FinanceCommodityData = () => {
+interface Props {
+  dateRange: { start: Date | null; end: Date | null };
+}
+
+const FinanceCommodityData = ({ dateRange }: Props) => {
   const { data: commodityData, isLoading, isError } = useFinanceCommodity();
 
   if (isLoading) {
@@ -32,6 +36,17 @@ const FinanceCommodityData = () => {
     );
   }
 
+  const filteredData = useMemo(() => {
+    if (!commodityData) return [];
+    if (!dateRange.start || !dateRange.end) return commodityData;
+    const start = dateRange.start.getTime();
+    const end = dateRange.end.getTime();
+    return commodityData.filter((item) => {
+      const t = new Date(item.transactionDate).getTime();
+      return t >= start && t <= end;
+    });
+  }, [commodityData, dateRange]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -43,7 +58,7 @@ const FinanceCommodityData = () => {
           Catatan Penjualan Komoditas
         </Link>
       </div>
-      <DataTable columns={commodityColumns} data={commodityData || []} />
+      <DataTable columns={commodityColumns} data={filteredData} />
     </DefaultCard>
   );
 };

@@ -1,6 +1,6 @@
-﻿/* 
-Description: 
-- Testing Pembeli (Buyer)
+﻿/*
+Description:
+- Testing Pembeli (Buyer) sesuai Test Case Document (UT-047 - UT-051)
 */
 
 import "@testing-library/jest-dom";
@@ -130,9 +130,9 @@ describe("Pembeli (Buyer) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Pembeli | buyers/page.tsx | Render Halaman Pembeli
+   * UT-045-Pembeli | buyers/page.tsx | Render Halaman Pembeli
    * ======================================================================== */
-  it("Halaman pengguna muncul dengan benar tanpa crash", () => {
+  it("UT-045-Pembeli: Halaman pengguna muncul dengan benar tanpa crash", () => {
     (useCreateBuyer as jest.Mock).mockReturnValue({ isPending: false });
     (useUpdateBuyer as jest.Mock).mockReturnValue({ isPending: false });
     (useGetBuyers as jest.Mock).mockReturnValue({
@@ -156,9 +156,9 @@ describe("Pembeli (Buyer) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Pembeli | useBuyer.ts | Request Api Post Buyer
+   * UT-046-Pembeli | useBuyer.ts | Request Api Post Buyer (Positive)
    * ======================================================================== */
-  it("Memastikan API_CLIENT.post dipanggil 1x untuk CREATE pembeli dan isSuccess: true", async () => {
+  it("UT-046-Pembeli: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE pembeli dan isSuccess: true", async () => {
     const { useCreateBuyer: realUseCreateBuyer } = jest.requireActual(
       "@/lib/api/service/master-data/buyer/useBuyer",
     );
@@ -187,9 +187,9 @@ describe("Pembeli (Buyer) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Pembeli | useBuyer.ts | Request Api Put Buyer
+   * UT-047-Pembeli | useBuyer.ts | Request Api Put Buyer (Positive)
    * ======================================================================== */
-  it("Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE pembeli dan isSuccess: true", async () => {
+  it("UT-047-Pembeli: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE pembeli dan isSuccess: true", async () => {
     const { useUpdateBuyer: realUseUpdateBuyer } = jest.requireActual(
       "@/lib/api/service/master-data/buyer/useBuyer",
     );
@@ -219,9 +219,9 @@ describe("Pembeli (Buyer) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Pembeli | useBuyer.ts | Handling API Error saat Tambah Pembeli
+   * UT-048-Pembeli | useBuyer.ts | Handling API Error saat Tambah Pembeli
    * ======================================================================== */
-  it("Handling API Error saat Tambah Pembeli (state isError: true)", async () => {
+  it("UT-048-Pembeli: Handling API Error saat Tambah Pembeli (state isError: true)", async () => {
     const { useCreateBuyer: realUseCreateBuyer } = jest.requireActual(
       "@/lib/api/service/master-data/buyer/useBuyer",
     );
@@ -249,9 +249,9 @@ describe("Pembeli (Buyer) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Pembeli | useBuyer.ts | Handling API Error saat Edit Pembeli
+   * UT-049-Pembeli | useBuyer.ts | Handling API Error saat Edit Pembeli
    * ======================================================================== */
-  it("Handling API Error saat Edit Pembeli (state isError: true)", async () => {
+  it("UT-049-Pembeli: Handling API Error saat Edit Pembeli (state isError: true)", async () => {
     const { useUpdateBuyer: realUseUpdateBuyer } = jest.requireActual(
       "@/lib/api/service/master-data/buyer/useBuyer",
     );

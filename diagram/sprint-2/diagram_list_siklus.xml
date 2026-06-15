@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diagram_list_siklus">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Daftar Siklus Kolam" vertex="1">
+          <mxGeometry height="1100" width="1400" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="1070" width="690" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start node -->
+        <mxCell id="6" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="320" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Navigasi dari halaman daftar kolam -->
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Detail kolam&#xa;dari halaman daftar kolam" vertex="1">
+          <mxGeometry height="50" width="230" x="220" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Halaman terbuka dengan nav tabs -->
+        <mxCell id="nav" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Halaman detail kolam terbuka&#xa;dengan nav tab:&#xa;&quot;Siklus Kolam&quot;" vertex="1">
+          <mxGeometry height="60" width="220" x="220" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_nav" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;" target="nav">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Melihat daftar siklus -->
+        <mxCell id="view" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat daftar riwayat&#xa;siklus kolam" vertex="1">
+          <mxGeometry height="50" width="200" x="230" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="e_nav_view" edge="1" parent="3" source="nav" style="edgeStyle=orthogonalEdgeStyle;" target="view">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision aksi -->
+        <mxCell id="dec" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih aksi" vertex="1">
+          <mxGeometry height="60" width="150" x="265" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="e_view_dec" edge="1" parent="3" source="view" style="edgeStyle=orthogonalEdgeStyle;" target="dec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lihat detail siklus -->
+        <mxCell id="det" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Detail&#xa;pada salah satu siklus" vertex="1">
+          <mxGeometry height="50" width="170" x="460" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dec_det" edge="1" parent="3" source="dec" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="det">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_det" connectable="0" parent="e_dec_det" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Detail" vertex="1">
+          <mxGeometry relative="1" x="-0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Navigasi ke detail siklus -->
+        <mxCell id="nav_det" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Navigasi ke halaman&#xa;detail siklus&#xa;(/pools/[poolId]/[cycleId])" vertex="1">
+          <mxGeometry height="60" width="175" x="458" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="e_det_nav" edge="1" parent="3" source="det" style="edgeStyle=orthogonalEdgeStyle;" target="nav_det">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Hanya lihat -->
+        <mxCell id="only_view" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Hanya melihat&#xa;daftar siklus" vertex="1">
+          <mxGeometry height="50" width="160" x="30" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dec_view" edge="1" parent="3" source="dec" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="only_view">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_view" connectable="0" parent="e_dec_view" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Lihat saja" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="endN" parent="3" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="328" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="endN2" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="333" y="985" as="geometry" />
+        </mxCell>
+
+        <!-- exit arrows to end -->
+        <mxCell id="e_only_end" edge="1" parent="3" source="only_view" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="980" />
+            </Array>
+            <mxPoint x="720" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e_navdet_end" edge="1" parent="3" source="nav_det" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="545" y="980" />
+            </Array>
+            <mxPoint x="720" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="28" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1070" width="710" x="690" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- End node dalam Sistem -->
+        <mxCell id="29" parent="28" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="580" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="28" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="585" y="985" as="geometry" />
+        </mxCell>
+
+        <!-- Load pool info + breadcrumb -->
+        <mxCell id="load_pool" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Load data kolam dari API&#xa;(usePoolById)&#xa;Set nama kolam ke breadcrumb" vertex="1">
+          <mxGeometry height="60" width="230" x="235" y="130" as="geometry" />
+        </mxCell>
+
+        <!-- Load list siklus -->
+        <mxCell id="load_cycle" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Load daftar siklus dari API&#xa;(useListCycle by poolId)" vertex="1">
+          <mxGeometry height="50" width="230" x="235" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pool_cycle" edge="1" parent="28" source="load_pool" style="edgeStyle=orthogonalEdgeStyle;" target="load_cycle">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render nav tabs -->
+        <mxCell id="render_tabs" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render nav tabs:&#xa;&quot;Siklus Kolam&quot;&#xa;(+ &quot;Detail Kolam&quot; jika ada cycleId)" vertex="1">
+          <mxGeometry height="60" width="230" x="235" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cycle_tabs" edge="1" parent="28" source="load_cycle" style="edgeStyle=orthogonalEdgeStyle;" target="render_tabs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render tabel siklus -->
+        <mxCell id="render_tabel" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render tabel daftar siklus:&#xa;Mulai, Selesai, Kondisi,&#xa;Jumlah Tebar, Jumlah Terkini,&#xa;Kematian, Pindah Kolam,&#xa;Umur (hari), Action (Detail)" vertex="1">
+          <mxGeometry height="100" width="230" x="235" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tabs_tabel" edge="1" parent="28" source="render_tabs" style="edgeStyle=orthogonalEdgeStyle;" target="render_tabel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Kondisi badge -->
+        <mxCell id="note_kondisi" parent="28" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Kondisi Aktif → badge biru&#xa;* Kondisi Lainnya → badge merah muda&#xa;* Kematian &gt; 0 → teks merah&#xa;* endDate null → ditampilkan sebagai -" vertex="1">
+          <mxGeometry height="60" width="240" x="420" y="490" as="geometry" />
+        </mxCell>
+
+        <!-- Navigasi ke detail siklus -->
+        <mxCell id="nav_sys" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Navigasi ke&#xa;/dashboard/pools/[poolId]/[cycleId]" vertex="1">
+          <mxGeometry height="50" width="230" x="235" y="700" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_nav_end" edge="1" parent="28" source="nav_sys" style="edgeStyle=orthogonalEdgeStyle;" target="29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_tabel_end" edge="1" parent="28" source="render_tabel" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="650" y="530" />
+              <mxPoint x="650" y="992" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <!-- Klik detail kolam -> load pool info -->
+        <mxCell id="e_click_load" edge="1" parent="2" source="7" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="load_pool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render tabs -> nav tampil di UI -->
+        <mxCell id="e_tabs_nav" edge="1" parent="2" source="render_tabs" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="nav">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render tabel -> user melihat daftar -->
+        <mxCell id="e_tabel_view" edge="1" parent="2" source="render_tabel" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="view">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Klik detail siklus -> navigasi sistem -->
+        <mxCell id="e_det_nav_sys" edge="1" parent="2" source="nav_det" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="nav_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

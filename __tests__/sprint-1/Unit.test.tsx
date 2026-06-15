@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Satuan (Unit) sesuai Test Case Document (UT-018)
+/*
+Description:
+- Testing Satuan (Unit) sesuai Test Case Document (UT-023 - UT-027)
 */
 
 import "@testing-library/jest-dom";
@@ -155,9 +155,9 @@ describe("Unit (Satuan) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Unit | useUnit.ts | Request Api Post Unit
+   * UT-019-Unit | useUnit.ts | Request Api Post Unit
    * ======================================================================== */
-  it("UT-018-Unit: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE unit dan isSuccess: true", async () => {
+  it("UT-019-Unit: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE unit dan isSuccess: true", async () => {
     const { useCreateUnit: realUseCreateUnit } = jest.requireActual(
       "@/lib/api/service/master-data/unit/useUnit",
     );
@@ -185,9 +185,9 @@ describe("Unit (Satuan) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Unit | useUnit.ts | Request Api Put Unit
+   * UT-020-Unit | useUnit.ts | Request Api Put Unit
    * ======================================================================== */
-  it("UT-018-Unit: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE unit dan isSuccess: true", async () => {
+  it("UT-020-Unit: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE unit dan isSuccess: true", async () => {
     const { useUpdateUnit: realUseUpdateUnit } = jest.requireActual(
       "@/lib/api/service/master-data/unit/useUnit",
     );
@@ -216,9 +216,9 @@ describe("Unit (Satuan) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Unit | useUnit.ts | Handling API Error saat Tambah Unit
+   * UT-021-Unit | useUnit.ts | Handling API Error saat Tambah Unit
    * ======================================================================== */
-  it("UT-018-Unit: Handling API Error saat Tambah Unit (state isError: true)", async () => {
+  it("UT-021-Unit: Handling API Error saat Tambah Unit (state isError: true)", async () => {
     const { useCreateUnit: realUseCreateUnit } = jest.requireActual(
       "@/lib/api/service/master-data/unit/useUnit",
     );
@@ -245,9 +245,9 @@ describe("Unit (Satuan) Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-018-Unit | useUnit.ts | Handling API Error saat Edit Unit
+   * UT-022-Unit | useUnit.ts | Handling API Error saat Edit Unit
    * ======================================================================== */
-  it("UT-018-Unit: Handling API Error saat Edit Unit (state isError: true)", async () => {
+  it("UT-022-Unit: Handling API Error saat Edit Unit (state isError: true)", async () => {
     const { useUpdateUnit: realUseUpdateUnit } = jest.requireActual(
       "@/lib/api/service/master-data/unit/useUnit",
     );

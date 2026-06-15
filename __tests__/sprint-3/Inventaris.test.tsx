@@ -1,6 +1,6 @@
 /*
 Description:
-- Testing Inventaris (Inventory)
+- Testing Inventaris (Inventory) sesuai Test Case Document (UT-057 - UT-062)
 - Mencakup: Render Halaman (List & Detail), Hook useCreateInventory, Hook usePostInventoryTransaction
 */
 
@@ -369,9 +369,9 @@ describe("Inventory Module Unit Tests", () => {
   // =========================================================================
   describe("Render Halaman & Get Data", () => {
     /* -----------------------------------------------------------------------
-     * Test 1: Render Halaman List Inventaris
+     * UT-055-Inventaris | inventory/page.tsx | Render Halaman List
      * ---------------------------------------------------------------------- */
-    it("Render Halaman List: Menampilkan list inventaris dengan benar beserta statistiknya", async () => {
+    it("UT-055-Inventaris: Menampilkan list inventaris dengan benar beserta statistiknya", async () => {
       (useInventory as jest.Mock).mockReturnValue({
         data: mockInventoryList,
         isLoading: false,
@@ -404,9 +404,9 @@ describe("Inventory Module Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 2: Render Halaman Detail Inventaris
+     * UT-056-Inventaris | inventory/[id]/page.tsx | Render Halaman Detail
      * ---------------------------------------------------------------------- */
-    it("Render Halaman Detail: Menampilkan detail stok in/out dengan merge data terintegrasi", async () => {
+    it("UT-056-Inventaris: Menampilkan detail stok in/out dengan merge data terintegrasi", async () => {
       (useGetInventoryByIdWithParams as jest.Mock).mockReturnValue({
         data: mockInventoryDetail,
         isLoading: false,
@@ -463,9 +463,9 @@ describe("Inventory Module Unit Tests", () => {
   // =========================================================================
   describe("API Mutations & Error Handling", () => {
     /* -----------------------------------------------------------------------
-     * Test 3: (Positive) Hook useCreateInventory (POST)
+     * UT-057-Inventaris | useInventory.ts | useCreateInventory (POST) Positive
      * ---------------------------------------------------------------------- */
-    it("useCreateInventory (POST) - Positive: Berhasil memanggil API POST untuk tambah inventaris", async () => {
+    it("UT-057-Inventaris: Berhasil memanggil API POST untuk tambah inventaris", async () => {
       const { useCreateInventory: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );
@@ -494,9 +494,9 @@ describe("Inventory Module Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 4: (Negative) Hook useCreateInventory (POST) Error Handling
+     * UT-058-Inventaris | useInventory.ts | useCreateInventory (POST) Negative
      * ---------------------------------------------------------------------- */
-    it("useCreateInventory (POST) - Negative: Menangani error saat API POST tambah inventaris gagal", async () => {
+    it("UT-058-Inventaris: Menangani error saat API POST tambah inventaris gagal", async () => {
       const { useCreateInventory: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );
@@ -526,9 +526,9 @@ describe("Inventory Module Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 5: (Positive) Hook usePostInventoryTransaction (POST)
+     * UT-059-Inventaris | useInventory.ts | usePostInventoryTransaction (POST) Positive
      * ---------------------------------------------------------------------- */
-    it("usePostInventoryTransaction (POST) - Positive: Berhasil memanggil API POST untuk mencatat transaksi stok", async () => {
+    it("UT-059-Inventaris: Berhasil memanggil API POST untuk mencatat transaksi stok", async () => {
       const { usePostInventoryTransaction: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );
@@ -564,9 +564,9 @@ describe("Inventory Module Unit Tests", () => {
     });
 
     /* -----------------------------------------------------------------------
-     * Test 6: (Negative) Hook usePostInventoryTransaction (POST) Error Handling
+     * UT-060-Inventaris | useInventory.ts | usePostInventoryTransaction (POST) Negative
      * ---------------------------------------------------------------------- */
-    it("usePostInventoryTransaction (POST) - Negative: Menangani error saat API POST transaksi stok gagal", async () => {
+    it("UT-060-Inventaris: Menangani error saat API POST transaksi stok gagal", async () => {
       const { usePostInventoryTransaction: realHook } = jest.requireActual(
         "@/lib/api/service/inventory/useInventory",
       );

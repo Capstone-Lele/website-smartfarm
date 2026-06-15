@@ -176,9 +176,9 @@ describe("Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-005-Kolam | pools/page.tsx | Render Halaman Kolam
+   * UT-011-Kolam | pools/page.tsx | Render Halaman Kolam
    * ======================================================================== */
-  it("UT-005-Kolam: Halaman Kolam muncul dengan benar tanpa crash", () => {
+  it("UT-011-Kolam: Halaman Kolam muncul dengan benar tanpa crash", () => {
     (useCreatePool as jest.Mock).mockReturnValue({ isPending: false });
     (useUpdatePool as jest.Mock).mockReturnValue({ isPending: false });
     (usePool as jest.Mock).mockReturnValue({
@@ -201,9 +201,9 @@ describe("Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-007-Kolam | usePool.ts | Request Api Post Pool
+   * UT-012-Kolam | usePool.ts | Request Api Post Pool
    * ======================================================================== */
-  it("UT-007-Kolam: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE pool dan isSuccess: true", async () => {
+  it("UT-012-Kolam: Memastikan API_CLIENT.post dipanggil 1x untuk CREATE pool dan isSuccess: true", async () => {
     const { useCreatePool: realUseCreatePool } = jest.requireActual(
       "@/lib/api/service/pools/usePool",
     );
@@ -239,9 +239,9 @@ describe("Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-008-Kolam | usePool.ts | Request Api Put Pool
+   * UT-013-Kolam | usePool.ts | Request Api Put Pool
    * ======================================================================== */
-  it("UT-008-Kolam: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE pool dan isSuccess: true", async () => {
+  it("UT-013-Kolam: Memastikan API_CLIENT.put dipanggil 1x untuk UPDATE pool dan isSuccess: true", async () => {
     const { useUpdatePool: realUseUpdatePool } = jest.requireActual(
       "@/lib/api/service/pools/usePool",
     );
@@ -278,9 +278,9 @@ describe("Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-009-Kolam | usePool.ts | Handling API Error saat Tambah Kolam
+   * UT-014-Kolam | usePool.ts | Handling API Error saat Tambah Kolam
    * ======================================================================== */
-  it("UT-009-Kolam: Handling API Error saat Tambah Kolam (state isError: true)", async () => {
+  it("UT-014-Kolam: Handling API Error saat Tambah Kolam (state isError: true)", async () => {
     const { useCreatePool: realUseCreatePool } = jest.requireActual(
       "@/lib/api/service/pools/usePool",
     );
@@ -310,9 +310,9 @@ describe("Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * UT-010-Kolam | usePool.ts | Handling API Error saat Edit Kolam
+   * UT-015-Kolam | usePool.ts | Handling API Error saat Edit Kolam
    * ======================================================================== */
-  it("UT-010-Kolam: Handling API Error saat Edit Kolam (state isError: true)", async () => {
+  it("UT-015-Kolam: Handling API Error saat Edit Kolam (state isError: true)", async () => {
     const { useUpdatePool: realUseUpdatePool } = jest.requireActual(
       "@/lib/api/service/pools/usePool",
     );

@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing List Siklus (Cycle)
+/*
+Description:
+- Testing List Siklus (Cycle) sesuai Test Case Document (UT-028 - UT-030)
 */
 
 import "@testing-library/jest-dom";
@@ -121,9 +121,9 @@ describe("List Siklus Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Komponen / UI
+   * UT-028-List Siklus | pools/[poolId]/page.tsx | Render Halaman List Siklus
    * ======================================================================== */
-  it("Render Halaman List Cycle: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-028-List Siklus: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (usePoolById as jest.Mock).mockReturnValue({
       data: { name: "Kolam Pembesaran" },
     });
@@ -154,9 +154,9 @@ describe("List Siklus Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API (Hook TanStack)
+   * UT-029-List Siklus | useCycle.ts | Request Api Get List Siklus (Positive)
    * ======================================================================== */
-  it("Request Api Get Cycle (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-029-List Siklus: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListCycle: realUseListCycle } = jest.requireActual(
       "@/lib/api/service/cycles/useCycle",
     );
@@ -181,9 +181,9 @@ describe("List Siklus Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error via API Hook
+   * UT-030-List Siklus | useCycle.ts | Request Api Get List Siklus (Negative)
    * ======================================================================== */
-  it("Request Api Get Cycle (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-030-List Siklus: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListCycle: realUseListCycle } = jest.requireActual(
       "@/lib/api/service/cycles/useCycle",
     );

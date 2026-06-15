@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Menu Beranda Dashboard
+/*
+Description:
+- Testing Menu Beranda Dashboard sesuai Test Case Document (UT-084 - UT-085)
 */
 
 import "@testing-library/jest-dom";
@@ -85,7 +85,7 @@ describe("Menu Beranda Unit Tests", () => {
     jest.clearAllMocks();
   });
 
-  it("Render Menu Beranda: Komponen utama muncul dengan benar beserta data stats", async () => {
+  it("UT-084-Menu Beranda: Komponen utama muncul dengan benar beserta data stats", async () => {
     (useDashboard as jest.Mock).mockReturnValue({
       data: {
         totalPool: 10,
@@ -123,7 +123,7 @@ describe("Menu Beranda Unit Tests", () => {
     expect(screen.getByText("5000")).toBeInTheDocument();
   });
 
-  it("Menampilkan notifikasi stok rendah jika terdapat item inventaris limit", async () => {
+  it("UT-085-Menu Beranda: Menampilkan notifikasi stok rendah jika terdapat item inventaris limit", async () => {
     (useDashboard as jest.Mock).mockReturnValue({
       data: { fishPopulation: {} },
     });

@@ -2,14 +2,18 @@
 
 import DefaultCard from "@/components/card/default-card";
 import { DataTable } from "@/components/data-table/data-table";
-import React from "react";
+import React, { useMemo } from "react";
 import { nonInventoryColumns } from "./column";
 import { useFinanceNonInventory } from "@/lib/api/service/finance/useFinance";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { LuExternalLink } from "react-icons/lu";
 
-const FinanceNonInventoryData = () => {
+interface Props {
+  dateRange: { start: Date | null; end: Date | null };
+}
+
+const FinanceNonInventoryData = ({ dateRange }: Props) => {
   const {
     data: nonInventoryData,
     isLoading,
@@ -36,6 +40,17 @@ const FinanceNonInventoryData = () => {
     );
   }
 
+  const filteredData = useMemo(() => {
+    if (!nonInventoryData) return [];
+    if (!dateRange.start || !dateRange.end) return nonInventoryData;
+    const start = dateRange.start.getTime();
+    const end = dateRange.end.getTime();
+    return nonInventoryData.filter((item) => {
+      const t = new Date(item.transactionDate).getTime();
+      return t >= start && t <= end;
+    });
+  }, [nonInventoryData, dateRange]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -47,7 +62,7 @@ const FinanceNonInventoryData = () => {
           Catatan Non-Inventaris
         </Link>
       </div>
-      <DataTable columns={nonInventoryColumns} data={nonInventoryData || []} />
+      <DataTable columns={nonInventoryColumns} data={filteredData} />
     </DefaultCard>
   );
 };

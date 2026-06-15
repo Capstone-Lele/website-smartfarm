@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diag-laporan-pakan-main">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="cell-0" />
+        <mxCell id="cell-1" parent="cell-0" />
+
+        <mxCell id="pk-outer" parent="cell-1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Laporan Pemberian Pakan" vertex="1">
+          <mxGeometry height="1400" width="1400" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="pk-swim-petugas" parent="pk-outer" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="1370" width="690" y="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-start" parent="pk-swim-petugas" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="320" y="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-buka" parent="pk-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman&#xa;Laporan Pemberian Pakan" vertex="1">
+          <mxGeometry height="50" width="220" x="225" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-start-buka" edge="1" parent="pk-swim-petugas" source="pk-start" style="edgeStyle=orthogonalEdgeStyle;" target="pk-buka">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-filter" parent="pk-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengatur filter:&#xa;Tanggal, Kolam,&#xa;Siklus, Petugas" vertex="1">
+          <mxGeometry height="60" width="200" x="235" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-buka-filter" edge="1" parent="pk-swim-petugas" source="pk-buka" style="edgeStyle=orthogonalEdgeStyle;" target="pk-filter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-note-filter" parent="pk-swim-petugas" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Siklus aktif setelah Kolam dipilih&#xa;* Semua filter dapat direset" vertex="1">
+          <mxGeometry height="40" width="200" x="235" y="290" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-tabdec" parent="pk-swim-petugas" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="60" width="150" x="260" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-filter-tab" edge="1" parent="pk-swim-petugas" source="pk-filter" style="edgeStyle=orthogonalEdgeStyle;" target="pk-tabdec">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-tab-vis" parent="pk-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat ringkasan&#xa;&amp; grafik pakan" vertex="1">
+          <mxGeometry height="50" width="160" x="30" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-tab-vis" edge="1" parent="pk-swim-petugas" source="pk-tabdec" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pk-tab-vis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="80" y="390" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pk-lbl-vis" connectable="0" parent="pk-e-tab-vis" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ringkasan" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="pk-tab-tabel" parent="pk-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat data tabel&#xa;laporan pakan" vertex="1">
+          <mxGeometry height="50" width="160" x="450" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-tab-tabel" edge="1" parent="pk-swim-petugas" source="pk-tabdec" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pk-tab-tabel">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="590" y="390" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pk-lbl-tabel" connectable="0" parent="pk-e-tab-tabel" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Tabel" vertex="1">
+          <mxGeometry relative="1" x="0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="pk-det" parent="pk-swim-petugas" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih data laporan&#xa;untuk dilihat detailnya" vertex="1">
+          <mxGeometry height="50" width="175" x="443" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-tabel-det" edge="1" parent="pk-swim-petugas" source="pk-tab-tabel" style="edgeStyle=orthogonalEdgeStyle;" target="pk-det">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-end-outer" parent="pk-swim-petugas" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="328" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-end-inner" parent="pk-swim-petugas" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="333" y="1285" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-e-vis-end" edge="1" parent="pk-swim-petugas" source="pk-tab-vis" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="110" y="1280" /></Array>
+            <mxPoint x="720" y="1280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pk-e-det-end" edge="1" parent="pk-swim-petugas" source="pk-det" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="530" y="1280" /></Array>
+            <mxPoint x="720" y="1280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="pk-swim-sistem" parent="pk-outer" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1370" width="710" x="690" y="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-sys-end-outer" parent="pk-swim-sistem" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="580" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-sys-end-inner" parent="pk-swim-sistem" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="585" y="1285" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-load" parent="pk-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Ambil semua data laporan&#xa;pakan dari API" vertex="1">
+          <mxGeometry height="50" width="220" x="235" y="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-apply" parent="pk-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Terapkan filter:&#xa;Tanggal, Kolam, Siklus, Petugas&#xa;pada data yang ada" vertex="1">
+          <mxGeometry height="60" width="220" x="235" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-load-apply" edge="1" parent="pk-swim-sistem" source="pk-load" style="edgeStyle=orthogonalEdgeStyle;" target="pk-apply">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-vis-sys" parent="pk-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Render ringkasan &amp; grafik:&#xa;summary cards, trend chart,&#xa;chart per pakan, chart per kolam" vertex="1">
+          <mxGeometry height="70" width="230" x="30" y="470" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-tabel-sys" parent="pk-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Render tabel:&#xa;Tanggal, Kolam, Siklus,&#xa;Pakan, Jumlah, Foto,&#xa;Petugas, Action" vertex="1">
+          <mxGeometry height="70" width="220" x="430" y="470" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-det-sys" parent="pk-swim-sistem" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan sheet detail:&#xa;Foto, Jenis Pakan, Tipe, Jumlah,&#xa;Tanggal, Petugas,&#xa;Info Kolam &amp; Siklus" vertex="1">
+          <mxGeometry height="70" width="230" x="420" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-tabel-det-sys" edge="1" parent="pk-swim-sistem" source="pk-tabel-sys" style="edgeStyle=orthogonalEdgeStyle;" target="pk-det-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pk-e-det-sys-end" edge="1" parent="pk-swim-sistem" source="pk-det-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pk-sys-end-outer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="660" y="635" /><mxPoint x="660" y="1292" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pk-e-vis-end2" edge="1" parent="pk-swim-sistem" source="pk-vis-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="pk-sys-end-outer">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="145" y="1292" /></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <mxCell id="pk-e-load-cross" edge="1" parent="pk-outer" source="pk-buka" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="pk-load">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-filter-cross" edge="1" parent="pk-outer" source="pk-filter" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="pk-apply">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-vis-cross" edge="1" parent="pk-outer" source="pk-vis-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="pk-tab-vis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-tabel-cross" edge="1" parent="pk-outer" source="pk-tabel-sys" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="pk-tab-tabel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-det-cross" edge="1" parent="pk-outer" source="pk-det" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="pk-det-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-apply-vis" edge="1" parent="pk-outer" source="pk-apply" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pk-vis-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pk-e-apply-tabel" edge="1" parent="pk-outer" source="pk-apply" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pk-tabel-sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

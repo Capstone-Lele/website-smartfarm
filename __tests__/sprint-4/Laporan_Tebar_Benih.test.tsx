@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Tebar Benih
+/*
+Description:
+- Testing Laporan Tebar Benih sesuai Test Case Document (UT-081 - UT-083)
 */
 
 import "@testing-library/jest-dom";
@@ -113,9 +113,9 @@ describe("Laporan Tebar Benih Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Tebar Benih
+   * UT-081-Laporan Tebar Benih | reports/seeding/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Tebar Benih: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-081-Laporan Tebar Benih: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (useListSeeding as jest.Mock).mockReturnValue({
       data: {
         data: [
@@ -151,9 +151,9 @@ describe("Laporan Tebar Benih Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Seeding
+   * UT-082-Laporan Tebar Benih | useSeeding.ts | Request Api Get Seeding (Positive)
    * ======================================================================== */
-  it("Request Api Get Seeding (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-082-Laporan Tebar Benih: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListSeeding: realUseListSeeding } = jest.requireActual(
       "@/lib/api/service/notes/seeding/useSeeding",
     );
@@ -177,9 +177,9 @@ describe("Laporan Tebar Benih Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Seeding
+   * UT-083-Laporan Tebar Benih | useSeeding.ts | Request Api Get Seeding (Negative)
    * ======================================================================== */
-  it("Request Api Get Seeding (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-083-Laporan Tebar Benih: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListSeeding: realUseListSeeding } = jest.requireActual(
       "@/lib/api/service/notes/seeding/useSeeding",
     );

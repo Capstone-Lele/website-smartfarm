@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="diagram_kolam">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Manajemen Kolam" vertex="1">
+          <mxGeometry height="2100" width="1500" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Petugas swimlane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Petugas / Penanggung Jawab" vertex="1">
+          <mxGeometry height="2070" width="730" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start node -->
+        <mxCell id="6" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="345" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Buka halaman Kolam -->
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman Manajemen Kolam" vertex="1">
+          <mxGeometry height="50" width="240" x="240" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Pilih tab -->
+        <mxCell id="tab" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih Tab" vertex="1">
+          <mxGeometry height="60" width="150" x="300" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_tab" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;" target="tab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Tab Informasi -->
+        <mxCell id="info" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat informasi&#xa;alur kolam budidaya&#xa;(Siklus, Perpindahan,&#xa;Kepadatan)" vertex="1">
+          <mxGeometry height="70" width="160" x="30" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tab_info" edge="1" parent="3" source="tab" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="info">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_info" connectable="0" parent="e_tab_info" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Informasi" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Tab Kolam -> sub-tab -->
+        <mxCell id="subtab" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih&#xa;Sub-Tab" vertex="1">
+          <mxGeometry height="60" width="150" x="515" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tab_subtab" edge="1" parent="3" source="tab" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="subtab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_subtab" connectable="0" parent="e_tab_subtab" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Kolam" vertex="1">
+          <mxGeometry relative="1" x="-0.5" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Sub-tab Budidaya dan Karantina -->
+        <mxCell id="budidaya_list" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat daftar&#xa;Kolam Budidaya" vertex="1">
+          <mxGeometry height="50" width="160" x="420" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sub_bud" edge="1" parent="3" source="subtab" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="budidaya_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_bud" connectable="0" parent="e_sub_bud" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Budidaya" vertex="1">
+          <mxGeometry relative="1" x="-0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="karantina_list" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Melihat daftar&#xa;Kolam Karantina" vertex="1">
+          <mxGeometry height="50" width="160" x="550" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sub_kar" edge="1" parent="3" source="subtab" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="karantina_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_kar" connectable="0" parent="e_sub_kar" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Karantina" vertex="1">
+          <mxGeometry relative="1" x="0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Decision CRUD -->
+        <mxCell id="16" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih aksi" vertex="1">
+          <mxGeometry height="60" width="150" x="300" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bud_crud" edge="1" parent="3" source="budidaya_list" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_kar_crud" edge="1" parent="3" source="karantina_list" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- TAMBAH branch -->
+        <mxCell id="9" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol&#xa;Tambah Kolam" vertex="1">
+          <mxGeometry height="50" width="160" x="530" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl9" connectable="0" parent="e9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Tambah" vertex="1">
+          <mxGeometry relative="1" x="-0.4" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="10" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengisi form:&#xa;Kategori, Tipe Kolam&#xa;(Bundar / Persegi),&#xa;Dimensi Kolam" vertex="1">
+          <mxGeometry height="70" width="170" x="525" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="e9_10" edge="1" parent="3" source="9" style="edgeStyle=orthogonalEdgeStyle;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- catatan tipe kolam -->
+        <mxCell id="note_tipe" parent="3" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Nama otomatis: Kolam N+1&#xa;* Bundar: Diameter + Tinggi wajib&#xa;* Persegi: Panjang + Lebar + Tinggi wajib&#xa;* Nama tidak boleh duplikat" vertex="1">
+          <mxGeometry height="60" width="210" x="505" y="870" as="geometry" />
+        </mxCell>
+
+        <!-- DETAIL branch -->
+        <mxCell id="det1" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Detail&#xa;(navigasi ke halaman&#xa;detail kolam)" vertex="1">
+          <mxGeometry height="60" width="170" x="525" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="e_det" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="det1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="610" />
+              <mxPoint x="700" y="975" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_det" connectable="0" parent="e_det" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Detail" vertex="1">
+          <mxGeometry relative="1" x="-0.3" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- EDIT branch -->
+        <mxCell id="5" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih kolam&#xa;yang akan diedit" vertex="1">
+          <mxGeometry height="50" width="160" x="530" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="610" />
+              <mxPoint x="700" y="1135" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl5" connectable="0" parent="e5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ubah" vertex="1">
+          <mxGeometry relative="1" x="-0.3" y="-1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="25" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengubah form:&#xa;Kategori, Tipe Kolam,&#xa;Dimensi Kolam" vertex="1">
+          <mxGeometry height="60" width="165" x="533" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="e5_25" edge="1" parent="3" source="5" style="edgeStyle=orthogonalEdgeStyle;" target="25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- catatan edit -->
+        <mxCell id="note_edit" parent="3" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;spacingLeft=4;rounded=0;" value="* Nama kolam tidak dapat diubah&#xa;* Nama tidak boleh duplikat dengan kolam lain&#xa;* Tipe berubah → dimensi lainnya di-reset" vertex="1">
+          <mxGeometry height="50" width="220" x="505" y="1355" as="geometry" />
+        </mxCell>
+
+        <!-- TOGGLE STATUS branch -->
+        <mxCell id="21" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Memilih kolam yang&#xa;akan diubah statusnya" vertex="1">
+          <mxGeometry height="50" width="170" x="30" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="e21" edge="1" parent="3" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="30" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl21" connectable="0" parent="e21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Toggle Status" vertex="1">
+          <mxGeometry relative="1" x="-0.6" y="-2" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="20" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Toggle&#xa;Aktif / Nonaktif" vertex="1">
+          <mxGeometry height="50" width="165" x="32" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="e20" edge="1" parent="3" source="21" style="edgeStyle=orthogonalEdgeStyle;" target="20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Exit arrow toggle -->
+        <mxCell id="endToggle" edge="1" parent="3" source="20" style="edgeStyle=orthogonalEdgeStyle;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="114" y="1880" />
+            </Array>
+            <mxPoint x="760" y="1880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- End node -->
+        <mxCell id="endN" parent="3" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="348" y="1980" as="geometry" />
+        </mxCell>
+        <mxCell id="endN2" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="353" y="1985" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem swimlane -->
+        <mxCell id="28" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="2070" width="770" x="730" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- End node dalam Sistem -->
+        <mxCell id="29" parent="28" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="640" y="1980" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="28" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="645" y="1985" as="geometry" />
+        </mxCell>
+
+        <!-- Tampilkan halaman (stat cards + tab) -->
+        <mxCell id="34" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan stat cards:&#xa;Total, Pembesaran,&#xa;Pembibitan, Karantina&#xa;+ Tab Kolam &amp; Informasi" vertex="1">
+          <mxGeometry height="70" width="230" x="260" y="130" as="geometry" />
+        </mxCell>
+
+        <!-- Render tabel kolam budidaya / karantina -->
+        <mxCell id="tabel_bud" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render tabel Kolam Budidaya&#xa;(Nama, Kategori, Kondisi,&#xa;Petugas, Ukuran, Siklus,&#xa;Jml Ikan, Kepadatan,&#xa;Kematian, Status Air)" vertex="1">
+          <mxGeometry height="90" width="230" x="260" y="350" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tabel_kar" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Render tabel Kolam Karantina&#xa;(Nama, Kategori, Kondisi,&#xa;Ukuran, Jumlah Ikan)" vertex="1">
+          <mxGeometry height="70" width="220" x="500" y="360" as="geometry" />
+        </mxCell>
+
+        <!-- Validasi form tambah -->
+        <mxCell id="31" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi form:&#xa;Kategori wajib, Tipe wajib,&#xa;Dimensi sesuai tipe wajib,&#xa;Cek duplikasi nama kolam" vertex="1">
+          <mxGeometry height="70" width="240" x="245" y="790" as="geometry" />
+        </mxCell>
+
+        <!-- Data valid? tambah -->
+        <mxCell id="40" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Data valid?" vertex="1">
+          <mxGeometry height="60" width="150" x="290" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="e31_40" edge="1" parent="28" source="31" style="edgeStyle=orthogonalEdgeStyle;" target="40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error tambah -->
+        <mxCell id="32" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;/ toast nama duplikat" vertex="1">
+          <mxGeometry height="50" width="180" x="510" y="915" as="geometry" />
+        </mxCell>
+        <mxCell id="e32" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="32" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan kolam baru -->
+        <mxCell id="41" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan Kolam baru ke database&#xa;(nama otomatis, dimensi kolam)" vertex="1">
+          <mxGeometry height="50" width="250" x="240" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="e41" edge="1" parent="28" source="40" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="41" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toast sukses tambah -->
+        <mxCell id="43" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses,&#xa;tutup sheet, refresh daftar" vertex="1">
+          <mxGeometry height="50" width="230" x="250" y="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="e43" edge="1" parent="28" source="41" style="edgeStyle=orthogonalEdgeStyle;" target="43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e43_end" edge="1" parent="28" source="43" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="1155" />
+              <mxPoint x="660" y="1992" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Navigasi detail kolam -->
+        <mxCell id="nav_det" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Navigasi ke&#xa;/dashboard/pools/[id]/[cycleId]" vertex="1">
+          <mxGeometry height="50" width="230" x="250" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="e_det_nav_end" edge="1" parent="28" source="nav_det" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="655" y="1035" />
+              <mxPoint x="655" y="1992" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Validasi form edit -->
+        <mxCell id="44" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi form:&#xa;Kategori wajib, Tipe wajib,&#xa;Dimensi sesuai tipe wajib,&#xa;Cek duplikasi nama dengan kolam lain" vertex="1">
+          <mxGeometry height="70" width="240" x="245" y="1280" as="geometry" />
+        </mxCell>
+
+        <!-- Perubahan valid? -->
+        <mxCell id="45" parent="28" style="rhombus;whiteSpace=wrap;html=1;" value="Perubahan valid?" vertex="1">
+          <mxGeometry height="60" width="160" x="285" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="e44_45" edge="1" parent="28" source="44" style="edgeStyle=orthogonalEdgeStyle;" target="45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error edit -->
+        <mxCell id="35" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;/ toast nama duplikat" vertex="1">
+          <mxGeometry height="50" width="175" x="510" y="1405" as="geometry" />
+        </mxCell>
+        <mxCell id="e35" edge="1" parent="28" source="45" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="35" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan perubahan kolam -->
+        <mxCell id="46" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan perubahan Kolam&#xa;ke database" vertex="1">
+          <mxGeometry height="50" width="230" x="250" y="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="e46" edge="1" parent="28" source="45" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="46" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toast sukses edit -->
+        <mxCell id="48" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses,&#xa;tutup sheet, refresh daftar" vertex="1">
+          <mxGeometry height="50" width="220" x="255" y="1630" as="geometry" />
+        </mxCell>
+        <mxCell id="e48" edge="1" parent="28" source="46" style="edgeStyle=orthogonalEdgeStyle;" target="48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e48_end" edge="1" parent="28" source="48" style="edgeStyle=orthogonalEdgeStyle;" target="29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toggle status kolam di sistem -->
+        <mxCell id="50" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Nonaktif / Aktifkan&#xa;Kolam (soft delete)" vertex="1">
+          <mxGeometry height="50" width="200" x="30" y="790" as="geometry" />
+        </mxCell>
+
+        <mxCell id="53" parent="28" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses:&#xa;&quot;Kolam berhasil diaktifkan/&#xa;dinonaktifkan&quot;" vertex="1">
+          <mxGeometry height="60" width="200" x="30" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="e50_53" edge="1" parent="28" source="50" style="edgeStyle=orthogonalEdgeStyle;" target="53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e53_end" edge="1" parent="28" source="53" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="29">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="1050" />
+              <mxPoint x="130" y="1992" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-swimlane edges -->
+        <!-- Buka halaman -> Tampilkan stat+tab -->
+        <mxCell id="e_load" edge="1" parent="2" source="7" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render budidaya -> daftar budidaya -->
+        <mxCell id="e_rend_bud" edge="1" parent="2" source="tabel_bud" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="budidaya_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Render karantina -> daftar karantina -->
+        <mxCell id="e_rend_kar" edge="1" parent="2" source="tabel_kar" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="karantina_list">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mengisi form -> Validasi tambah -->
+        <mxCell id="e_form_val" edge="1" parent="2" source="10" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error tambah -> kembali ke form -->
+        <mxCell id="e_err_t" edge="1" parent="2" source="32" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Klik detail -> navigasi -->
+        <mxCell id="e_det_cross" edge="1" parent="2" source="det1" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="nav_det">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Mengubah form -> Validasi edit -->
+        <mxCell id="e_edit_val" edge="1" parent="2" source="25" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Error edit -> kembali ke form edit -->
+        <mxCell id="e_err_e" edge="1" parent="2" source="35" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;dashed=1;" target="25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Toggle -> soft delete sistem -->
+        <mxCell id="e_toggle_sys" edge="1" parent="2" source="20" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

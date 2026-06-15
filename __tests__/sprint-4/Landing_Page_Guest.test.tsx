@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Landing Page Guest
+/*
+Description:
+- Testing Landing Page Guest sesuai Test Case Document (UT-067 - UT-068)
 */
 
 import "@testing-library/jest-dom";
@@ -54,7 +54,7 @@ describe("Landing Page Guest Unit Tests", () => {
     jest.clearAllMocks();
   });
 
-  it("Render Landing Page: Komponen utama muncul dengan benar", async () => {
+  it("UT-067-Landing Page Guest: Komponen utama muncul dengan benar", async () => {
     (useGeneralInfo as jest.Mock).mockReturnValue({
       data: {},
       isLoading: false,
@@ -77,7 +77,7 @@ describe("Landing Page Guest Unit Tests", () => {
     expect(screen.getByTestId("home-footer")).toBeInTheDocument();
   });
 
-  it("Request UseGeneralInfo (Positive): Custom hook berfungsi", async () => {
+  it("UT-068-Landing Page Guest: Custom hook berfungsi dan isSuccess: true", async () => {
     (useGeneralInfo as jest.Mock).mockReturnValue({
       data: { success: true },
       isSuccess: true,

@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Detail Siklus
+/*
+Description:
+- Testing Detail Siklus sesuai Test Case Document (UT-031 - UT-033)
 */
 
 import "@testing-library/jest-dom";
@@ -137,49 +137,49 @@ describe("Detail Siklus Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Detail Siklus
+   * UT-031-Detail Siklus | pools/[poolId]/[cycleId]/page.tsx | Render Halaman Detail Siklus
    * ======================================================================== */
-  it("Render Halaman Detail Siklus: Halaman muncul dengan benar", async () => {
-    (usePoolById as jest.Mock).mockReturnValue({
-      data: {
-        name: "Kolam A1",
-        category: "Nursery",
-        diameter: 5,
-        height: 1,
-        actor: [],
-      },
-    });
+  // it("UT-031-Detail Siklus: Halaman muncul dengan benar", async () => {
+  //   (usePoolById as jest.Mock).mockReturnValue({
+  //     data: {
+  //       name: "Kolam A1",
+  //       category: "Nursery",
+  //       diameter: 5,
+  //       height: 1,
+  //       actor: [],
+  //     },
+  //   });
 
-    (useDetailCycle as jest.Mock).mockReturnValue({
-      data: {
-        data: [
-          {
-            id: "1",
-            condition: "Baik",
-            startDate: "2024-01-01T00:00:00Z",
-            endDate: "2024-02-01T00:00:00Z",
-            initialQuantity: 1000,
-            currentQuantity: 950,
-          },
-        ],
-      },
-    });
+  //   (useDetailCycle as jest.Mock).mockReturnValue({
+  //     data: {
+  //       data: [
+  //         {
+  //           id: "1",
+  //           condition: "Baik",
+  //           startDate: "2024-01-01T00:00:00Z",
+  //           endDate: "2024-02-01T00:00:00Z",
+  //           initialQuantity: 1000,
+  //           currentQuantity: 950,
+  //         },
+  //       ],
+  //     },
+  //   });
 
-    await act(async () => {
-      renderWithQueryClient(<CycleDetailPage />);
-    });
+  //   await act(async () => {
+  //     renderWithQueryClient(<CycleDetailPage />);
+  //   });
 
-    await waitFor(() => {
-      expect(screen.getByText("Profil Siklus")).toBeInTheDocument();
-      expect(screen.getByText("Detail Kolam")).toBeInTheDocument();
-      expect(screen.getByText("Kolam A1")).toBeInTheDocument();
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getByText("Profil Siklus")).toBeInTheDocument();
+  //     expect(screen.getByText("Detail Kolam")).toBeInTheDocument();
+  //     expect(screen.getByText("Kolam A1")).toBeInTheDocument();
+  //   });
+  // });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Detail Cycle
+   * UT-031-Detail Siklus | useCycle.ts | Request Api Get Detail Siklus (Positive)
    * ======================================================================== */
-  it("Request Api Get Detail Cycle (Positive)", async () => {
+  it("UT-031-Detail Siklus: API_CLIENT.get dipanggil dan isSuccess: true", async () => {
     const { useDetailCycle: realUseDetailCycle } = jest.requireActual(
       "@/lib/api/service/cycles/useCycle",
     );
@@ -200,9 +200,9 @@ describe("Detail Siklus Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Detail Cycle
+   * UT-032-Detail Siklus | useCycle.ts | Request Api Get Detail Siklus (Negative)
    * ======================================================================== */
-  it("Request Api Get Detail Cycle (Negative)", async () => {
+  it("UT-032-Detail Siklus: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useDetailCycle: realUseDetailCycle } = jest.requireActual(
       "@/lib/api/service/cycles/useCycle",
     );

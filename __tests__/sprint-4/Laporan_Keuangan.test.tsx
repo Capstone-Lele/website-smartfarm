@@ -1,6 +1,6 @@
-/* 
-Description: 
-- Testing Laporan Keuangan
+/*
+Description:
+- Testing Laporan Keuangan sesuai Test Case Document (UT-075 - UT-077)
 */
 
 import "@testing-library/jest-dom";
@@ -143,9 +143,9 @@ describe("Laporan Keuangan Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Keuangan
+   * UT-075-Laporan Keuangan | finance/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Keuangan: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  it("UT-075-Laporan Keuangan: Halaman pengguna muncul dengan benar tanpa crash", async () => {
     (useFinanceCommodity as jest.Mock).mockReturnValue({ data: [], isLoading: false });
     (useFinanceInventory as jest.Mock).mockReturnValue({ data: [], isLoading: false });
     (useFinanceInventorySubmission as jest.Mock).mockReturnValue({ data: [], isLoading: false });
@@ -163,9 +163,9 @@ describe("Laporan Keuangan Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Finance Inventory
+   * UT-076-Laporan Keuangan | useFinance.ts | Request Api Get Finance Inventory (Positive)
    * ======================================================================== */
-  it("Request Api Get Finance Inventory (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-076-Laporan Keuangan: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useFinanceInventory: realUseFinanceInventory } = jest.requireActual(
       "@/lib/api/service/finance/useFinance",
     );
@@ -189,9 +189,9 @@ describe("Laporan Keuangan Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Finance Inventory
+   * UT-077-Laporan Keuangan | useFinance.ts | Request Api Get Finance Inventory (Negative)
    * ======================================================================== */
-  it("Request Api Get Finance Inventory (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-077-Laporan Keuangan: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useFinanceInventory: realUseFinanceInventory } = jest.requireActual(
       "@/lib/api/service/finance/useFinance",
     );

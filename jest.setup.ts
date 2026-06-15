@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom';
 
+// Suppress console output during tests for clean test output
+global.console.log = jest.fn();
+global.console.warn = jest.fn();
+global.console.error = jest.fn();
+
 // Mock URL.createObjectURL and revokeObjectURL since JSDOM does not support them
 global.URL.createObjectURL = jest.fn(() => 'blob:mock-url');
 global.URL.revokeObjectURL = jest.fn();

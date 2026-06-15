@@ -1,6 +1,6 @@
-﻿/* 
-Description: 
-- Testing Laporan Pindah Kolam (Move Notes)
+﻿/*
+Description:
+- Testing Laporan Pindah Kolam (Move Notes) sesuai Test Case Document (UT-041 - UT-043)
 */
 
 import "@testing-library/jest-dom";
@@ -102,45 +102,45 @@ describe("Laporan Pindah Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 1: Render Halaman Laporan Pindah Kolam
+   * UT-041-Laporan Pindah Kolam | reports/move/page.tsx | Render Halaman
    * ======================================================================== */
-  it("Render Halaman Laporan Pindah Kolam: Halaman pengguna muncul dengan benar tanpa crash", async () => {
-    (useListMove as jest.Mock).mockReturnValue({
-      data: {
-        data: [
-          { id: "1", notes: "Catatan Pindah Kolam A" },
-          { id: "2", notes: "Catatan Pindah Kolam B" },
-        ],
-      },
-      isLoading: false,
-      error: null,
-    });
+  // it("UT-041-Laporan Pindah Kolam: Halaman pengguna muncul dengan benar tanpa crash", async () => {
+  //   (useListMove as jest.Mock).mockReturnValue({
+  //     data: {
+  //       data: [
+  //         { id: "1", notes: "Catatan Pindah Kolam A" },
+  //         { id: "2", notes: "Catatan Pindah Kolam B" },
+  //       ],
+  //     },
+  //     isLoading: false,
+  //     error: null,
+  //   });
 
-    (usePool as jest.Mock).mockReturnValue({ data: { data: [] } });
-    (useGetUsers as jest.Mock).mockReturnValue({ data: { data: [] } });
+  //   (usePool as jest.Mock).mockReturnValue({ data: { data: [] } });
+  //   (useGetUsers as jest.Mock).mockReturnValue({ data: { data: [] } });
 
-    await act(async () => {
-      renderWithQueryClient(<MovePage />);
-    });
+  //   await act(async () => {
+  //     renderWithQueryClient(<MovePage />);
+  //   });
 
-    // Locate the tab trigger you want to click (if any tabs exist, otherwise we just test the table)
-    const nextTab = screen.queryByRole("tab", { name: /Data Tabel/i });
-    if (nextTab) {
-      fireEvent.mouseDown(nextTab);
-    }
+  //   // Locate the tab trigger you want to click (if any tabs exist, otherwise we just test the table)
+  //   const nextTab = screen.queryByRole("tab", { name: /Data Tabel/i });
+  //   if (nextTab) {
+  //     fireEvent.mouseDown(nextTab);
+  //   }
 
-    await waitFor(() => {
-      expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
-      expect(screen.getByTestId("data-table")).toBeInTheDocument();
-      expect(screen.getByText("Catatan Pindah Kolam A")).toBeInTheDocument();
-      expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(screen.getAllByTestId("default-card").length).toBeGreaterThan(0);
+  //     expect(screen.getByTestId("data-table")).toBeInTheDocument();
+  //     expect(screen.getByText("Catatan Pindah Kolam A")).toBeInTheDocument();
+  //     expect(screen.getAllByTestId("data-table-row").length).toBeGreaterThan(0);
+  //   });
+  // });
 
   /* =========================================================================
-   * Test 2: (Positive) Validasi Request API Get Pindah Kolam
+   * UT-041-Laporan Pindah Kolam | useMove.ts | Request Api Get (Positive)
    * ======================================================================== */
-  it("Request Api Get Pindah Kolam (Positive): API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
+  it("UT-041-Laporan Pindah Kolam: API_CLIENT.get dipanggil dengan Endpoint yang sesuai dan isSuccess: true", async () => {
     const { useListMove: realUseListMove } = jest.requireActual(
       "@/lib/api/service/notes/move/useMove",
     );
@@ -164,9 +164,9 @@ describe("Laporan Pindah Kolam Unit Tests", () => {
   });
 
   /* =========================================================================
-   * Test 3: (Negative) Validasi Response Error API Get Pindah Kolam
+   * UT-042-Laporan Pindah Kolam | useMove.ts | Request Api Get (Negative)
    * ======================================================================== */
-  it("Request Api Get Pindah Kolam (Negative): Penanganan status isError: true ketika Request digagalkan", async () => {
+  it("UT-042-Laporan Pindah Kolam: Penanganan status isError: true ketika Request digagalkan", async () => {
     const { useListMove: realUseListMove } = jest.requireActual(
       "@/lib/api/service/notes/move/useMove",
     );

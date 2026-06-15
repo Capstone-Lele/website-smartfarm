@@ -278,16 +278,16 @@ const page = () => {
             </DefaultCard>
           </TabsContent>
           <TabsContent value="komoditas">
-            <FinanceCommodityData />
+            <FinanceCommodityData dateRange={dateRange} />
           </TabsContent>
           <TabsContent value="inventaris">
-            <FinanceInventoryData />
+            <FinanceInventoryData dateRange={dateRange} />
           </TabsContent>
           <TabsContent value="pengajuan-inventaris">
-            <FinanceInventorySubmissionData />
+            <FinanceInventorySubmissionData dateRange={dateRange} />
           </TabsContent>
           <TabsContent value="non-inventaris">
-            <FinanceNonInventoryData />
+            <FinanceNonInventoryData dateRange={dateRange} />
           </TabsContent>
         </Tabs>
       </>
