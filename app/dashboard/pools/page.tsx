@@ -1,7 +1,7 @@
 "use client";
 import { DataTable } from "@/components/data-table/data-table";
 import { usePool } from "@/lib/api/service/pools/usePool";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { columnsPool } from "./column";
 import PostKolamModal from "./post";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
@@ -17,18 +17,32 @@ import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
-import { Pool } from "@/types/pool.types";
 import { columnsPoolQuarantine } from "./_quarantine/column";
 import { FaFish, FaWater } from "react-icons/fa";
 import { IoFish } from "react-icons/io5";
 import { FiShield } from "react-icons/fi";
+import { useSocketStore } from "@/lib/store/useSocketStore";
 
 const page = () => {
+  const connect = useSocketStore((s) => s.connect);
+  const disconnect = useSocketStore((s) => s.disconnect);
   const { data, isLoading, error } = usePool();
+
+  useEffect(() => {
+    connect();
+    return () => disconnect();
+  }, []);
   const { setTabComponent } = useSubNavbarTab();
   const [isPoolTab, setIsPoolTab] = useState(true);
-  const [dataBudidaya, setDataBudidaya] = useState<Pool[]>([]);
-  const [dataKarantina, setDataKarantina] = useState<Pool[]>([]);
+
+  const dataBudidaya = useMemo(
+    () => (data?.data ?? []).filter((pool) => pool.category !== "quarantine"),
+    [data],
+  );
+  const dataKarantina = useMemo(
+    () => (data?.data ?? []).filter((pool) => pool.category === "quarantine"),
+    [data],
+  );
 
   const cardData = [
     {
@@ -58,22 +72,6 @@ const page = () => {
       icon: <FiShield />,
     },
   ];
-
-  useEffect(() => {
-    if (data) {
-      console.log("Kolam Data:", data);
-      const dB = data.data.filter((pool) => pool.category !== "quarantine");
-      const dK = data.data.filter((pool) => pool.category === "quarantine");
-      setDataBudidaya(dB);
-      setDataKarantina(dK);
-
-      console.log("Kolam Budidaya:", dB);
-      console.log("Kolam Karantina:", dK);
-    }
-    if (error) {
-      console.error("Error fetching kolam:", error);
-    }
-  }, [data, error]);
 
   useEffect(() => {
     setTabComponent(

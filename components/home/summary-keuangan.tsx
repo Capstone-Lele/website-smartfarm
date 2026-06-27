@@ -18,32 +18,144 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
+import { ArrowDownIcon, ArrowUpIcon, ActivityIcon } from "lucide-react";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  WalletIcon,
-  ActivityIcon,
-} from "lucide-react";
+  usePublicFinanceCommodity,
+  usePublicFinanceInventory,
+  usePublicFinanceInventorySubmission,
+  usePublicFinanceNonInventory,
+} from "@/lib/api/service/guest/useGuest";
+import { Finance } from "@/types/finance/finance";
+import { format } from "date-fns";
+import { id as localeId } from "date-fns/locale";
 
-// Dummy Data untuk grafik tren arus kas tanpa menunjukkan laba/rugi total
-const dummyTrendData = [
-  { date: "Maret", income: 15400000, expense: 8200000 },
-  { date: "April", income: 12500000, expense: 9100000 },
-  { date: "Mei", income: 18200000, expense: 11400000 },
-  { date: "Juni", income: 14700000, expense: 12100000 },
-  { date: "Juli", income: 21000000, expense: 9800000 },
-  { date: "Agustus", income: 23500000, expense: 14200000 },
-];
+type TrendDataPoint = {
+  date: string;
+  sortKey: string;
+  income: number;
+  expense: number;
+};
 
 export function HomeSummaryKeuangan() {
-  const totalIncome = dummyTrendData.reduce(
-    (acc, curr) => acc + curr.income,
-    0,
-  );
-  const totalExpense = dummyTrendData.reduce(
-    (acc, curr) => acc + curr.expense,
-    0,
-  );
+  const { data: commodityData } = usePublicFinanceCommodity();
+  const { data: inventoryData } = usePublicFinanceInventory();
+  const { data: inventorySubmissionData } = usePublicFinanceInventorySubmission();
+  const { data: nonInventoryData } = usePublicFinanceNonInventory();
+
+  const allData = useMemo<Finance[]>(() => {
+    const merged: Finance[] = [];
+
+    commodityData?.forEach((item) => {
+      merged.push({
+        id: item.id,
+        transactionDate: item.transactionDate,
+        sourceId: item.sourceId,
+        type: item.type,
+        transactionSource: item.transactionSource,
+        transactionType: "-",
+        productCategory: "-",
+        product: "-",
+        notes: item.notes,
+        totalPrice: item.totalPrice,
+        createdAt: item.createdAt,
+      });
+    });
+
+    inventoryData?.forEach((item) => {
+      merged.push({
+        id: item.id,
+        transactionDate: item.transactionDate,
+        sourceId: item.sourceId,
+        type: item.type,
+        transactionSource: item.transactionSource,
+        productCategory: item.productCategory,
+        product: item.product,
+        transactionType: item.transactionType || undefined,
+        notes: item.notes,
+        totalPrice: item.totalPrice,
+        createdAt: item.createdAt,
+      });
+    });
+
+    inventorySubmissionData?.forEach((item) => {
+      merged.push({
+        id: item.id,
+        transactionDate: item.transactionDate,
+        sourceId: item.sourceId,
+        type: item.type,
+        transactionSource: item.transactionSource,
+        productCategory: item.productCategory,
+        product: item.product,
+        transactionType: item.transactionType || undefined,
+        notes: item.notes,
+        totalPrice: item.totalPrice,
+        createdAt: item.createdAt,
+      });
+    });
+
+    nonInventoryData?.forEach((item) => {
+      merged.push({
+        id: item.id,
+        transactionDate: item.transactionDate,
+        sourceId: item.sourceId,
+        type: item.type,
+        transactionSource: "non_inventory",
+        productCategory: item.productCategory,
+        product: item.product,
+        transactionType: item.transactionType,
+        notes: item.notes,
+        totalPrice: item.totalPrice || 0,
+        createdAt: item.createdAt,
+      });
+    });
+
+    return merged;
+  }, [commodityData, inventoryData, inventorySubmissionData, nonInventoryData]);
+
+  const { totalIncome, totalExpense, totalTransactions } = useMemo(() => {
+    let income = 0;
+    let expense = 0;
+
+    allData.forEach((item) => {
+      if (item.transactionType === "grant") return;
+      if (item.type === "in" || item.type === "IN") {
+        income += item.totalPrice || 0;
+      } else if (item.type === "out" || item.type === "OUT") {
+        expense += item.totalPrice || 0;
+      }
+    });
+
+    return { totalIncome: income, totalExpense: expense, totalTransactions: allData.length };
+  }, [allData]);
+
+  const trendData = useMemo<TrendDataPoint[]>(() => {
+    const grouped: Record<string, TrendDataPoint> = {};
+
+    allData.forEach((item) => {
+      try {
+        const parsed = new Date(item.transactionDate);
+        const sortKey = format(parsed, "yyyy-MM");
+        const displayDate = format(parsed, "MMM yyyy", { locale: localeId });
+        const amount = item.totalPrice || 0;
+
+        if (!grouped[sortKey]) {
+          grouped[sortKey] = { date: displayDate, sortKey, income: 0, expense: 0 };
+        }
+
+        if (item.type === "in" || item.type === "IN") {
+          grouped[sortKey].income += amount;
+        } else if (item.type === "out" || item.type === "OUT") {
+          grouped[sortKey].expense += amount;
+        }
+      } catch {
+        // skip invalid dates
+      }
+    });
+
+    return Object.values(grouped).sort((a, b) =>
+      a.sortKey.localeCompare(b.sortKey),
+    );
+  }, [allData]);
 
   return (
     <section className="py-16 md:py-24 bg-gray-50/50">
@@ -63,39 +175,37 @@ export function HomeSummaryKeuangan() {
           <Card className="flex flex-col border shadow-sm rounded-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Pemasukan (Tahun Ini)
+                Total Pemasukan
               </CardTitle>
-              <div className="h-4 w-4 text-emerald-500">
-                <ArrowUpIcon className="h-4 w-4" />
-              </div>
+              <ArrowUpIcon className="h-4 w-4 text-emerald-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-semibold ">
+              <div className="text-2xl font-semibold">
                 {formatRupiah(totalIncome)}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Berasal dari hasil panen, dan sumber lainnya
+                Berasal dari hasil panen dan sumber lainnya
               </p>
             </CardContent>
           </Card>
+
           <Card className="flex flex-col border shadow-sm rounded-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Pengeluaran (Tahun Ini)
+                Total Pengeluaran
               </CardTitle>
-              <div className="h-4 w-4 text-rose-500">
-                <ArrowDownIcon className="h-4 w-4" />
-              </div>
+              <ArrowDownIcon className="h-4 w-4 text-rose-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-semibold ">
+              <div className="text-2xl font-semibold">
                 {formatRupiah(totalExpense)}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Biaya pakan, inventaris & operasional
+                Biaya pakan, inventaris &amp; operasional
               </p>
             </CardContent>
           </Card>
+
           <Card className="flex flex-col border shadow-sm rounded-sm md:col-span-2 lg:col-span-1">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -104,14 +214,14 @@ export function HomeSummaryKeuangan() {
               <ActivityIcon className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-semibold 0">
-                128{" "}
+              <div className="text-2xl font-semibold">
+                {totalTransactions}{" "}
                 <span className="text-lg font-normal text-muted-foreground">
                   transaksi
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Tercatat pada tahun terakhir
+                Total seluruh data transaksi tercatat
               </p>
             </CardContent>
           </Card>
@@ -121,85 +231,85 @@ export function HomeSummaryKeuangan() {
           <CardHeader>
             <CardTitle>Tren Arus Kas</CardTitle>
             <CardDescription>
-              Representasi visual pemasukan vs pengeluaran bulan terakhir.
+              Representasi visual pemasukan vs pengeluaran per bulan.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[350px] w-full mt-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={dummyTrendData}
-                  margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient
-                      id="colorIncome"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient
-                      id="colorExpense"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                    dy={10}
-                  />
-                  <YAxis
-                    tickFormatter={(value) => `Rp ${value / 1000000}JT`}
-                    tickLine={false}
-                    axisLine={false}
-                    tick={{ fontSize: 12, fill: "#6b7280" }}
-                    width={80}
-                  />
-                  <CartesianGrid
-                    vertical={false}
-                    strokeDasharray="3 3"
-                    stroke="#e5e7eb"
-                  />
-                  <Tooltip
-                    formatter={(value: number) => formatRupiah(value)}
-                    contentStyle={{
-                      borderRadius: "8px",
-                      border: "1px solid #e5e7eb",
-                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="income"
-                    name="Pemasukan"
-                    stroke="#10b981"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorIncome)"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="expense"
-                    name="Pengeluaran"
-                    stroke="#f43f5e"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorExpense)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {trendData.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center gap-2 text-muted-foreground">
+                  <span className="text-sm">Belum ada data arus kas</span>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={trendData}
+                    margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                      dy={10}
+                    />
+                    <YAxis
+                      tickFormatter={(value) =>
+                        value >= 1e6
+                          ? `Rp ${(value / 1e6).toFixed(1)}Jt`
+                          : value >= 1e3
+                          ? `Rp ${(value / 1e3).toFixed(1)}Rb`
+                          : `Rp ${value}`
+                      }
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                      width={80}
+                    />
+                    <CartesianGrid
+                      vertical={false}
+                      strokeDasharray="3 3"
+                      stroke="#e5e7eb"
+                    />
+                    <Tooltip
+                      formatter={(value: number) => formatRupiah(value)}
+                      contentStyle={{
+                        borderRadius: "8px",
+                        border: "1px solid #e5e7eb",
+                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="income"
+                      name="Pemasukan"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorIncome)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="expense"
+                      name="Pengeluaran"
+                      stroke="#f43f5e"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorExpense)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </CardContent>
         </Card>

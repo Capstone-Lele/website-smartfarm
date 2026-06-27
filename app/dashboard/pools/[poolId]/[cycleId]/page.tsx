@@ -23,7 +23,8 @@ import { SimpleStatus } from "./_water-quality/simple-status";
 import { ParamStatus } from "./_water-quality/param-status";
 import { WaterQualityChart } from "./_water-quality/chart";
 import { WaterQualityTable } from "./_water-quality/table";
-import { useIotByNode, useIotLiveByNode } from "@/lib/api/service/iot/useIot";
+import { useIotByNode } from "@/lib/api/service/iot/useIot";
+import { useSocketStore } from "@/lib/store/useSocketStore";
 import { calculatePoolVolume } from "@/lib/utils/volume-pool";
 
 const CycleDetailPage = () => {
@@ -52,11 +53,19 @@ const CycleDetailPage = () => {
   const nodeStr = poolData?.name
     ? parseInt(poolData.name.replace(/\D/g, "")).toString()
     : "";
+  const nodeNum = nodeStr ? parseInt(nodeStr) : 0;
+
   const { data: iotData, isLoading: isLoadingIot } = useIotByNode(nodeStr);
-  const { data: iotLiveData } = useIotLiveByNode(nodeStr);
-  const liveTemp = iotLiveData?.temp || "-";
-  const livePh = iotLiveData?.ph || "-";
-  const liveTime = iotLiveData?.receivedAt || null;
+
+  // WebSocket untuk live data
+  const connect = useSocketStore((s) => s.connect);
+  const disconnect = useSocketStore((s) => s.disconnect);
+  const socket = useSocketStore((s) => s.socket);
+  const liveIotData = useSocketStore((s) => (nodeNum ? s.iotData[nodeNum] : null) ?? null);
+
+  const liveTemp = liveIotData?.temp ?? "-";
+  const livePh = liveIotData?.ph ?? "-";
+  const liveTime = liveIotData?.receivedAt ?? null;
 
   let umur = "-";
   if (startDate) {
@@ -77,6 +86,16 @@ const CycleDetailPage = () => {
   const batasKepadatan = volume * 250;
   const currentQuantity = cycleData?.currentQuantity || 0;
   const isAman = currentQuantity <= batasKepadatan;
+
+  useEffect(() => {
+    connect();
+    return () => disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!socket || !nodeStr) return;
+    socket.emit("join-pool", { nodeId: nodeStr });
+  }, [socket, nodeStr]);
 
   // Sync pool name & cycle name ke breadcrumb store
   useEffect(() => {

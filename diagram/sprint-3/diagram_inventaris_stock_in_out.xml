@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="inventaris_stock_in_out_001">
+    <mxGraphModel dx="3142" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Outer swimlane -->
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Detail Inventaris &amp; Transaksi Stok Masuk/Keluar" vertex="1">
+          <mxGeometry height="1480" width="1400" x="40" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Penanggung Jawab lane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Admin" vertex="1">
+          <mxGeometry height="1450" width="690" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Start -->
+        <mxCell id="10" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="320" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- Buka halaman detail -->
+        <mxCell id="11" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman&#xa;Detail Inventaris" vertex="1">
+          <mxGeometry height="50" width="200" x="235" y="110" as="geometry" />
+        </mxCell>
+
+        <!-- Pilih aksi -->
+        <mxCell id="12" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Pilih aksi" vertex="1">
+          <mxGeometry height="70" width="160" x="255" y="200" as="geometry" />
+        </mxCell>
+
+        <!-- Filter tanggal (kiri) -->
+        <mxCell id="20" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Pilih rentang tanggal /&#xa;klik Reset tanggal" vertex="1">
+          <mxGeometry height="50" width="180" x="25" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Pilih tab -->
+        <mxCell id="25" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Pilih tab: Ringkasan &amp; Grafik /&#xa;Data Tabel / Laporan" vertex="1">
+          <mxGeometry height="50" width="200" x="235" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Tambah stok (kanan) -->
+        <mxCell id="30" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Pada tab Data Tabel,&#xa;klik tombol Tambah Stok" vertex="1">
+          <mxGeometry height="50" width="190" x="470" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Pilih tipe transaksi -->
+        <mxCell id="31" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Pilih Tipe Transaksi&#xa;(Grant / Non-Grant)" vertex="1">
+          <mxGeometry height="50" width="190" x="470" y="400" as="geometry" />
+        </mxCell>
+
+        <!-- Isi form stok -->
+        <mxCell id="32" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengisi form stok:&#xa;Jumlah, Catatan, Foto Bukti" vertex="1">
+          <mxGeometry height="60" width="190" x="470" y="490" as="geometry" />
+        </mxCell>
+
+        <!-- Isi data transaksi -->
+        <mxCell id="33" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Mengisi data transaksi:&#xa;Tanggal, Harga Per Item,&#xa;Catatan Transaksi, Foto Nota/&#xa;Serah Terima" vertex="1">
+          <mxGeometry height="80" width="200" x="465" y="580" as="geometry" />
+        </mxCell>
+
+        <!-- Klik Simpan -->
+        <mxCell id="34" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Simpan" vertex="1">
+          <mxGeometry height="50" width="190" x="470" y="690" as="geometry" />
+        </mxCell>
+
+        <!-- Konfirmasi -->
+        <mxCell id="35" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Konfirmasi&#xa;penambahan stok?" vertex="1">
+          <mxGeometry height="70" width="170" x="290" y="690" as="geometry" />
+        </mxCell>
+
+        <!-- Batal -->
+        <mxCell id="36" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Batalkan penambahan" vertex="1">
+          <mxGeometry height="50" width="170" x="50" y="700" as="geometry" />
+        </mxCell>
+
+        <!-- Lihat detail catatan -->
+        <mxCell id="40" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik Detail pada baris catatan&#xa;In/Out di tabel" vertex="1">
+          <mxGeometry height="50" width="200" x="235" y="420" as="geometry" />
+        </mxCell>
+
+        <!-- Edges petugas -->
+        <mxCell id="e10_11" edge="1" parent="3" source="10" style="edgeStyle=orthogonalEdgeStyle;" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11_12" edge="1" parent="3" source="11" style="edgeStyle=orthogonalEdgeStyle;" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e12_20" edge="1" parent="3" source="12" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="20" value="Filter">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="115" y="235" />
+              <mxPoint x="115" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12_25" edge="1" parent="3" source="12" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="25" value="Pilih Tab">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e25_40" edge="1" parent="3" source="25" style="edgeStyle=orthogonalEdgeStyle;" target="40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12_30" edge="1" parent="3" source="12" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="30" value="Tambah Stok">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="565" y="235" />
+              <mxPoint x="565" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e30_31" edge="1" parent="3" source="30" style="edgeStyle=orthogonalEdgeStyle;" target="31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e31_32" edge="1" parent="3" source="31" style="edgeStyle=orthogonalEdgeStyle;" target="32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e32_33" edge="1" parent="3" source="32" style="edgeStyle=orthogonalEdgeStyle;" target="33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e33_34" edge="1" parent="3" source="33" style="edgeStyle=orthogonalEdgeStyle;" target="34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e34_35" edge="1" parent="3" source="34" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e35_36" edge="1" parent="3" source="35" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="36" value="Batal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem lane -->
+        <mxCell id="4" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="1450" width="710" x="690" y="30" as="geometry" />
+        </mxCell>
+
+        <!-- Load & merge data -->
+        <mxCell id="60" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Memuat &amp; menggabungkan data:&#xa;Notes, Pengajuan (approved),&#xa;Consumption. Hitung statistik&#xa;(Stok saat ini, Masuk, Keluar, Kejadian)" vertex="1">
+          <mxGeometry height="90" width="270" x="220" y="95" as="geometry" />
+        </mxCell>
+
+        <!-- Filter sistem -->
+        <mxCell id="70" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Memfilter data berdasarkan&#xa;rentang tanggal" vertex="1">
+          <mxGeometry height="50" width="200" x="30" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Tampilkan tab -->
+        <mxCell id="75" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Menampilkan konten tab:&#xa;Ringkasan+Grafik / Tabel In-Out /&#xa;Laporan" vertex="1">
+          <mxGeometry height="60" width="240" x="230" y="305" as="geometry" />
+        </mxCell>
+
+        <!-- Detail catatan -->
+        <mxCell id="80" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman detail catatan&#xa;(sesuai source: notes /&#xa;submission / consumption)" vertex="1">
+          <mxGeometry height="70" width="240" x="230" y="410" as="geometry" />
+        </mxCell>
+
+        <!-- Buka sheet tambah stok -->
+        <mxCell id="90" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka sheet Tambah Stok" vertex="1">
+          <mxGeometry height="50" width="200" x="475" y="310" as="geometry" />
+        </mxCell>
+
+        <!-- Auto hitung total -->
+        <mxCell id="91" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Hitung otomatis&#xa;Total Harga = Harga × Jumlah" vertex="1">
+          <mxGeometry height="50" width="220" x="465" y="500" as="geometry" />
+        </mxCell>
+
+        <!-- Validasi -->
+        <mxCell id="92" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Validasi form&#xa;(stok + data transaksi)" vertex="1">
+          <mxGeometry height="50" width="220" x="465" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="93" parent="4" style="rhombus;whiteSpace=wrap;html=1;" value="Data valid?" vertex="1">
+          <mxGeometry height="60" width="150" x="500" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="94" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan pesan error&#xa;pada field" vertex="1">
+          <mxGeometry height="50" width="160" x="270" y="725" as="geometry" />
+        </mxCell>
+        <mxCell id="95" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan popup konfirmasi" vertex="1">
+          <mxGeometry height="50" width="220" x="465" y="820" as="geometry" />
+        </mxCell>
+
+        <!-- Simpan transaksi -->
+        <mxCell id="96" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Simpan transaksi stok ke DB,&#xa;update total stok inventaris" vertex="1">
+          <mxGeometry height="50" width="220" x="465" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="97" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast sukses,&#xa;tutup sheet, refresh data &amp; statistik" vertex="1">
+          <mxGeometry height="60" width="240" x="455" y="1000" as="geometry" />
+        </mxCell>
+
+        <!-- Toast batal -->
+        <mxCell id="98" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast&#xa;&quot;Penambahan stok dibatalkan&quot;" vertex="1">
+          <mxGeometry height="50" width="200" x="35" y="1000" as="geometry" />
+        </mxCell>
+
+        <!-- End -->
+        <mxCell id="110" parent="4" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="343" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="111" parent="4" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="348" y="1365" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem edges -->
+        <mxCell id="e90_91" edge="1" parent="4" source="90" style="edgeStyle=orthogonalEdgeStyle;" target="91">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e91_92" edge="1" parent="4" source="91" style="edgeStyle=orthogonalEdgeStyle;" target="92">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e92_93" edge="1" parent="4" source="92" style="edgeStyle=orthogonalEdgeStyle;" target="93">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e93_94" edge="1" parent="4" source="93" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="94" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e93_95" edge="1" parent="4" source="93" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="95" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e95_96" edge="1" parent="4" source="95" style="edgeStyle=orthogonalEdgeStyle;" target="96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e96_97" edge="1" parent="4" source="96" style="edgeStyle=orthogonalEdgeStyle;" target="97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- end connections -->
+        <mxCell id="e97_end" edge="1" parent="4" source="97" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e98_end" edge="1" parent="4" source="98" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e70_end" edge="1" parent="4" source="70" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="1360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e75_end" edge="1" parent="4" source="75" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="335" />
+              <mxPoint x="200" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e80_end" edge="1" parent="4" source="80" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="445" />
+              <mxPoint x="210" y="1345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cross-lane edges -->
+        <mxCell id="ce1" edge="1" parent="2" source="11" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce2" edge="1" parent="2" source="20" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="70">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce3" edge="1" parent="2" source="25" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="75">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce4" edge="1" parent="2" source="40" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce5" edge="1" parent="2" source="30" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="90">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce6" edge="1" parent="2" source="33" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="91">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce7" edge="1" parent="2" source="34" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="92">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Konfirmasi YA → simpan -->
+        <mxCell id="ce8" edge="1" parent="2" source="35" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="96" value="Konfirmasi">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="375" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- Batal → toast batal -->
+        <mxCell id="ce9" edge="1" parent="2" source="36" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="98">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="135" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <!-- error feedback dashed -->
+        <mxCell id="ce10" edge="1" parent="2" source="94" style="edgeStyle=orthogonalEdgeStyle;dashed=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" target="33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

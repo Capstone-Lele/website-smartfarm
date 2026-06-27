@@ -153,6 +153,11 @@ export const API_ENDPOINTS = {
   },
   GUEST: {
     GENERAL_INFO: "/app/general-info",
+    // PUBLIC FINANCE
+    GET_PUBLIC_FINANCE_INVENTORY:`/app/finance?sourceType=inventory_notes`,
+    GET_PUBLIC_FINANCE_NON_INVENTORY:`/app/finance?sourceType=manual`,
+    GET_PUBLIC_FINANCE_INVENTORY_SUBMISSION:`/app/finance?sourceType=inventory_submissions`,
+    GET_PUBLIC_FINANCE_COMMODITY:`/app/finance?sourceType=commodity_sales`,
   },
   CLEAR_REDIS_CACHE: "/app/clear-cache",
 } as const;

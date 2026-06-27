@@ -94,6 +94,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   // Menambahkan kolom dan data row "No" secara dinamis
   const dataWithNo = useMemo(() => {
@@ -111,16 +112,19 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     globalFilterFn: "includesString",
     filterFns: {
       dateRange: dateRangeFilter as FilterFn<TData>,
     },
+    autoResetPageIndex: false,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
       globalFilter,
+      pagination,
     },
   });
 

@@ -215,6 +215,13 @@ const EditSubmissionModal = ({
   const isApproved = status === "approved";
   const isNonGrant = transactionType === "non-grant";
 
+
+
+
+
+
+
+
   // Auto-calculate totalPrice = pricePerItem × submission.quantity
   useEffect(() => {
     const price = Number(pricePerItem);
@@ -419,7 +426,7 @@ const EditSubmissionModal = ({
                     )}
                   />
 
-                  {/* ── Conditional: Feedback Section ── */}
+                  {/* Conditional: Feedback Section */}
                   {(status === "rejected" || status === "approved") && (
                     <Controller
                       name="feedback"

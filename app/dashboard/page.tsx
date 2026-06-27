@@ -213,7 +213,7 @@ const DashboardPage = () => {
             - Exclude tipe transaksi Hibah/Grant
           </span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <Card className="rounded-sm shadow-none border py-0 ">
             <CardContent className="p-4 flex items-center gap-4">
               <div className="p-3 bg-blue-100/80 text-blue-600 rounded-full">
