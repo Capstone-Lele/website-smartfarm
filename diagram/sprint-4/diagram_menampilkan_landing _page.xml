@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="landing_page_001">
+    <mxGraphModel dx="2728" dy="1502" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1527" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=15;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Menampilkan Landing Page" vertex="1">
+          <mxGeometry height="700" width="800" x="40" y="40" as="geometry" />
+        </mxCell>
+
+        <!-- Pengunjung lane -->
+        <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=15;align=center;collapsible=0;" value="Pengunjung" vertex="1">
+          <mxGeometry height="670" width="430" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;fontSize=15;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="265" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Membuka halaman&#xa;Landing Page ( / )" vertex="1">
+          <mxGeometry height="50" width="200" x="180" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="3" style="rhombus;whiteSpace=wrap;html=1;fontSize=15;" value="Pilih aksi" vertex="1">
+          <mxGeometry height="60" width="150" x="205" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Menelusuri (scroll) section:&#xa;Header, Profil, Kolam, Populasi,&#xa;Panen, Ringkasan Keuangan,&#xa;CTA, Footer" vertex="1">
+          <mxGeometry height="80" width="220" x="20" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="3" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Klik tombol Login&#xa;pada Navbar" vertex="1">
+          <mxGeometry height="50" width="180" x="230" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="3" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;fontSize=15;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="268" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="3" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;fontSize=15;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="273" y="585" as="geometry" />
+        </mxCell>
+        <mxCell id="e4_5" edge="1" parent="3" source="4" style="edgeStyle=orthogonalEdgeStyle;fontSize=15;" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5_6" edge="1" parent="3" source="5" style="edgeStyle=orthogonalEdgeStyle;fontSize=15;" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6_7" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="7" value="Lihat Informasi">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="270" />
+              <mxPoint x="130" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6_8" edge="1" parent="3" source="6" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="8" value="Login">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="320" y="270" />
+              <mxPoint x="320" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7_9" edge="1" parent="3" source="7" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=15;" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem lane -->
+        <mxCell id="11" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=15;align=center;collapsible=0;" value="Sistem" vertex="1">
+          <mxGeometry height="670" width="370" x="430" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="11" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Memuat informasi umum&#xa;(data guest) dari API" vertex="1">
+          <mxGeometry height="50" width="220" x="60" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="11" style="rhombus;whiteSpace=wrap;html=1;fontSize=15;" value="Data sedang dimuat?" vertex="1">
+          <mxGeometry height="70" width="160" x="90" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="11" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Menampilkan kondisi&#xa;loading" vertex="1">
+          <mxGeometry height="50" width="150" x="190" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="11" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Merender seluruh section:&#xa;Navbar, Header, Profil, Kolam,&#xa;Populasi, Panen, Ringkasan&#xa;Keuangan, CTA, Footer" vertex="1">
+          <mxGeometry height="90" width="230" x="30" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="11" style="rounded=1;whiteSpace=wrap;html=1;fontSize=15;" value="Navigasi ke halaman&#xa;Login ( /login )" vertex="1">
+          <mxGeometry height="50" width="170" x="160" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="e12_13" edge="1" parent="11" source="12" style="edgeStyle=orthogonalEdgeStyle;fontSize=15;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13_14" edge="1" parent="11" source="13" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="14" value="Ya">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13_15" edge="1" parent="11" source="13" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=15;" target="15" value="Tidak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14_15" edge="1" parent="11" source="14" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;fontSize=15;dashed=1;" target="15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-lane edges -->
+        <mxCell id="ce1" edge="1" parent="2" source="5" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=15;" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce2" edge="1" parent="2" source="15" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=15;" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce3" edge="1" parent="2" source="8" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=15;" target="16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ce4" edge="1" parent="2" source="16" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=15;" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

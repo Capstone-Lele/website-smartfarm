@@ -35,9 +35,7 @@ const page = () => {
     useFinanceCommodity();
   const { data: inventoryData, isLoading: loadingInventory } =
     useFinanceInventory();
-  const {
-    data: inventorySubmissionData,
-    isLoading: loadingInventorySubmission,
+  const { data: inventorySubmissionData, isLoading: loadingInventorySubmission,
   } = useFinanceInventorySubmission();
   const { data: nonInventoryData, isLoading: loadingNonInventory } =
     useFinanceNonInventory();

@@ -1,5 +1,5 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -19,10 +19,93 @@ import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
 import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 import { formatDate } from "@/lib/utils/format-date";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
-import { useIotLiveByNode } from "@/lib/api/service/iot/useIot";
 import { getWaterStatus } from "@/lib/utils/read-water-status";
 import { formatNumber, formatNumberFloor } from "@/lib/utils/format-number";
 import { calculatePoolVolume } from "@/lib/utils/volume-pool";
+import { useEffect } from "react";
+import { useSocketStore } from "@/lib/store/useSocketStore";
+import { IOTData } from "@/types/notes/iot";
+
+function StatusAirCell({ row }: { row: Row<Pool> }) {
+  const node = parseInt(row.original.name.replace(/\D/g, ""));
+  const socket = useSocketStore((s) => s.socket);
+  const data = useSocketStore((s) => s.iotData[node] ?? null);
+
+  useEffect(() => {
+    if (!socket) return;
+    console.log(`[WS] join-pool emit → nodeId: "${node}" (pool: "${row.original.name}")`);
+    socket.emit("join-pool", { nodeId: node.toString() });
+  }, [socket, node]);
+
+  if (data === null) {
+    console.log(`[IoT] "${row.original.name}" (node: ${node}): belum ada data dari socket`);
+    return <span>-</span>;
+  }
+
+  const { ph, temp } = data;
+
+  if (
+    ph === undefined ||
+    temp === undefined ||
+    row.original.acidityMin === null ||
+    row.original.acidityMax === null ||
+    row.original.acidityNormal === null ||
+    row.original.temperatureMin === null ||
+    row.original.temperatureMax === null ||
+    row.original.temperatureNormal === null
+  ) {
+    console.log(`[IoT] "${row.original.name}" (node: ${node}): parameter kolam belum diset`, {
+      ph,
+      temp,
+      acidityMin: row.original.acidityMin,
+      acidityMax: row.original.acidityMax,
+      acidityNormal: row.original.acidityNormal,
+      temperatureMin: row.original.temperatureMin,
+      temperatureMax: row.original.temperatureMax,
+      temperatureNormal: row.original.temperatureNormal,
+    });
+    return <span>-</span>;
+  }
+
+  const phStatus = getWaterStatus(
+    ph,
+    row.original.acidityMin,
+    row.original.acidityMax,
+    row.original.acidityNormal,
+  );
+
+  const tempStatus = getWaterStatus(
+    temp,
+    row.original.temperatureMin,
+    row.original.temperatureMax,
+    row.original.temperatureNormal,
+  );
+
+  const statusColors = {
+    danger: "bg-red-50 text-red-600 border-red-200",
+    warning: "bg-yellow-50 text-yellow-600 border-yellow-200",
+    normal: "bg-green-50 text-green-600 border-green-200",
+    "invalid-parameter": "bg-gray-50 text-gray-500 border-gray-200",
+    unknown: "bg-gray-50 text-gray-500 border-gray-200",
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5 min-w-[100px]">
+      <div
+        className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[phStatus]}`}
+      >
+        <span>pH</span>
+        <span>{ph}</span>
+      </div>
+      <div
+        className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[tempStatus]}`}
+      >
+        <span>Suhu</span>
+        <span>{temp}°C</span>
+      </div>
+    </div>
+  );
+}
 
 export const columnsPool: ColumnDef<Pool>[] = [
   {
@@ -131,7 +214,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
       const nF = (value: any) => {
         return Number(value);
       };
-      
+
       const volume = calculatePoolVolume({ height, diameter, length, width });
 
       if (diameter) {
@@ -280,65 +363,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS AIR" />
     ),
-    cell: ({ row }) => {
-      // node berasal dari nama kolam, misal "Kolam 1" -> node_id = 1
-      const node = parseInt(row.original.name.replace(/\D/g, ""));
-      const { data: iotData } = useIotLiveByNode(node.toString());
-      const ph = iotData?.ph;
-      const temp = iotData?.temp;
-
-      if (
-        ph === undefined ||
-        temp === undefined ||
-        row.original.acidityMin === null ||
-        row.original.acidityMax === null ||
-        row.original.acidityNormal === null ||
-        row.original.temperatureMin === null ||
-        row.original.temperatureMax === null ||
-        row.original.temperatureNormal === null
-      ) {
-        return <span>-</span>;
-      }
-
-      const phStatus = getWaterStatus(
-        ph,
-        row.original.acidityMin,
-        row.original.acidityMax,
-        row.original.acidityNormal,
-      );
-
-      const tempStatus = getWaterStatus(
-        temp,
-        row.original.temperatureMin,
-        row.original.temperatureMax,
-        row.original.temperatureNormal,
-      );
-
-      const statusColors = {
-        danger: "bg-red-50 text-red-600 border-red-200",
-        warning: "bg-yellow-50 text-yellow-600 border-yellow-200",
-        normal: "bg-green-50 text-green-600 border-green-200",
-        "invalid-parameter": "bg-gray-50 text-gray-500 border-gray-200",
-        unknown: "bg-gray-50 text-gray-500 border-gray-200",
-      };
-
-      return (
-        <div className="flex flex-col gap-1.5 min-w-[100px]">
-          <div
-            className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[phStatus]}`}
-          >
-            <span>pH</span>
-            <span>{ph}</span>
-          </div>
-          <div
-            className={`flex items-center justify-between px-2 py-0.5 rounded text-xs font-medium border ${statusColors[tempStatus]}`}
-          >
-            <span>Suhu</span>
-            <span>{temp}°C</span>
-          </div>
-        </div>
-      );
-    },
+    cell: ({ row }) => <StatusAirCell row={row} />,
   },
   {
     id: "isActive",

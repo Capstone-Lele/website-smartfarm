@@ -148,7 +148,7 @@ const PostKolamModal = ({ dataPool }: { dataPool?: Pool[] }) => {
     }
   }, [isCirclePool]);
 
-  // Tambahkan baris ini
+  // Tambahan nomor
   useEffect(() => {
     if (isOpen) {
       // Hanya update/hitung ulang saat modal dibuka

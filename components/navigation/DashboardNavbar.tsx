@@ -21,6 +21,7 @@ import SkeletonNavbarProfile from "../sekeleton/navbar-profile";
 import { HiOutlineChevronDown } from "react-icons/hi2";
 import useSubNavbarTab from "@/lib/hooks/useSubNavbarTab";
 import { getAvatarUrl } from "@/lib/utils/avatar";
+import { Spinner } from "../ui/spinner";
 
 const DashboardNavbar = () => {
   const { tabComponent } = useSubNavbarTab();
@@ -174,13 +175,20 @@ const UserProfile = () => {
           <FiUser className="text-lg" />
           Setting Profile
         </Link>
-        <div
-          onClick={onLogout}
-          className="flex items-center cursor-pointer gap-2 px-2 py-1 hover:text-red-600 hover:bg-red-100 rounded"
-        >
-          <MdOutlineLogout className="text-lg" />
-          Logout
-        </div>
+        {logoutMutation.isPending ? (
+          <div className="flex items-center gap-2 px-2 py-1 text-gray-500">
+            <Spinner className="mr-2" />
+            Loading ...
+          </div>
+        ) : (
+          <div
+            onClick={onLogout}
+            className="flex items-center cursor-pointer gap-2 px-2 py-1 hover:text-red-600 hover:bg-red-100 rounded"
+          >
+            <MdOutlineLogout className="text-lg" />
+            Logout
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
