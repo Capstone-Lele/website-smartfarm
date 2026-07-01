@@ -126,30 +126,35 @@ export const columnsPool: ColumnDef<Pool>[] = [
     },
   },
   {
-    accessorKey: "category",
+    id: "category",
+    accessorFn: (row) => translateCategoryPool(row.category),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
     cell: ({ row }) => {
       return (
         <Badge className="px-2" variant={"outline"}>
-          {translateCategoryPool(row.original.category)}
+          {row.getValue("category")}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "cycle",
+    id: "cycle",
+    accessorFn: (row) => {
+      const condition = ALL_CYCLE_CONDITIONS.find(
+        (cond) => cond.value === row.cycle,
+      );
+      return condition ? condition.label : "-";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
     cell: ({ row }) => {
-      const condition = ALL_CYCLE_CONDITIONS.find(
-        (cond) => cond.value === row.original.cycle,
-      );
-      return condition ? (
+      const val = row.getValue("cycle") as string;
+      return val !== "-" ? (
         <Badge className="px-2" variant={"outline"}>
-          {condition.label}
+          {val}
         </Badge>
       ) : (
         <span>-</span>
@@ -263,6 +268,21 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "density",
+    accessorFn: (row) => {
+      const quantity = row.currentQuantity;
+      const { length, width, height, diameter } = row;
+
+      if (quantity === null || quantity === undefined || !height) {
+        return "-";
+      }
+
+      const volume = calculatePoolVolume({ height, diameter, length, width });
+
+      if (volume <= 0) return "-";
+
+      const batasKepadatan = volume * 250;
+      return quantity <= batasKepadatan ? "Aman" : "Overload";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KEPADATAN" />
     ),
@@ -275,11 +295,9 @@ export const columnsPool: ColumnDef<Pool>[] = [
       }
 
       const volume = calculatePoolVolume({ height, diameter, length, width });
-
-      if (volume <= 0) return <span>-</span>;
-
-      const batasKepadatan = volume * 250; // Batas kepadatan berdasarkan volume
-      const isAman = quantity <= batasKepadatan;
+      const batasKepadatan = volume * 250;
+      const val = row.getValue("density") as string;
+      const isAman = val === "Aman";
 
       return (
         <div className="flex flex-col gap-1.5">
@@ -290,7 +308,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
                 : "bg-red-50 text-red-600 border-red-200"
             }`}
           >
-            {isAman ? "Aman" : "Overload"}
+            {val}
           </div>
           <span>
             {formatNumberFloor(batasKepadatan)} / {formatNumberFloor(quantity)}{" "}
@@ -336,14 +354,11 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "umur",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="UMUR SIKLUS" />
-    ),
-    cell: ({ row }) => {
-      const { cycleStartDate, cycleEndDate } = row.original;
+    accessorFn: (row) => {
+      const { cycleStartDate, cycleEndDate } = row;
 
       if (!cycleStartDate) {
-        return <span>-</span>;
+        return "-";
       }
 
       const start = new Date(cycleStartDate);
@@ -355,7 +370,13 @@ export const columnsPool: ColumnDef<Pool>[] = [
       const diffTime = end.getTime() - start.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-      return <span>{diffDays >= 0 ? diffDays : 0} hari</span>;
+      return `${diffDays >= 0 ? diffDays : 0} hari`;
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="UMUR SIKLUS" />
+    ),
+    cell: ({ row }) => {
+      return <span>{row.getValue("umur")}</span>;
     },
   },
   {
@@ -367,6 +388,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "isActive",
+    accessorFn: (row) => (row.deletedAt === null ? "Aktif" : "Nonaktif"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),
@@ -386,11 +408,12 @@ export const columnsPool: ColumnDef<Pool>[] = [
         }
       };
 
-      const isDeleted = row.original.deletedAt !== null;
+      const val = row.getValue("isActive") as string;
+      const isActive = val === "Aktif";
       return (
         <div>
           <ButtonSwitchColumn
-            isActive={!isDeleted}
+            isActive={isActive}
             onCheckedChange={handleCheckedChange}
             isLoading={deletePoolMutation.isPending}
           />

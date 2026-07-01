@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header-sor
 import { formatDate } from "@/lib/utils/format-date";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
 import { FinanceInventory } from "@/types/finance/finance-inventory";
-import { formatRupiah } from "@/lib/utils/format-rupiah";
+import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-type-transaction-column";
 import { ButtonCopy } from "@/components/button-copy";
 import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 
@@ -18,7 +18,8 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
     ),
   },
   {
-    accessorKey: "transactionDate",
+    id: "transactionDate",
+    accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -26,12 +27,11 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
         title="TANGGAL TRANSAKSI"
       />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.transactionDate);
-    },
+    cell: ({ row }) => row.getValue("transactionDate"),
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -44,11 +44,10 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
     },
   },
   {
-    accessorKey: "transactionSource",
+    id: "transactionSource",
+    accessorFn: (row) => sourceLabelTranslation(row.transactionSource),
     header: () => <span>SUMBER TRANSAKSI</span>,
-    cell: ({ row }) => {
-      return sourceLabelTranslation(row.original.transactionSource);
-    },
+    cell: ({ row }) => row.getValue("transactionSource"),
   },
   {
     accessorKey: "productCategory",
@@ -73,41 +72,58 @@ export const inventoryColumns: ColumnDef<FinanceInventory>[] = [
         : row.original.notes,
   },
   {
-    accessorKey: "quantity",
+    id: "quantity",
+    accessorFn: (row) => `${row.quantity} ${row.unit}`,
     header: () => <span>JUMLAH</span>,
-    cell: ({ row }) => {
-      return `${row.original.quantity} ${row.original.unit}`;
-    },
+    cell: ({ row }) => row.getValue("quantity"),
   },
   {
-    accessorKey: "pricePerItem",
+    id: "pricePerItem",
+    accessorFn: (row) => {
+      const priceStr =
+        row.pricePerItem !== null && row.pricePerItem !== undefined
+          ? formatRupiahTypeTransactionColumn(row.pricePerItem, row.transactionType)
+          : "-";
+      return row.transactionType === "grant" ? `${priceStr} (perkiraan)` : priceStr;
+    },
     header: () => <span>HARGA/UNIT</span>,
     cell: ({ row }) => {
-      const pricePerItem = Number(row.original.pricePerItem);
-      return (
-        <span>
-          {formatRupiah(pricePerItem)} / {row.original.unit}
-        </span>
+      return formatRupiahTypeTransactionColumn(
+        row.original.pricePerItem,
+        row.original.transactionType,
       );
     },
   },
   {
-    accessorKey: "totalPrice",
+    accessorKey: "unit",
+    header: () => <span>UNIT</span>,
+  },
+  {
+    id: "totalPrice",
+    accessorFn: (row) => {
+      const priceStr =
+        row.totalPrice !== null && row.totalPrice !== undefined
+          ? formatRupiahTypeTransactionColumn(row.totalPrice, row.transactionType)
+          : "-";
+      return row.transactionType === "grant" ? `${priceStr} (perkiraan)` : priceStr;
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL HARGA" />
     ),
     cell: ({ row }) => {
-      return <span>{formatRupiah(row.original.totalPrice)}</span>;
+      return formatRupiahTypeTransactionColumn(
+        row.original.totalPrice,
+        row.original.transactionType,
+      );
     },
   },
   {
-    accessorKey: "createdAt",
+    id: "createdAt",
+    accessorFn: (row) => formatDate(row.createdAt),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
-    },
+    cell: ({ row }) => row.getValue("createdAt"),
   },
   {
     id: "actions",

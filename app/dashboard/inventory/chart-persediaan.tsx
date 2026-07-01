@@ -80,6 +80,7 @@ export function ChartBarStacked({
                 angle={-45}
                 textAnchor="end"
                 interval={0}
+                fontSize={8}
               />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               {/* <ChartLegend content={<ChartLegendContent />} /> */}

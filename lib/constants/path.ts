@@ -15,14 +15,7 @@ const dataPath = [
         path: "/dashboard/pools/cycle",
         name: "Siklus Kolam",
       },
-      {
-        path: "/dashboard/pools/quarantine",
-        name: "Karantina",
-        isDynamic: true,
-        dynamicName: (params: any, meta?: Record<string, string>) => {
-          return meta?.["quarantine"] ?? `Karantina #${params.poolId}`;
-        },
-      },
+
       {
         path: "/dashboard/pools/[poolId]",
         name: "List Siklus",
@@ -40,6 +33,14 @@ const dataPath = [
         },
       },
     ],
+  },
+  {
+    path: "/dashboard/pools/quarantine",
+    name: "Karantina",
+    // isDynamic: true,
+    // dynamicName: (params: any, meta?: Record<string, string>) => {
+    //   return meta?.["quarantine"] ?? `Karantina #${params.poolId}`;
+    // },
   },
   {
     path: "/dashboard/master-data",

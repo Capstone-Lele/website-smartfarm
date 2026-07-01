@@ -32,11 +32,10 @@ export const columns: ColumnDef<Inventory>[] = [
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
   },
-
   {
     accessorKey: "totalQuantity",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="TOTAL STOK" />
+      <span>TOTAL STOK</span>
     ),
     cell: ({ row }) => {
       return (
@@ -60,7 +59,7 @@ export const columns: ColumnDef<Inventory>[] = [
   {
     accessorKey: "unit",
     header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="SATUAN" />
+      <DataTableColumnHeader className="" column={column} title="UNIT" />
     ),
   },
   {

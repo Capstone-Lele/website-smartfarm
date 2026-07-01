@@ -30,14 +30,14 @@ function QuarantinePageContent() {
 
   // const quarantinePool = quarantinePoolData || {} as any; // Using cycleId because row.original.id was passed here
 
-  useEffect(() => {
-    if (quarantinePoolData?.name) {
-      setLabel("quarantine", `Karantina ${quarantinePoolData.name}`);
-    }
-    return () => {
-      removeLabel("quarantine");
-    };
-  }, [quarantinePoolData?.name, quarantinePoolData, setLabel, removeLabel]);
+  // useEffect(() => {
+  //   if (quarantinePoolData?.name) {
+  //     setLabel("quarantine", `Karantina ${quarantinePoolData.name}`);
+  //   }
+  //   return () => {
+  //     removeLabel("quarantine");
+  //   };
+  // }, [quarantinePoolData?.name, quarantinePoolData, setLabel, removeLabel]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">

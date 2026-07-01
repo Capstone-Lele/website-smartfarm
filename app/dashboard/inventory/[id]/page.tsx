@@ -114,7 +114,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
         transactionType: item.transactionType ?? "-",
-        reportDate: item.reportDate,
+        reportDate: item.updatedAt,
         createdAt: item.reportDate ?? item.createdAt,
         updatedAt: item.updatedAt,
         deletedAt: item.deletedAt ?? null,

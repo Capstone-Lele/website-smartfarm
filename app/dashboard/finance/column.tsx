@@ -11,17 +11,19 @@ import { ButtonCopy } from "@/components/button-copy";
 import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 import { inventoryTransactionTypeTranslation } from "@/lib/constants/type-inventory";
 import { usePathname } from "next/navigation";
+import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-type-transaction-column";
 
 export const columns: ColumnDef<Finance>[] = [
-    {
-      accessorKey: "id",
-      header: () => <span>ID TRANSAKSI</span>,
-      cell: ({ row }) => (
-        <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
-      ),
-    },
   {
-    accessorKey: "transactionDate",
+    accessorKey: "id",
+    header: () => <span>ID TRANSAKSI</span>,
+    cell: ({ row }) => (
+      <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
+    ),
+  },
+  {
+    id: "transactionDate",
+    accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -29,12 +31,11 @@ export const columns: ColumnDef<Finance>[] = [
         title="TANGGAL TRANSAKSI"
       />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.transactionDate);
-    },
+    cell: ({ row }) => row.getValue("transactionDate"),
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -62,19 +63,17 @@ export const columns: ColumnDef<Finance>[] = [
         : row.original.notes,
   },
   {
-    accessorKey: "transactionSource",
+    id: "transactionSource",
+    accessorFn: (row) => sourceLabelTranslation(row.transactionSource),
     header: () => <span>SUMBER TRANSAKSI</span>,
-    cell: ({ row }) => {
-      return sourceLabelTranslation(row.original.transactionSource);
-    }
+    cell: ({ row }) => row.getValue("transactionSource"),
   },
 
   {
-    accessorKey: "transactionType",
+    id: "transactionType",
+    accessorFn: (row) => inventoryTransactionTypeTranslation(row.transactionType),
     header: () => <span>TIPE TRANSAKSI</span>,
-    cell: ({ row }) => {
-      return inventoryTransactionTypeTranslation(row.original.transactionType);
-    }
+    cell: ({ row }) => row.getValue("transactionType"),
   },
   {
     accessorKey: "productCategory",
@@ -85,19 +84,31 @@ export const columns: ColumnDef<Finance>[] = [
     header: () => <span>PRODUK</span>,
   },
   {
-    accessorKey: "totalPrice",
+    id: "totalPrice",
+    accessorFn: (row) => {
+      const priceStr =
+        row.totalPrice !== null && row.totalPrice !== undefined
+          ? formatRupiahTypeTransactionColumn(row.totalPrice, row.transactionType)
+          : "-";
+      return row.transactionType === "grant" ? `${priceStr} (perkiraan)` : priceStr;
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL" />
     ),
+    cell: ({ row }) => {
+      return formatRupiahTypeTransactionColumn(
+        row.original.totalPrice,
+        row.original.transactionType,
+      );
+    },
   },
   {
-    accessorKey: "createdAt",
+    id: "createdAt",
+    accessorFn: (row) => formatDate(row.createdAt || ""),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.createdAt || "");
-    },
+    cell: ({ row }) => row.getValue("createdAt"),
   },
   {
     id: "actions",
@@ -105,7 +116,7 @@ export const columns: ColumnDef<Finance>[] = [
     cell: ({ row }) => {
       const pathname = usePathname();
       let detailLink = "";
-      if(row.original.transactionSource === "non_inventory") {
+      if (row.original.transactionSource === "non_inventory") {
         detailLink = `${pathname}/${row.original.sourceId}?type=non_inventory`;
       } else if (row.original.transactionSource === "commodity_sales") {
         detailLink = `${pathname}/${row.original.sourceId}?type=commodity_sales`;

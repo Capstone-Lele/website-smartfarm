@@ -4,7 +4,7 @@ import React from "react";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="fixed inset-0 w-full overflow-hidden bg-slate-50">
+    <div className="fixed inset-0 w-full bg-slate-50">
       <main className="flex relative w-full h-full">
         <DashboardSidebar />
         <div className="flex flex-1 flex-col h-full overflow-hidden w-full">

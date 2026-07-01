@@ -334,7 +334,7 @@ const PostStockInOut = () => {
                             <FieldError errors={[fieldState.error]} />
                           ) : (
                             <FieldDescription>
-                              Tambahkan catatan jika diperlukan.
+                              Tambahkan catatan untuk stok ini.
                             </FieldDescription>
                           )}
                         </Field>

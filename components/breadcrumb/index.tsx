@@ -100,7 +100,7 @@ const BreadCrumbPath = () => {
               return sParts.every((part: string, i: number) =>
                 part.startsWith("[") && part.endsWith("]")
                   ? true
-                  : part === subItemParts[i]
+                  : part === subItemParts[i],
               );
             });
 
@@ -111,13 +111,16 @@ const BreadCrumbPath = () => {
                 .map((part: string, i: number) =>
                   part.startsWith("[") && part.endsWith("]")
                     ? pathParts[i]
-                    : part
+                    : part,
                 )
                 .join("/");
               const parentDisplayName = (parentSubItem as any).dynamicName
                 ? (parentSubItem as any).dynamicName(params, meta)
                 : (parentSubItem as any).name;
-              breadcrumbs.push({ name: parentDisplayName, href: realParentHref });
+              breadcrumbs.push({
+                name: parentDisplayName,
+                href: realParentHref,
+              });
             }
 
             const displayName = (subItem as any).dynamicName

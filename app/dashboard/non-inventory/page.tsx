@@ -13,6 +13,7 @@ import {
   LuArrowUpToLine,
   LuFileText,
 } from "react-icons/lu";
+import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 
 export default function NonInventoryPage() {
   const {
@@ -21,32 +22,79 @@ export default function NonInventoryPage() {
     isError,
   } = useFinanceNonInventory();
 
+  const [dateRange, setDateRange] = React.useState<{
+    start: Date | null;
+    end: Date | null;
+  }>({
+    start: null,
+    end: null,
+  });
+
+  const filteredData = React.useMemo(() => {
+    if (!nonInventoryData) return [];
+
+    return nonInventoryData
+      .filter((item) => {
+        const itemDate = new Date(item.transactionDate || item.createdAt).getTime();
+
+        if (dateRange.start && dateRange.end) {
+          // Normalize start and end to beginning and end of day
+          const startDay = new Date(dateRange.start);
+          startDay.setHours(0, 0, 0, 0);
+          
+          const endDay = new Date(dateRange.end);
+          endDay.setHours(23, 59, 59, 999);
+
+          return (
+            itemDate >= startDay.getTime() &&
+            itemDate <= endDay.getTime()
+          );
+        }
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.transactionDate || b.createdAt).getTime() - new Date(a.transactionDate || a.createdAt).getTime(),
+      );
+  }, [nonInventoryData, dateRange]);
+
   const cardData = [
     {
       title: "Total Transaksi",
-      value: nonInventoryData?.length.toString() || "0",
+      value: filteredData.length.toString() || "0",
       icon: <LuFileText />,
     },
     {
       title: "Pemasukan",
       value:
-        nonInventoryData
-          ?.filter((item) => item.type === "in")
+        filteredData
+          .filter((item) => item.type === "in")
           .length.toString() || "0",
       icon: <LuArrowDownFromLine className="text-green-500" />,
     },
     {
       title: "Pengeluaran",
       value:
-        nonInventoryData
-          ?.filter((item) => item.type === "out")
+        filteredData
+          .filter((item) => item.type === "out")
           .length.toString() || "0",
       icon: <LuArrowUpToLine className="text-red-500" />,
     },
   ];
 
   return (
-    <>
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-4 mt-2">
+        <h1 className="text-2xl font-semibold">Keuangan Non-Inventaris</h1>
+        <div className="w-full md:w-72">
+          <DatePickerWithRange
+            label="Pilih Rentang Waktu"
+            onValueChange={(start, end) =>
+              setDateRange({ start: start || null, end: end || null })
+            }
+          />
+        </div>
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {cardData.map((card, index) => (
           <CardStatistic
@@ -68,12 +116,12 @@ export default function NonInventoryPage() {
               </div>
               <DataTable
                 columns={nonInventoryColumns}
-                data={nonInventoryData || []}
+                data={filteredData}
               />
             </div>
           )}
         </div>
       </DefaultCard>
-    </>
+    </div>
   );
 }

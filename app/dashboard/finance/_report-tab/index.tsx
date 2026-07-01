@@ -141,10 +141,10 @@ const FinanceReportTab: React.FC<FinanceReportTabProps> = ({ data, rentang_tangg
           <SelectCombobox
             data={[
               { label: "Semua Sumber", value: "all" },
-              { label: "Non Inventaris", value: "non_inventaris" },
-              { label: "Penjualan Komoditas", value: "comodity_sale" },
+              { label: "Non Inventaris", value: "non_inventory" },
+              { label: "Penjualan Komoditas", value: "commodity_sales" },
               { label: "Catatan Inventaris", value: "inventory_notes" },
-              { label: "Pengajuan Inventaris", value: "inventory_submission" },
+              { label: "Pengajuan Inventaris", value: "inventory_submissions" },
             ]}
             onValueChange={setSourceFilter}
             label="Sumber Transaksi"

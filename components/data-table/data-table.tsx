@@ -66,7 +66,7 @@ interface DataTableProps<TData, TValue> {
  */
 const dateRangeFilter: FilterFn<unknown> = (row, columnId, filterValue) => {
   const [from, to] = filterValue as [string, string];
-  const rawValue = row.getValue(columnId);
+  const rawValue = (row.original as any)[columnId] || row.getValue(columnId);
   if (!rawValue) return false;
 
   // Normalise ke yyyy-mm-dd string

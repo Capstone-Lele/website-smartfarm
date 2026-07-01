@@ -156,7 +156,7 @@ const InventoryReportTab: React.FC<InventoryReportTabProps> = ({
               </p>
               <p
                 className={`text-lg font-bold ${
-                  currentStock >= 0 ? "text-blue-600" : "text-red-500"
+                  currentStock >= 0 ? "text-black" : "text-red-500"
                 }`}
               >
                 {currentStock.toLocaleString("id-ID")}{" "}

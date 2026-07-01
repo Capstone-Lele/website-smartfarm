@@ -60,11 +60,11 @@ const DetailSeedingSheet = ({ item }: { item: Seed }) => {
                 <span className="text-muted-foreground">Jumlah Tebar</span>
                 <span className="font-medium">{item.initialQuantity} Ekor</span>
               </div>
-              <Separator />
+              {/* <Separator />
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">Jumlah Saat Ini</span>
                 <span className="font-medium">{item.currentQuantity} Ekor</span>
-              </div>
+              </div> */}
               <Separator />
               <div className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground">
