@@ -8,19 +8,22 @@ import { ImagePopup } from "@/components/image-popup";
 import { FinanceNonInventory } from "@/types/finance/finance-non-inventory";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { ButtonCopy } from "@/components/button-copy";
+import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-type-transaction-column";
 
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   {
-    accessorKey: "transactionDate",
+    id: "transactionDate",
+    accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.transactionDate);
+      return row.getValue("transactionDate");
     },
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -45,30 +48,60 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
     header: () => <span>TIPE TRANSAKSI</span>,
   },
   {
-    accessorKey: "quantity",
+    id: "quantity",
+    accessorFn: (row) => {
+      if (row.unit.toLowerCase() == "uang") {
+        return "-";
+      }
+      return `${row.quantity}`;
+    },
     header: () => <span>JUMLAH</span>,
     cell: ({ row }) => {
-      return `${row.original.quantity} ${row.original.unit}`;
+      return row.getValue("quantity");
     },
   },
   {
-    accessorKey: "pricePerItem",
+    id: "pricePerItem",
+    accessorFn: (row) => {
+      const priceStr =
+        row.pricePerItem !== null && row.pricePerItem !== undefined
+          ? formatRupiah(Number(row.pricePerItem))
+          : "-";
+      return row.transactionType === "grant"
+        ? `${priceStr} (perkiraan)`
+        : priceStr;
+    },
     header: () => <span>HARGA/UNIT</span>,
     cell: ({ row }) => {
-      return (
-        <span>
-          {formatRupiah(row.original.pricePerItem ?? 0)} / {row.original.unit}
-        </span>
+      return formatRupiahTypeTransactionColumn(
+        row.original.pricePerItem,
+        row.original.transactionType,
       );
     },
   },
   {
-    accessorKey: "totalPrice",
+    accessorKey: "unit",
+    header: () => <span>UNIT</span>,
+  },
+  {
+    id: "totalPrice",
+    accessorFn: (row) => {
+      const priceStr =
+        row.totalPrice !== null && row.totalPrice !== undefined
+          ? formatRupiah(Number(row.totalPrice))
+          : "-";
+      return row.transactionType === "grant"
+        ? `${priceStr} (perkiraan)`
+        : priceStr;
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL HARGA" />
     ),
     cell: ({ row }) => {
-      return formatRupiah(row.original.totalPrice ?? 0);
+      return formatRupiahTypeTransactionColumn(
+        row.original.totalPrice,
+        row.original.transactionType,
+      );
     },
   },
 

@@ -18,7 +18,8 @@ export const commodityColumns: ColumnDef<FinanceCommodity>[] = [
     ),
   },
   {
-    accessorKey: "transactionDate",
+    id: "transactionDate",
+    accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -26,12 +27,11 @@ export const commodityColumns: ColumnDef<FinanceCommodity>[] = [
         title="TANGGAL TRANSAKSI"
       />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.transactionDate);
-    },
+    cell: ({ row }) => row.getValue("transactionDate"),
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -44,11 +44,10 @@ export const commodityColumns: ColumnDef<FinanceCommodity>[] = [
     },
   },
   {
-    accessorKey: "transactionSource",
+    id: "transactionSource",
+    accessorFn: (row) => sourceLabelTranslation(row.transactionSource),
     header: () => <span>SUMBER TRANSAKSI</span>,
-    cell: ({ row }) => {
-      return sourceLabelTranslation(row.original.transactionSource);
-    },
+    cell: ({ row }) => row.getValue("transactionSource"),
   },
   {
     accessorKey: "notes",
@@ -81,22 +80,20 @@ export const commodityColumns: ColumnDef<FinanceCommodity>[] = [
     header: () => <span>TOTAL (KG)</span>,
   },
   {
-    accessorKey: "totalPrice",
+    id: "totalPrice",
+    accessorFn: (row) => formatRupiah(row.totalPrice),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL HARGA" />
     ),
-    cell: ({ row }) => {
-      return <span>{formatRupiah(row.original.totalPrice)}</span>;
-    },
+    cell: ({ row }) => <span>{row.getValue("totalPrice")}</span>,
   },
   {
-    accessorKey: "createdAt",
+    id: "createdAt",
+    accessorFn: (row) => formatDate(row.createdAt),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
     ),
-    cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
-    },
+    cell: ({ row }) => row.getValue("createdAt"),
   },
   {
     id: "actions",

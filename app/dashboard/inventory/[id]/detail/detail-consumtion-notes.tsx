@@ -102,7 +102,7 @@ const DetailConsumptionNotes = ({
         </DefaultCard>
 
         <DefaultCard className="p-4 rounded-sm">
-          <p className="text-xs text-muted-foreground mb-1">Kuantitas Terpakai</p>
+          <p className="text-xs text-muted-foreground mb-1">Kuantitas Pemakaian</p>
           <p className="text-lg font-semibold text-foreground">
             {Number(getRealOne.quantity).toLocaleString("id-ID")}
           </p>
@@ -113,7 +113,7 @@ const DetailConsumptionNotes = ({
         <DefaultCard className="rounded-sm">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm">Informasi Pemakaian</h3>
+              <h3 className="font-semibold text-sm">Informasi Catatan</h3>
               <Badge
                 variant="secondary"
                 className={`text-xs ${badgeColor} border-none`}

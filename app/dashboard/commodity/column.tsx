@@ -6,14 +6,16 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Commodity>[] = [
   {
-    accessorKey: "date",
+    id: "date",
+    accessorFn: (row) => formatDate(row.date),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
-    cell: ({ row }) => formatDate(row.original.date),
+    cell: ({ row }) => row.getValue("date"),
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Masuk" : "Keluar"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -27,16 +29,18 @@ export const columns: ColumnDef<Commodity>[] = [
               : "bg-red-100 text-red-700"
           }`}
         >
-          {type === "in" ? "Masuk" : "Keluar"}
+          {row.getValue("type")}
         </div>
       );
     },
   },
   {
-    accessorKey: "category",
+    id: "category",
+    accessorFn: () => "Panen",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
+    cell: ({ row }) => row.getValue("category"),
   },
   {
     accessorKey: "quantity",
@@ -82,11 +86,12 @@ export const columns: ColumnDef<Commodity>[] = [
     ),
   },
    {
-    accessorKey: "cycleStartDate",
+    id: "cycleStartDate",
+    accessorFn: (row) => row.cycleStartDate ? formatDate(row.cycleStartDate) : "-",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
-    cell: ({ row }) => row.original.cycleStartDate ? formatDate(row.original.cycleStartDate) : "-",
+    cell: ({ row }) => row.getValue("cycleStartDate"),
   },
   {
     id: "actions",

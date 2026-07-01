@@ -39,45 +39,37 @@ export const columnsUser: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "role",
+    id: "role",
+    accessorFn: (row) => ROLE_LABEL.find((r) => r.value === row.role)?.label || row.role,
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="ROLE" />
     ),
     cell: ({ row }) => {
-      const role = ROLE_LABEL.find((r) => r.value === row.original.role);
       return (
         <Badge className="px-2" variant={"outline"}>
-          {role?.label || row.original.role}
+          {row.getValue("role")}
         </Badge>
       );
     },
   },
   {
-    id: "jumlah_akses",
+    id: "jumlah_akses", 
+    accessorFn: (row) => row.permission?.length || 0,
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="JUMLAH AKSES" />
     ),
     cell: ({ row }) => {
-      const data = row.original.permission?.length || 0;
-      return <span>{data}</span>;
+      return row.getValue("jumlah_akses");
     }
   },
   {
-    accessorKey: "createdAt",
+    id: "createdAt",
+    accessorFn: (row) => formatDate(row.createdAt),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI BUAT" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
-    },
-  },
-  {
-    accessorKey: "updatedAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="DI UBAH" />
-    ),
-    cell: ({ row }) => {
-      return formatDate(row.original.updatedAt);
+      return row.getValue("createdAt");
     },
   },
   {

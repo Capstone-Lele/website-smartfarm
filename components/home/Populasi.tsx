@@ -36,8 +36,9 @@ const HomePopulasi = ({ data }: { data?: GeneralInfoResponse }) => {
                 Rata Rata Populasi per Kolam
               </h3>
               <div className="text-2xl font-semibold text-secondary">
-                {generalInfo?.populationSection.totalAverageFishPopulation ||
-                  "-"}{" "}
+                {generalInfo?.populationSection.totalAverageFishPopulation
+                  ? Math.round(generalInfo.populationSection.totalAverageFishPopulation)
+                  : "-"}{" "}
                 Ekor
               </div>
               <p className="text-sm text-slate-700">

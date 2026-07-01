@@ -23,12 +23,13 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     ),
   },
   {
-    accessorKey: "reportDate",
+    id: "reportDate",
+    accessorFn: (row) => formatDate(row.reportDate),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.reportDate);
+      return row.getValue("reportDate");
     },
   },
   {
@@ -53,7 +54,11 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     },
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => {
+      const option = INVENTORY_TYPE_OPTIONS.find((opt) => opt.value === row.type);
+      return option ? option.label : row.type || "-";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -76,7 +81,13 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     },
   },
   {
-    accessorKey: "transactionType",
+    id: "transactionType",
+    accessorFn: (row) => {
+      const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
+        (opt) => opt.value === row.transactionType,
+      );
+      return option ? option.label : row.transactionType || "-";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -99,7 +110,8 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     ),
   },
   {
-    accessorKey: "quantity",
+    id: "quantity",
+    accessorFn: (row) => formatNumber(row.quantity).toString(),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KUANTITAS" />
     ),
@@ -113,7 +125,14 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     },
   },
   {
-    accessorKey: "pricePerItem",
+    id: "pricePerItem",
+    accessorFn: (row) => {
+      if (row.transactionType === "grant") {
+        const val = row.pricePerItem !== null ? formatRupiah(Number(row.pricePerItem)) : formatRupiah(0);
+        return `${val} (perkiraan)`;
+      }
+      return row.pricePerItem !== null ? formatRupiah(Number(row.pricePerItem)) : "-";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -148,7 +167,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
       return (
         <div className="flex items-center text-primary gap-0.5">
           <ButtonDetailColumn
-            href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.original.id}&&source=${row.original.source}`}
+            href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.original.id}&&source=${row.original.source == "inventory-notes" && row.original.type == "out" ? "inventory-notes-out" : row.original.source}`}
           />
         </div>
       );

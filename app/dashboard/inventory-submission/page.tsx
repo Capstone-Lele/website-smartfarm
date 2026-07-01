@@ -18,23 +18,6 @@ import { INVENTORY_SUBMISSION_STATUS } from "@/lib/constants/type-inventory";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 
-const tableFilter: TableFacetedFilter = [
-  {
-    column: "status",
-    option: INVENTORY_SUBMISSION_STATUS.map((status) => ({
-      label: status.label,
-      value: status.value,
-    })),
-  },
-];
-
-const tableDateFilter = [
-  {
-    column: "createdAt",
-    label: "Tanggal",
-  },
-];
-
 const Page = () => {
   const { data, isLoading } = useGetInventorySubmissions();
   const { setTabComponent } = useSubNavbarTab();

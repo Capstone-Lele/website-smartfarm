@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import DetailInventoryNotes from "./detail-inventory-notes";
 import DetailInventorySubmissionNotes from "./detail-inventory-submission-notes";
 import DetailConsumptionNotes from "./detail-consumtion-notes";
+import DetailInventoryNotesOut from "./detail-inventory-notes-out";
 
 const page = () => {
   const params = useParams();
@@ -17,6 +18,7 @@ const page = () => {
       {source === "inventory-notes" && <DetailInventoryNotes id={idInventory} source={idSource} />}
       {source === "inventory-submission" && <DetailInventorySubmissionNotes id={idInventory} source={idSource} />}
       {source === "inventory-consumption" && <DetailConsumptionNotes id={idInventory} source={idSource} />}
+      {source === "inventory-notes-out" && <DetailInventoryNotesOut id={idInventory} source={idSource} />}
     </div>
   );
 };

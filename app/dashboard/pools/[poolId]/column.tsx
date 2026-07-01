@@ -33,23 +33,27 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
     },
   },
   {
-    accessorKey: "condition",
+    id: "condition",
+    accessorFn: (row) => {
+      const condition = ALL_CYCLE_CONDITIONS.find(
+        (cond) => cond.value === row.condition
+      );
+      return condition?.label || "Unknown";
+    },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KONDISI" />
     ),
     cell: ({ row }) => {
-             const condition = ALL_CYCLE_CONDITIONS.find(
-              (cond) => cond.value === row.original.condition
-            );
+      const val = row.getValue("condition") as string;
       return (
         <Badge
           className={`${
-            condition?.value === "active_cultivation"
+            row.original.condition === "active_cultivation"
               ? "bg-blue-100 text-blue-600 hover:bg-blue-100"
               : "bg-pink-100 text-pink-600 hover:bg-pink-100"
           } font-normal`}
         >
-          {condition?.label || "Unknown"}
+          {val}
         </Badge>
       );
     },
@@ -100,12 +104,9 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
   },
   {
     id: "umur",
-    header: ({ column }) => (
-      <DataTableColumnHeader className="" column={column} title="UMUR" />
-    ),
-    cell: ({ row }) => {
-      const { startDate, endDate } = row.original;
-      if (!startDate) return <span>-</span>;
+    accessorFn: (row) => {
+      const { startDate, endDate } = row;
+      if (!startDate) return "-";
 
       const start = new Date(startDate);
       const end = endDate ? new Date(endDate) : new Date();
@@ -113,7 +114,13 @@ export const columnsCycle: ColumnDef<Cycle>[] = [
       const diffTime = end.getTime() - start.getTime();
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-      return <span>{diffDays >= 0 ? diffDays : 0} Hari</span>;
+      return `${diffDays >= 0 ? diffDays : 0} Hari`;
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="UMUR" />
+    ),
+    cell: ({ row }) => {
+      return <span>{row.getValue("umur")}</span>;
     },
   },
   {

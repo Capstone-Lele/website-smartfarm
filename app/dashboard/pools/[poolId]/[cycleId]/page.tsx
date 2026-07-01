@@ -70,7 +70,9 @@ const CycleDetailPage = () => {
   let umur = "-";
   if (startDate) {
     const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
     const end = endDate ? new Date(endDate) : new Date();
+    end.setHours(0, 0, 0, 0);
     const diffTime = end.getTime() - start.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     umur = `${diffDays >= 0 ? diffDays : 0} Hari`;

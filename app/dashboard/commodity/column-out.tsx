@@ -6,14 +6,16 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export const columns_out: ColumnDef<Commodity>[] = [
   {
-    accessorKey: "date",
+    id: "date",
+    accessorFn: (row) => formatDate(row.date),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
-    cell: ({ row }) => formatDate(row.original.date),
+    cell: ({ row }) => row.getValue("date"),
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => (row.type === "in" ? "Masuk" : "Keluar"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
@@ -27,16 +29,18 @@ export const columns_out: ColumnDef<Commodity>[] = [
               : "bg-red-100 text-red-700"
           }`}
         >
-          {type === "in" ? "Masuk" : "Keluar"}
+          {row.getValue("type")}
         </div>
       );
     },
   },
   {
-    accessorKey: "category",
+    id: "category",
+    accessorFn: () => "Penjualan",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
+    cell: ({ row }) => row.getValue("category"),
   },
   {
     accessorKey: "buyerName",

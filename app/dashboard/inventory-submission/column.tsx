@@ -10,14 +10,15 @@ import { Separator } from "@/components/ui/separator";
 
 export const columns: ColumnDef<InventorySubmission>[] = [
   {
-    accessorKey: "createdAt",
+    id: "createdAt",
+    accessorFn: (row) => formatDate(row.createdAt),
     // Gunakan custom filterFn yang terdaftar di DataTable
     filterFn: "dateRange" as never,
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
     cell: ({ row }) => {
-      return formatDate(row.original.createdAt);
+      return row.getValue("createdAt");
     },
   },
   {
@@ -52,7 +53,8 @@ export const columns: ColumnDef<InventorySubmission>[] = [
     },
   },
   {
-    accessorKey: "reviewedDate",
+    id: "reviewedDate",
+    accessorFn: (row) => row.status === "pending" ? "-" : formatDate(row.updatedAt),
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -61,10 +63,11 @@ export const columns: ColumnDef<InventorySubmission>[] = [
       />
     ),
     cell: ({ row }) => {
-      if (row.original.status === "pending") {
+      const val = row.getValue("reviewedDate") as string;
+      if (val === "-") {
         return <span className="text-muted-foreground">-</span>;
       }
-      return formatDate(row.original.updatedAt);
+      return val;
     },
   },
   {

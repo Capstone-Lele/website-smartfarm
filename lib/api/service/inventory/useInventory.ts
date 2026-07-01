@@ -136,6 +136,7 @@ export const usePostInventoryTransaction = () => {
       queryClient.invalidateQueries({ queryKey: ["getInventoryConsumptionByIdWithParams"] });
       queryClient.invalidateQueries({ queryKey: ["getInventory"] });
       queryClient.invalidateQueries({ queryKey: ["getInventoryById"] });
+      queryClient.invalidateQueries({ queryKey: ["getInventoryByIdWithParams"] });
     },
   });
 }
