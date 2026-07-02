@@ -6,11 +6,51 @@ on:
       - production # Pastikan ini sesuai dengan branch utama di repository kamu
 
 jobs:
-  deploy:
-    name: Deploy to Server
+  build-and-deploy:
+    name: Build & Deploy to Server
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Mengambil kode terbaru dari repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js di runner GitHub
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24" # Gunakan versi Node.js yang sesuai dengan project kamu
+          cache: "npm"
+
+      # 3. Install dependencies di GitHub Actions
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      # 4. Buat file .env dari GitHub Secrets khusus untuk proses build
+      - name: Create .env for build
+        run: echo "${{ secrets.ENV_FILE }}" > .env
+
+      # 5. Build aplikasi Next.js di GitHub Actions
+      - name: Build Next.js
+        run: npm run build
+
+      # 6. Compress hasil build untuk mempercepat proses transfer
+      # Jika kamu menggunakan next.config.mjs, ubah next.config.js menjadi next.config.mjs
+      - name: Compress Build Artifacts
+        run: zip -r deploy.zip .next public package.json package-lock.json next.config.js
+
+      # 7. Transfer file zip ke server aaPanel menggunakan SCP
+      - name: Copy files to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "deploy.zip"
+          target: "/www/wwwroot/web-smartfarm/"
+          rm: false # Jangan hapus folder target
+
+      # 8. Eksekusi perintah di server untuk ekstrak dan restart PM2
       - name: Execute deployment commands via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -18,31 +58,30 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 1. Masuk ke direktori project web smart farm kamu
+            # Masuk ke direktori project web smart farm
             cd /www/wwwroot/web-smartfarm/
 
-            # 2. Ambil update terbaru dan paksa sinkronisasi dengan GitHub
-            git fetch --all
-            git reset --hard origin/production
+            # BACKUP AMAN: Salin .env yang ada di server ke folder sementara luar project
+            # Jaga-jaga agar .env server yang asli tidak hilang
+            cp .env /tmp/web_smartfarm_env_backup 2>/dev/null || true
 
-            # 3. CLEAN INSTALL: Hapus node_modules, cache .next, dan lockfile yang corrupt
-            echo "Membersihkan cache build dan node_modules..."
-            rm -rf node_modules
-            rm -rf .next
-            rm -f package-lock.json
+            # Ekstrak file zip dan timpa file-file lama
+            unzip -o deploy.zip
 
-            # 4. Install dependencies (Fresh Install)
-            echo "Menginstal ulang dependencies..."
-            npm install
-            
-            # (Opsional) Jika Turbopack masih bentrok dengan jose, uncomment baris di bawah ini:
-            # npm install jose@latest
+            # Hapus file zip setelah diekstrak agar hemat storage
+            rm deploy.zip
 
-            # 5. Build aplikasi Next.js menjadi production-ready
-            echo "Memulai proses build..."
-            npm run build
+            # RESTORE: Jika karena suatu hal .env di folder ini hilang saat ekstrak, kembalikan dari backup
+            if [ ! -f .env ] && [ -f /tmp/web_smartfarm_env_backup ]; then
+              cp /tmp/web_smartfarm_env_backup .env
+              echo "Mereset .env dari backup keamanan."
+            fi
 
-            # 6. Restart service Node.js di aaPanel menggunakan PM2
+            # Install HANYA dependencies untuk production agar node_modules lebih ringan
+            echo "Menginstal production dependencies..."
+            npm ci --omit=dev || npm install --production
+
+            # Restart service PM2
             echo "Merestart aplikasi..."
             pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
