@@ -251,12 +251,15 @@ const EditPoolModal = ({ pool }: { pool: Pool }) => {
                         onValueChange={field.onChange}
                         name="category"
                         selectedValue={field.value}
+                        disable={pool.cycle === "active_cultivation"}
                       />
                       {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan kategori kolam.
+                          {pool.cycle === "active_cultivation"
+                            ? "Tidak bisa mengubah kategori kolam karena sedang dalam masa budidaya."
+                            : "Masukkan kategori kolam."}
                         </FieldDescription>
                       )}
                     </Field>
