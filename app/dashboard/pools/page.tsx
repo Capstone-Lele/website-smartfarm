@@ -184,7 +184,7 @@ const page = () => {
                         Ketika kondisi siklus: Panen
                       </p>
                       <p className="text-gray-600">
-                        Maka kondisi kolam: Stand By (tidak terpakai)
+                        Maka kondisi kolam: - (tidak terpakai/kosong)
                       </p>
                     </div>
                     <div>
@@ -208,7 +208,7 @@ const page = () => {
                         Ketika kondisi siklus: Pindah
                       </p>
                       <p className="text-gray-600">
-                        Maka kondisi kolam: Stand By (tidak terpakai)
+                        Maka kondisi kolam: - (tidak terpakai/kosong)
                       </p>
                     </div>
                     <div>
@@ -232,7 +232,7 @@ const page = () => {
                         Ketika kolam: Kosong (tidak ada ikan)
                       </p>
                       <p className="text-gray-600">
-                        Maka kondisi kolam: Stand By
+                        Maka kondisi kolam: Perawatan
                       </p>
                     </div>
                     <div>
@@ -249,6 +249,36 @@ const page = () => {
             </TabsContent>
             <TabsContent value="move">
               <div className="flex flex-col gap-4">
+                <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
+                  <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                    <LuCheck className="text-white w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Pembenihan {`-->`} Pembenihan Lain
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      Ikan di kolam pembenihan dapat dipindahkan ke kolam
+                      pembenihan lainnya
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
+                  <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
+                    <LuCheck className="text-white w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Pembesaran {`-->`} Pembesaran Lain
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      Ikan di kolam pembesaran dapat dipindahkan ke kolam
+                      pembesaran lainnya
+                    </p>
+                  </div>
+                </div>
+
                 <div className="border border-gray-200 rounded-md flex items-start p-4 gap-4">
                   <div className="rounded-full bg-[#20c960] p-1.5 shrink-0 mt-0.5">
                     <LuCheck className="text-white w-5 h-5" />

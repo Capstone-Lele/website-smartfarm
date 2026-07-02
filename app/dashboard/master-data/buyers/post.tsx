@@ -45,7 +45,9 @@ const formSchema = z.object({
     .string()
     .max(15, { error: "Nomor telepon maksimal 15 karakter" })
     .optional(),
-  email: z.union([z.string().email({ error: "Email tidak valid" }), z.literal("")]).optional(),
+  email: z
+    .union([z.string().email({ error: "Email tidak valid" }), z.literal("")])
+    .optional(),
   address: z.string().min(1, { error: "Alamat wajib diisi" }),
 });
 
@@ -66,8 +68,13 @@ const PostBuyerModal = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      console.log("Submitting form with data:", data);
-      const res = await buyerMutation.mutateAsync(data);
+      console.log("Submitting form data:", data);
+      const payload = Object.fromEntries(
+        Object.entries(data).filter(
+          ([_, value]) => value !== "" && value !== null && value !== undefined,
+        ), // logika : hanya menyertakan field yang memiliki nilai yang valid (tidak kosong, tidak null, dan tidak undefined)
+      );
+      const res = await buyerMutation.mutateAsync(payload as any);
       form.reset();
       console.log("Buyer created:", res);
       toast.success("Pembeli berhasil ditambahkan");
@@ -86,7 +93,7 @@ const PostBuyerModal = () => {
         <FiPlusCircle />
         Tambah Pembeli
       </SheetTrigger>
-      <SheetContent >
+      <SheetContent>
         <SheetHeader className="border-b">
           <SheetTitle>Tambah Pembeli</SheetTitle>
           <SheetDescription>
@@ -144,69 +151,69 @@ const PostBuyerModal = () => {
                 <Controller
                   name="phone"
                   control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel htmlFor="phone">Nomor Telepon</FieldLabel>
-                            <Input
-                                id="phone"
-                                autoComplete="off"
-                                placeholder="Contoh: 081234567890"
-                                type="number"
-                                {...field}
-                            />
-                            {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                            ) : (
-                                <FieldDescription>
-                                    Masukkan nomor telepon pembeli (opsional).
-                                </FieldDescription>
-                            )}
-                        </Field>
-                    )}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="phone">Nomor Telepon</FieldLabel>
+                      <Input
+                        id="phone"
+                        autoComplete="off"
+                        placeholder="Contoh: 081234567890"
+                        type="number"
+                        {...field}
+                      />
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan nomor telepon pembeli (opsional).
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
                 />
                 <Controller
-                    name="email"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel htmlFor="email">Email</FieldLabel>
-                            <Input
-                                id="email"
-                                autoComplete="off"
-                                placeholder="Contoh: john.doe@example.com"
-                                {...field}
-                            />
-                            {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                            ) : (
-                                <FieldDescription>
-                                    Masukkan email pembeli (opsional).
-                                </FieldDescription>
-                            )}
-                        </Field>
-                    )}
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="email">Email</FieldLabel>
+                      <Input
+                        id="email"
+                        autoComplete="off"
+                        placeholder="Contoh: john.doe@example.com"
+                        {...field}
+                      />
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan email pembeli (opsional).
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
                 />
                 <Controller
-                    name="address"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel htmlFor="address">Alamat</FieldLabel>
-                            <Textarea 
-                                id="address"
-                                autoComplete="off"
-                                placeholder="Contoh: Jl. Merdeka No. 123"
-                                {...field}
-                            />  
-                            {fieldState.invalid ? (
-                                <FieldError errors={[fieldState.error]} />
-                            ) : (
-                                <FieldDescription>
-                                    Masukkan alamat pembeli.
-                                </FieldDescription>
-                            )}
-                        </Field>
-                    )}
+                  name="address"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="address">Alamat</FieldLabel>
+                      <Textarea
+                        id="address"
+                        autoComplete="off"
+                        placeholder="Contoh: Jl. Merdeka No. 123"
+                        {...field}
+                      />
+                      {fieldState.invalid ? (
+                        <FieldError errors={[fieldState.error]} />
+                      ) : (
+                        <FieldDescription>
+                          Masukkan alamat pembeli.
+                        </FieldDescription>
+                      )}
+                    </Field>
+                  )}
                 />
                 <Field orientation="vertical">
                   {buyerMutation.isPending ? (

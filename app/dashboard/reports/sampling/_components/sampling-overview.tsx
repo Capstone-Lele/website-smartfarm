@@ -23,7 +23,7 @@ import { SelectCombobox } from "@/components/combobox/select";
 import { usePool } from "@/lib/api/service/pools/usePool";
 import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 
-const HARVEST_TARGET_GRAM = 350; // Use your actual target here
+const HARVEST_TARGET_GRAM = 750; // Use your actual target here
 const MIN_PREDICTION_POINTS = 3;
 const MAX_PREDICTION_POINTS = 20;
 
@@ -263,10 +263,10 @@ const SamplingOverview: React.FC<SamplingOverviewProps> = ({ data }) => {
             <span className="font-semibold text-lg">
               Grafik Pertumbuhan Aktual & Prediksi (Trend Sampling)
             </span>
-            <div className="w-full h-[45vh] min-h-[300px] mt-4">
+            <div className="mt-4 flex w-full h-[45vh] min-h-75 flex-col gap-2">
               <ChartContainer
                 config={chartConfig}
-                className="h-full w-full aspect-auto"
+                className="min-h-0 flex-1 w-full aspect-auto"
               >
                 <LineChart
                   accessibilityLayer
@@ -328,7 +328,7 @@ const SamplingOverview: React.FC<SamplingOverviewProps> = ({ data }) => {
                 </LineChart>
               </ChartContainer>
 
-              <div className="mt-2 text-xs text-muted-foreground">
+              <div className="text-xs leading-relaxed text-muted-foreground wrap-break-word">
                 Prediksi ditampilkan jika minimal {MIN_PREDICTION_POINTS} data
                 sampling.
                 {canPredict
@@ -342,7 +342,7 @@ const SamplingOverview: React.FC<SamplingOverviewProps> = ({ data }) => {
         </>
       ) : (
         <DefaultCard>
-          <div className="h-[200px] flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-50 flex items-center justify-center text-muted-foreground text-sm">
             Silakan pilih kolam dan siklus terlebih dahulu untuk melihat
             ringkasan & grafik prediksi.
           </div>
