@@ -10,6 +10,10 @@ export type Commodity = {
   cycleStartDate?: string | null;
   poolName?: string | null;
   buyerName?: string | null;
+  transactionId?: string | null;
+  sourceId?: string | null;
+  referenceId?: string | null;
+  referenceSourceId?: string | null;
 };
 
 export type CommodityResponse = {

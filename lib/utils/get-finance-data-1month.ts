@@ -6,6 +6,21 @@ export const calculateFinanceSummary = (
 ) => {
   let income = 0;
   let expense = 0;
+  const allData = [
+    ...(commodityData || []),
+    ...(inventoryData || []),
+    ...(inventorySubmissionData || []),
+    ...(nonInventoryData || []),
+  ];
+  const reversedSourceIds = new Set(
+    allData
+      .filter(
+        (item) =>
+          item?.type?.toLowerCase() === "reversal" &&
+          item.referenceTransactionSourceId,
+      )
+      .map((item) => item.referenceTransactionSourceId),
+  );
   const currDate = new Date();
   const firstDayOfMonth = new Date(
     currDate.getFullYear(),
@@ -27,10 +42,12 @@ export const calculateFinanceSummary = (
     arr.forEach((item) => {
       const time = new Date(item.transactionDate).getTime();
       if (time >= firstDayOfMonth && time <= lastDayOfMonth) {
+        if (item.type?.toLowerCase() === "reversal") return;
+        if (item.sourceId && reversedSourceIds.has(item.sourceId)) return;
         if (item.transactionType === "grant") return; // exclude hibah/pendanaan
-        if (item.type === "in") {
+        if (item.type?.toLowerCase() === "in") {
           income += Number(item.totalPrice) || 0;
-        } else if (item.type === "out") {
+        } else if (item.type?.toLowerCase() === "out") {
           expense += Number(item.totalPrice) || 0;
         }
       }

@@ -9,6 +9,7 @@ import CashFlowChart from "./_components/cash-flow-chart";
 import FinancePieCharts from "./_components/finance-pie-charts";
 import TransactionCountChart from "./_components/transaction-count-chart";
 import TransactionCountPie from "./_components/transaction-count-pie";
+import TransactionReversalPie from "./_components/transaction-reversal-pie";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 import {
   Tooltip,
@@ -72,6 +73,8 @@ const page = () => {
           notes: item.notes,
           totalPrice: item.totalPrice,
           createdAt: item.createdAt,
+          referenceId: item.referenceId,
+          referenceTransactionSourceId: item.referenceTransactionSourceId,
         });
       });
     }
@@ -90,6 +93,8 @@ const page = () => {
           notes: item.notes,
           totalPrice: item.totalPrice,
           createdAt: item.createdAt,
+          referenceId: item.referenceId,
+          referenceTransactionSourceId: item.referenceTransactionSourceId,
         });
       });
     }
@@ -108,6 +113,8 @@ const page = () => {
           notes: item.notes,
           totalPrice: item.totalPrice,
           createdAt: item.createdAt,
+          referenceId: item.referenceId,
+          referenceTransactionSourceId: item.referenceTransactionSourceId,
         });
       });
     }
@@ -126,6 +133,8 @@ const page = () => {
           notes: item.notes,
           totalPrice: item.totalPrice || 0,
           createdAt: item.createdAt,
+          referenceId: item.referenceId,
+          referenceTransactionSourceId: item.referenceTransactionSourceId,
         });
       });
     }
@@ -155,11 +164,43 @@ const page = () => {
     dateRange,
   ]);
 
+  const dataWithReversalInfo = useMemo(() => {
+    return memoizedValue.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? memoizedValue.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? memoizedValue.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [memoizedValue]);
+
   const { totalIncome, totalExpense } = useMemo(() => {
     let income = 0;
     let expense = 0;
 
-    memoizedValue.forEach((item) => {
+    // Filter out reversal & reversed transactions for summary cards
+    const activeForSummary = dataWithReversalInfo.filter((item) => {
+      if (item.type === "reversal") return false;
+      if (item.reversedBySourceId) return false;
+      return true;
+    });
+
+    activeForSummary.forEach((item) => {
       if (item.transactionType === "grant") return;
 
       if (item.type === "in" || item.type === "IN") {
@@ -170,17 +211,24 @@ const page = () => {
     });
 
     return { totalIncome: income, totalExpense: expense };
-  }, [memoizedValue]);
+  }, [dataWithReversalInfo]);
 
   const chartDataFiltered = useMemo(() => {
+    // Always exclude reversal & reversed transactions from charts/laporan
+    const activeData = dataWithReversalInfo.filter((item) => {
+      if (item.type === "reversal") return false;
+      if (item.reversedBySourceId) return false;
+      return true;
+    });
+
     if (txTypeFilter === "grant") {
-      return memoizedValue.filter((item) => item.transactionType === "grant");
+      return activeData.filter((item) => item.transactionType === "grant");
     }
     if (txTypeFilter === "non-grant") {
-      return memoizedValue.filter((item) => item.transactionType !== "grant");
+      return activeData.filter((item) => item.transactionType !== "grant");
     }
-    return memoizedValue;
-  }, [memoizedValue, txTypeFilter]);
+    return activeData;
+  }, [dataWithReversalInfo, txTypeFilter]);
 
   return (
     <div className="">
@@ -227,6 +275,8 @@ const page = () => {
           <TabsList className="mb-4 flex w-full justify-start overflow-x-auto h-auto whitespace-nowrap flex-nowrap md:flex-wrap">
             <TabsTrigger value="ringkasan-grafik">
               Ringkasan & Grafik
+
+
             </TabsTrigger>
             <TabsTrigger value="laporan">Laporan</TabsTrigger>
             <TabsTrigger value="semua-data">Semua Data (Ringkas)</TabsTrigger>
@@ -246,6 +296,7 @@ const page = () => {
                     { label: "Reguler (Non-Grant)", value: "non-grant" },
                     { label: "Hibah (Grant)", value: "grant" },
                   ]}
+                  selectedValue={txTypeFilter}
                   onValueChange={setTxTypeFilter}
                   label="Filter Tipe Transaksi"
                 />
@@ -257,12 +308,13 @@ const page = () => {
               <TransactionCountChart data={chartDataFiltered} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <TransactionCountPie data={chartDataFiltered} />
+                <TransactionReversalPie data={dataWithReversalInfo} />
               </div>
             </div>
           </TabsContent>
           <TabsContent value="laporan">
             <FinanceReportTab
-              data={memoizedValue}
+              data={chartDataFiltered}
               rentang_tanggal={
                 dateRange.start && dateRange.end
                   ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`
@@ -272,7 +324,7 @@ const page = () => {
           </TabsContent>
           <TabsContent value="semua-data">
             <DefaultCard>
-              <DataTable columns={columns} data={memoizedValue} />
+              <DataTable columns={columns} data={dataWithReversalInfo} />
             </DefaultCard>
           </TabsContent>
           <TabsContent value="komoditas">

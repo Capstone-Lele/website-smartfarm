@@ -7,6 +7,7 @@ import React, { useState, useMemo } from "react";
 import { RiResetRightLine } from "react-icons/ri";
 import { FaFish, FaWater } from "react-icons/fa";
 import { IoFish } from "react-icons/io5";
+import { LuUndo2 } from "react-icons/lu";
 import { columns } from "./column";
 import PostSellCommodity from "./post";
 import { useCommodity } from "@/lib/api/service/commodity/useCommodity";
@@ -65,11 +66,49 @@ const page = () => {
     });
   }, [data, dateRange]);
 
-  const totalMasuk = filteredCommodities
+  const dataWithReversalInfo = useMemo(() => {
+    if (!filteredCommodities) return [];
+    const all = data?.data || [];
+    return filteredCommodities.map((item) => {
+      const reversalSource = item.referenceSourceId
+        ? all.find(
+            (detail) => detail.sourceId === item.referenceSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? all.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredCommodities, data]);
+
+  const activeData = useMemo(() => {
+    return dataWithReversalInfo.filter(
+      (item) => item.type !== "reversal" && !item.reversedBySourceId,
+    );
+  }, [dataWithReversalInfo]);
+
+  const totalReversal = useMemo(() => {
+    const all = data?.data || [];
+    return all.filter((item) => item.type === "reversal").length;
+  }, [data]);
+
+  const totalMasuk = activeData
     .filter((item) => item.type === "in")
     .reduce((sum, item) => sum + Number(item.quantity), 0);
 
-  const totalKeluar = filteredCommodities
+  const totalKeluar = activeData
     .filter((item) => item.type === "out")
     .reduce((sum, item) => sum + Math.abs(Number(item.quantity)), 0);
 
@@ -90,6 +129,11 @@ const page = () => {
       title: "Ikan Masuk",
       value: `${totalMasuk.toLocaleString("id-ID")} ekor`,
       icon: <FaFish className="text-emerald-500" />,
+    },
+    {
+      title: "Total Reversal",
+      value: `${totalReversal.toLocaleString("id-ID")} trx`,
+      icon: <LuUndo2 className="text-blue-500" />,
     },
   ];
 
@@ -153,7 +197,7 @@ const page = () => {
                   <div>
                     <DataTable
                       columns={columns}
-                      data={filteredCommodities.filter(
+                      data={dataWithReversalInfo.filter(
                         (item) => item.type === "in",
                       )}
                     />
@@ -163,15 +207,15 @@ const page = () => {
                   <div>
                     <DataTable
                       columns={columns_out}
-                      data={filteredCommodities.filter(
-                        (item) => item.type === "out",
+                      data={dataWithReversalInfo.filter(
+                        (item) => item.type === "out" || item.type === "reversal",
                       )}
                     />
                   </div>
                 </TabsContent>
                 <TabsContent value="laporan">
                   <CommodityReportTab
-                    data={filteredCommodities}
+                    data={activeData}
                     rentang_tanggal={
                       dateRange.start && dateRange.end
                         ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`

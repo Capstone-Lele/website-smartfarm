@@ -14,6 +14,12 @@ export type FinanceInventorySubmission = {
   pricePerItem: number | null;
   totalPrice: number;
   createdAt: string;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
+  // Computed reversal info (added client-side)
+  reversedBySourceId?: string | null;
+  reversalSourceId?: string | null;
+  reversalSourceLabel?: string | null;
 };
 
 export type ResponseFinanceInventorySubmission = {

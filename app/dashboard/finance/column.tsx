@@ -12,6 +12,7 @@ import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 import { inventoryTransactionTypeTranslation } from "@/lib/constants/type-inventory";
 import { usePathname } from "next/navigation";
 import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-type-transaction-column";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<Finance>[] = [
   {
@@ -35,15 +36,26 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "type",
-    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
+    accessorFn: (row) =>
+      row.type === "in"
+        ? "Pemasukan"
+        : row.type === "out"
+          ? "Pengeluaran"
+          : row.type === "reversal"
+            ? "Reversal"
+            : "-",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
     cell: ({ row }) => {
       return row.original.type === "in" ? (
         <span className="text-green-500">Pemasukan</span>
-      ) : (
+      ) : row.original.type === "out" ? (
         <span className="text-red-500">Pengeluaran</span>
+      ) : row.original.type === "reversal" ? (
+        <span className="text-blue-500">Reversal</span>
+      ) : (
+        <span>-</span>
       );
     },
   },
@@ -58,8 +70,8 @@ export const columns: ColumnDef<Finance>[] = [
     ),
     cell: ({ row }) =>
       // Batas panjang teks catatan transaksi yang ditampilkan di tabel
-      row.original.notes.length > 50
-        ? `${row.original.notes.substring(0, 50)}...`
+      row.original.notes.length > 20
+        ? `${row.original.notes.substring(0, 20)}...`
         : row.original.notes,
   },
   {
@@ -71,7 +83,8 @@ export const columns: ColumnDef<Finance>[] = [
 
   {
     id: "transactionType",
-    accessorFn: (row) => inventoryTransactionTypeTranslation(row.transactionType),
+    accessorFn: (row) =>
+      inventoryTransactionTypeTranslation(row.transactionType),
     header: () => <span>TIPE TRANSAKSI</span>,
     cell: ({ row }) => row.getValue("transactionType"),
   },
@@ -88,9 +101,14 @@ export const columns: ColumnDef<Finance>[] = [
     accessorFn: (row) => {
       const priceStr =
         row.totalPrice !== null && row.totalPrice !== undefined
-          ? formatRupiahTypeTransactionColumn(row.totalPrice, row.transactionType)
+          ? formatRupiahTypeTransactionColumn(
+              row.totalPrice,
+              row.transactionType,
+            )
           : "-";
-      return row.transactionType === "grant" ? `${priceStr} (perkiraan)` : priceStr;
+      return row.transactionType === "grant"
+        ? `${priceStr} (perkiraan)`
+        : priceStr;
     },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TOTAL" />
@@ -109,6 +127,51 @@ export const columns: ColumnDef<Finance>[] = [
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
     ),
     cell: ({ row }) => row.getValue("createdAt"),
+  },
+  {
+    id: "reversalSource",
+    accessorFn: (row) => {
+      if (row.type === "reversal") {
+        return (
+          row.reversalSourceLabel || row.referenceTransactionSourceId || "-"
+        );
+      }
+      return row.reversedBySourceId ? "Direversal" : "-";
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="REVERSAL" />
+    ),
+    cell: ({ row }) => {
+      const item = row.original;
+
+      if (item.type === "reversal") {
+        return (
+          <div className="flex flex-col space-y-0.5">
+            <Badge variant="outline" className="text-blue-600 border-blue-200">
+              Dari data
+            </Badge>
+            {item.reversalSourceLabel ? (
+              <ButtonCopy
+                textToCopy={item.reversalSourceId || item.reversalSourceLabel}
+                truncateLength={5}
+              />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      }
+
+      if (item.reversedBySourceId) {
+        return (
+          <Badge variant="outline" className="text-orange-700 border-orange-200">
+            Direversal
+          </Badge>
+        );
+      }
+
+      return <span className="text-muted-foreground">-</span>;
+    },
   },
   {
     id: "actions",

@@ -12,6 +12,12 @@ export type FinanceNonInventory = {
   pricePerItem: number;
   totalPrice: number | null;
   createdAt: string;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
+  // Computed reversal info (added client-side)
+  reversedBySourceId?: string | null;
+  reversalSourceId?: string | null;
+  reversalSourceLabel?: string | null;
 };
 
 export type ResponseFinanceNonInventory = {

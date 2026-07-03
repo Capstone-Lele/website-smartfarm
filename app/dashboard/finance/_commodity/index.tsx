@@ -47,6 +47,33 @@ const FinanceCommodityData = ({ dateRange }: Props) => {
     });
   }, [commodityData, dateRange]);
 
+  // Compute reversal info for each item
+  const dataWithReversalInfo = useMemo(() => {
+    if (!filteredData) return [];
+    return filteredData.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? commodityData?.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? commodityData?.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredData, commodityData]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -58,7 +85,7 @@ const FinanceCommodityData = ({ dateRange }: Props) => {
           Catatan Penjualan Komoditas
         </Link>
       </div>
-      <DataTable columns={commodityColumns} data={filteredData} />
+      <DataTable columns={commodityColumns} data={dataWithReversalInfo} />
     </DefaultCard>
   );
 };

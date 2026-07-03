@@ -1,23 +1,20 @@
 "use client";
 
 import DefaultCard from "@/components/card/default-card";
+import { ButtonCopy } from "@/components/button-copy";
+import ButtonRedirectColumn from "@/components/button-column/button-redirect-column";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useFinanceBySourceId } from "@/lib/api/service/finance/useFinance";
-import {
-  useGetInventoryNotesByIdWithParams,
-  useInventory,
-  useInventoryById,
-} from "@/lib/api/service/inventory/useInventory";
 import { useGetProductById } from "@/lib/api/service/master-data/product/useProduct";
 import { useNonInventory } from "@/lib/api/service/non-inventory/useNonInventory";
-import { useGetUserById } from "@/lib/api/service/users/useUser";
 import { inventoryTransactionTypeTranslation } from "@/lib/constants/type-inventory";
 import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
-import { InventoryResponseParamNote } from "@/types/inventory";
+import { FinanceBySourceId } from "@/types/finance/finance";
 import { use, useEffect } from "react";
+import { LuArrowLeftRight, LuRepeat2 } from "react-icons/lu";
 
 function InfoRow({
   label,
@@ -33,6 +30,163 @@ function InfoRow({
         <div className="text-sm font-medium break-words mt-0.5">{value}</div>
       </div>
     </div>
+  );
+}
+
+type ReversalFinanceRecord = FinanceBySourceId & {
+  referenceTransactionSourceId?: string | null;
+  reversedBySourceId?: string | null;
+  reversalSourceId?: string | null;
+  reversalSourceLabel?: string | null;
+};
+
+function ReversalTransactionCard({
+  financeRecord,
+}: {
+  financeRecord: ReversalFinanceRecord | null;
+}) {
+  if (!financeRecord) return null;
+
+  const reversalTransactionId =
+    financeRecord.transactionReversalId ??
+    financeRecord.reversedBySourceId ??
+    null;
+  const reversalNoteId =
+    financeRecord.transactionReversalNoteId ??
+    financeRecord.reversalSourceId ??
+    null;
+  const referenceTransactionId = financeRecord.referenceId ?? null;
+  const referenceSourceId =
+    financeRecord.referenceSourceId ??
+    financeRecord.referenceTransactionSourceId ??
+    null;
+  const isReversed = Boolean(
+    financeRecord.isReversed || reversalTransactionId || reversalNoteId,
+  );
+  const isReversal = Boolean(
+    financeRecord.type?.toLowerCase() === "reversal" ||
+      referenceTransactionId ||
+      referenceSourceId,
+  );
+
+  if (!isReversed && !isReversal) return null;
+
+  return (
+    <>
+      {isReversed && (
+        <DefaultCard className="rounded-sm">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <LuRepeat2 className="text-blue-500" size={16} />
+              <h3 className="font-semibold text-sm text-blue-700 dark:text-blue-400">
+                Transaksi Ini Telah Di-Reversal
+              </h3>
+              <Badge
+                variant="secondary"
+                className="text-xs bg-blue-500/10 text-blue-600 border-none"
+              >
+                Reversed
+              </Badge>
+            </div>
+            <Separator className="bg-blue-200/60" />
+            <p className="text-xs text-muted-foreground">
+              Catatan non inventaris ini sudah pernah dilakukan transaksi
+              reversal. Berikut adalah referensi ke transaksi reversal-nya.
+            </p>
+            <div className="flex flex-col gap-3">
+              {reversalTransactionId && (
+                <div className="flex items-center justify-between gap-2 rounded-md bg-blue-500/5 px-3 py-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      ID Reversal Transaksi
+                    </p>
+                    <ButtonCopy
+                      textToCopy={reversalTransactionId}
+                      truncateLength={20}
+                      className="text-sm font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+              {reversalNoteId && (
+                <div className="flex items-center justify-between gap-2 rounded-md bg-blue-500/5 px-3 py-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      ID Catatan Reversal
+                    </p>
+                    <ButtonCopy
+                      textToCopy={reversalNoteId}
+                      truncateLength={20}
+                      className="text-sm font-mono"
+                    />
+                  </div>
+                  <ButtonRedirectColumn
+                    href={`/dashboard/non-inventory/${reversalNoteId}`}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </DefaultCard>
+      )}
+
+      {isReversal && (
+        <DefaultCard className="rounded-sm">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <LuArrowLeftRight className="text-orange-500" size={16} />
+              <h3 className="font-semibold text-sm text-orange-700 dark:text-orange-400">
+                Ini Adalah Transaksi Reversal
+              </h3>
+              <Badge
+                variant="secondary"
+                className="text-xs bg-orange-500/10 text-orange-600 border-none"
+              >
+                Referensi Asal
+              </Badge>
+            </div>
+            <Separator className="bg-orange-200/60" />
+            <p className="text-xs text-muted-foreground">
+              Transaksi ini merupakan pembalikan dari transaksi sebelumnya.
+              Berikut adalah referensi ke transaksi asal.
+            </p>
+            <div className="flex flex-col gap-3">
+              {referenceTransactionId && (
+                <div className="flex items-center justify-between gap-2 rounded-md bg-orange-500/5 px-3 py-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      ID Referensi Transaksi
+                    </p>
+                    <ButtonCopy
+                      textToCopy={referenceTransactionId}
+                      truncateLength={20}
+                      className="text-sm font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+              {referenceSourceId && (
+                <div className="flex items-center justify-between gap-2 rounded-md bg-orange-500/5 px-3 py-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      ID Catatan Asal
+                    </p>
+                    <ButtonCopy
+                      textToCopy={referenceSourceId}
+                      truncateLength={20}
+                      className="text-sm font-mono"
+                    />
+                  </div>
+                  <ButtonRedirectColumn
+                    href={`/dashboard/non-inventory/${referenceSourceId}`}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </DefaultCard>
+      )}
+    </>
   );
 }
 
@@ -61,13 +215,26 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     return () => removeLabel("inventory");
   }, [productData, setLabel, removeLabel]);
 
-  const financeRecord = financeData?.data?.[0];
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
+    : Array.isArray(financeData)
+      ? financeData[0]
+      : null;
 
-  const isIncome = financeRecord?.type.toLowerCase() === "in";
+  const isIncome = financeRecord?.type?.toLowerCase() === "in";
+  const isReversal = financeRecord?.type?.toLowerCase() === "reversal";
   const badgeColor = isIncome
     ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-    : "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20";
-  const mainTypeColor = isIncome ? "text-emerald-600" : "text-orange-500";
+    : isReversal
+      ? "bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
+      : "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20";
+  const mainTypeColor = isIncome
+    ? "text-emerald-600"
+    : isReversal
+      ? "text-blue-600"
+      : "text-orange-500";
 
   if (isLoadingInventoryDetailNotes || isLoadingFinance) {
     return (
@@ -87,12 +254,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="space-y-6">
+      <ReversalTransactionCard
+        financeRecord={financeRecord as ReversalFinanceRecord | null}
+      />
+
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <DefaultCard className="p-4 rounded-sm">
           <p className="text-xs text-muted-foreground mb-1">Tipe Catatan</p>
           <p className={`text-lg font-semibold capitalize ${mainTypeColor}`}>
-            {isIncome ? "Masuk" : "Keluar"}
+            {isIncome ? "Masuk" : isReversal ? "Reversal" : "Keluar"}
           </p>
         </DefaultCard>
 
@@ -165,7 +336,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 variant="secondary"
                 className={`text-xs ${badgeColor} border-none`}
               >
-                {isIncome ? "Penambahan" : "Pengurangan"}
+                {isIncome
+                  ? "Penambahan"
+                  : isReversal
+                    ? "Reversal"
+                    : "Pengurangan"}
               </Badge>
             </div>
             <Separator />

@@ -12,6 +12,7 @@ import {
   LuArrowDownFromLine,
   LuArrowUpToLine,
   LuFileText,
+  LuUndo2,
 } from "react-icons/lu";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 
@@ -58,16 +59,53 @@ export default function NonInventoryPage() {
       );
   }, [nonInventoryData, dateRange]);
 
+  const dataWithReversalInfo = React.useMemo(() => {
+    if (!filteredData) return [];
+    return filteredData.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? nonInventoryData?.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? nonInventoryData?.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredData, nonInventoryData]);
+
+  const activeData = React.useMemo(() => {
+    return dataWithReversalInfo.filter(
+      (item) => item.type !== "reversal" && !item.reversedBySourceId,
+    );
+  }, [dataWithReversalInfo]);
+
+  const totalReversal = React.useMemo(() => {
+    if (!nonInventoryData) return 0;
+    return nonInventoryData.filter((item) => item.type === "reversal").length;
+  }, [nonInventoryData]);
+
   const cardData = [
     {
       title: "Total Transaksi",
-      value: filteredData.length.toString() || "0",
+      value: activeData.length.toString() || "0",
       icon: <LuFileText />,
     },
     {
       title: "Pemasukan",
       value:
-        filteredData
+        activeData
           .filter((item) => item.type === "in")
           .length.toString() || "0",
       icon: <LuArrowDownFromLine className="text-green-500" />,
@@ -75,10 +113,15 @@ export default function NonInventoryPage() {
     {
       title: "Pengeluaran",
       value:
-        filteredData
+        activeData
           .filter((item) => item.type === "out")
           .length.toString() || "0",
       icon: <LuArrowUpToLine className="text-red-500" />,
+    },
+    {
+      title: "Total Reversal",
+      value: totalReversal.toString(),
+      icon: <LuUndo2 className="text-blue-500" />,
     },
   ];
 
@@ -116,7 +159,7 @@ export default function NonInventoryPage() {
               </div>
               <DataTable
                 columns={nonInventoryColumns}
-                data={filteredData}
+                data={dataWithReversalInfo}
               />
             </div>
           )}

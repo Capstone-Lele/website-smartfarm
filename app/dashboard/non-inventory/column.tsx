@@ -9,8 +9,75 @@ import { FinanceNonInventory } from "@/types/finance/finance-non-inventory";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { ButtonCopy } from "@/components/button-copy";
 import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-type-transaction-column";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import ButtonReversalColumn from "@/components/button-column/button-reversal-column";
+import PopupReversal from "@/components/popup-reversal";
+import { toast } from "sonner";
+import { useState } from "react";
+import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
+import { useCreateTransactionReversalNonInventoryNote } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
+
+const NonInventoryActions = ({ row }: { row: FinanceNonInventory }) => {
+  const [isReversalOpen, setIsReversalOpen] = useState(false);
+  const createTransactionReversal =
+    useCreateTransactionReversalNonInventoryNote(row.id || "");
+
+  const item = row as any;
+  const canCreateReversal =
+    item.type !== "reversal" && !item.reversedBySourceId && Boolean(item.id);
+
+  const handleReversal = async () => {
+    try {
+      await createTransactionReversal.mutateAsync();
+      toast.success("Transaksi reversal berhasil dilakukan");
+      setIsReversalOpen(false);
+    } catch {
+      toast.error("Gagal melakukan transaksi reversal", {
+        description: "Silakan coba lagi.",
+      });
+    }
+  };
+
+  return (
+    <div className="flex items-center text-primary gap-0.5">
+      <ButtonDetailColumn href={`/dashboard/non-inventory/${row.sourceId}`} />
+      {canCreateReversal ? (
+        <>
+          <Separator orientation="vertical" className="h-6" />
+          <ButtonReversalColumn
+            disabled={createTransactionReversal.isPending}
+            onClick={() => setIsReversalOpen(true)}
+          />
+          <PopupReversal
+            title="Konfirmasi Reversal"
+            message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik."
+            type="warning"
+            isOpen={isReversalOpen}
+            setOpen={setIsReversalOpen}
+            isLoading={createTransactionReversal.isPending}
+            onConfirm={handleReversal}
+            onCancel={() => setIsReversalOpen(false)}
+          />
+        </>
+      ) : item.type === "reversal" || item.reversedBySourceId ? (
+        <>
+          <Separator orientation="vertical" className="h-6" />
+          <ButtonReversalColumn disabled={true} onClick={() => {}} />
+        </>
+      ) : null}
+    </div>
+  );
+};
 
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
+  {
+    accessorKey: "sourceId",
+    header: () => <span>ID CATATAN</span>,
+    cell: ({ row }) => (
+      <ButtonCopy textToCopy={row.original.sourceId} truncateLength={10} />
+    ),
+  },
   {
     id: "transactionDate",
     accessorFn: (row) => formatDate(row.transactionDate),
@@ -23,15 +90,26 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "type",
-    accessorFn: (row) => (row.type === "in" ? "Pemasukan" : "Pengeluaran"),
+    accessorFn: (row) =>
+      row.type === "in"
+        ? "Pemasukan"
+        : row.type === "out"
+          ? "Pengeluaran"
+          : row.type === "reversal"
+            ? "Reversal"
+            : "-",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
     cell: ({ row }) => {
       return row.original.type === "in" ? (
         <span className="text-green-500">Pemasukan</span>
-      ) : (
+      ) : row.original.type === "out" ? (
         <span className="text-red-500">Pengeluaran</span>
+      ) : row.original.type === "reversal" ? (
+        <span className="text-blue-500">Reversal</span>
+      ) : (
+        <span>-</span>
       );
     },
   },
@@ -44,8 +122,27 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
     header: () => <span>PRODUK</span>,
   },
   {
-    accessorKey: "transactionType",
-    header: () => <span>TIPE TRANSAKSI</span>,
+    id: "transactionType",
+    accessorFn: (row) => {
+      const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
+        (opt) => opt.value === row.transactionType,
+      );
+      return option ? option.label : row.transactionType || "-";
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className=""
+        column={column}
+        title="TIPE TRANSAKSI"
+      />
+    ),
+    cell: ({ row }) => {
+      const transactionType = row.original.transactionType;
+      const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
+        (opt) => opt.value === transactionType,
+      );
+      return <div>{option ? option.label : transactionType || "-"}</div>;
+    },
   },
   {
     id: "quantity",
@@ -106,16 +203,56 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
 
   {
+    id: "reversalSource",
+    accessorFn: (row) => {
+      const item = row as any;
+      if (item.type === "reversal") {
+        return (
+          item.reversalSourceLabel || item.referenceTransactionSourceId || "-"
+        );
+      }
+      return item.reversedBySourceId ? "Direversal" : "-";
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="REVERSAL" />
+    ),
+    cell: ({ row }) => {
+      const item = row.original as any;
+
+      if (item.type === "reversal") {
+        return (
+          <div className="flex flex-col space-y-0.5">
+            <Badge variant="outline" className="text-blue-600 border-blue-200">
+              Dari data
+            </Badge>
+            {item.reversalSourceLabel ? (
+              <ButtonCopy
+                textToCopy={item.reversalSourceId || item.reversalSourceLabel}
+                truncateLength={5}
+              />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      }
+
+      if (item.reversedBySourceId) {
+        return (
+          <Badge variant="outline" className="text-orange-700 border-orange-200">
+            Direversal
+          </Badge>
+        );
+      }
+
+      return <span className="text-muted-foreground">-</span>;
+    },
+  },
+  {
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
-      return (
-        <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn
-            href={`/dashboard/non-inventory/${row.original.sourceId}`}
-          />
-        </div>
-      );
+      return <NonInventoryActions row={row.original} />;
     },
   },
 ];

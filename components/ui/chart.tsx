@@ -184,19 +184,20 @@ function ChartTooltipContent({
           .map((item, index) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
-            const indicatorColor = color || item.payload.fill || item.color
+            const rawColor = color || item.color || item.payload.fill
+            const finalKey = item.dataKey || key
+            const indicatorColor = rawColor?.startsWith("url(")
+              ? `var(--color-${finalKey})`
+              : rawColor || `var(--color-${finalKey})`
 
             return (
               <div
                 key={item.dataKey}
                 className={cn(
-                  "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
-                  indicator === "dot" && "items-center"
+                  "[&>svg]:text-muted-foreground flex w-full items-start gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
+                  indicator === "dot" && "items-start"
                 )}
               >
-                {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
-                ) : (
                   <>
                     {itemConfig?.icon ? (
                       <itemConfig.icon />
@@ -206,7 +207,7 @@ function ChartTooltipContent({
                           className={cn(
                             "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
                             {
-                              "h-2.5 w-2.5": indicator === "dot",
+                              "h-2.5 w-2.5 mt-[3px]": indicator === "dot",
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
@@ -222,26 +223,20 @@ function ChartTooltipContent({
                         />
                       )
                     )}
-                    <div
-                      className={cn(
-                        "flex flex-1 justify-between leading-none",
-                        nestLabel ? "items-end" : "items-center"
-                      )}
-                    >
-                      <div className="grid gap-1.5">
-                        {nestLabel ? tooltipLabel : null}
-                        <span className="text-muted-foreground">
-                          {itemConfig?.label || item.name}
-                        </span>
-                      </div>
-                      {item.value && (
-                        <span className="text-foreground font-mono font-medium tabular-nums">
-                          {item.value.toLocaleString()}
+                    <div className="flex flex-col gap-1 leading-none">
+                      <span className="text-muted-foreground font-medium">
+                        {itemConfig?.label || item.name}
+                      </span>
+                      {item.value !== undefined && (
+                        <span className="text-foreground font-semibold font-mono tabular-nums text-xs">
+                          {formatter
+                            ? formatter(item.value, item.name ?? "", item, index, item.payload)
+                            : item.value.toLocaleString()}
                         </span>
                       )}
+                      {nestLabel ? tooltipLabel : null}
                     </div>
                   </>
-                )}
               </div>
             )
           })}
@@ -282,6 +277,9 @@ function ChartLegendContent({
         .map((item) => {
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
+          const legendColor = item.color?.startsWith("url(")
+            ? `var(--color-${key})`
+            : item.color || `var(--color-${key})`
 
           return (
             <div
@@ -296,7 +294,7 @@ function ChartLegendContent({
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
                   style={{
-                    backgroundColor: item.color,
+                    backgroundColor: legendColor,
                   }}
                 />
               )}

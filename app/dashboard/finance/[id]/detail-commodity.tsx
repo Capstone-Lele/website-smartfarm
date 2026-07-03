@@ -21,6 +21,9 @@ import { useCommodityByIdAndType } from "@/lib/api/service/commodity/useCommodit
 import { useFinanceBySourceId } from "@/lib/api/service/finance/useFinance";
 import { CommodityByIdAndSourceIdItems } from "@/types/comodity";
 import { useDetailCycle } from "@/lib/api/service/cycles/useCycle";
+import ReversalTransactionCard, {
+  ReversalFinanceRecord,
+} from "./reversal-transaction-card";
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
@@ -36,17 +39,22 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 function SaleItemCard({
   item,
   index,
+  isReversal,
 }: {
   item: CommodityByIdAndSourceIdItems;
   index: number;
+  isReversal?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(index === 0);
-    const { data: dataCycle, isLoading: isLoadingCycle } = useDetailCycle(
-      item.cycleId || "",
-    );
-    const cycleStartDate = dataCycle?.data?.[0]?.startDate
-      ? formatDate(dataCycle.data[0].startDate)
-      : "-";
+  const { data: dataCycle, isLoading: isLoadingCycle } = useDetailCycle(
+    item.cycleId || "",
+  );
+  const cycleStartDate = dataCycle?.data?.[0]?.startDate
+    ? formatDate(dataCycle.data[0].startDate)
+    : "-";
+  const itemSubTotal = isReversal
+    ? Number(item.priceKg || 0) * Number(item.quantityKg || 0)
+    : (item.subTotal || 0);
 
   return (
     <div className="rounded-sm border bg-muted/10 overflow-hidden">
@@ -69,7 +77,7 @@ function SaleItemCard({
           )}
         </div>
         <Badge variant="outline" className="text-xs">
-          {formatRupiah(item.subTotal)}
+          {formatRupiah(itemSubTotal)}
         </Badge>
       </div>
 
@@ -110,7 +118,7 @@ function SaleItemCard({
                   Subtotal
                 </span>
                 <span className="font-bold text-primary">
-                  {formatRupiah(item.subTotal)}
+                  {formatRupiah(itemSubTotal)}
                 </span>
               </div>
             </div>
@@ -136,38 +144,57 @@ function SaleItemCard({
 /* -------------------------------------------------------------------------- */
 
 const DetailCommodity = ({ id }: { id: string }) => {
-    console.log("DetailCommodity rendered with id:", id);
-  const { data: dataCommodity, isLoading: isLoadingCommodity } =
-    useCommodityByIdAndType(id, "in");
-  const { data: dataBuyer, isLoading: isLoadingBuyer } = useGetBuyerById(
+  const { data: dataCommodity } = useCommodityByIdAndType(id, "in");
+  const { data: dataBuyer } = useGetBuyerById(
     dataCommodity?.data[0]?.buyerId || "",
   );
-  const { data: dataFinance, isLoading: isLoadingFinance } =
-    useFinanceBySourceId(id);
+  const { data: dataFinance } = useFinanceBySourceId(id);
+
+  const financeRecord = dataFinance?.data
+    ? Array.isArray(dataFinance.data)
+      ? dataFinance.data[0]
+      : dataFinance.data
+    : Array.isArray(dataFinance)
+      ? dataFinance[0]
+      : null;
+
+  const isReversal = !!financeRecord?.isReversed;
+  const orderItems = dataCommodity?.data?.[0]?.orderItems || [];
+  const calculatedTotalPrice = orderItems.reduce(
+    (sum, item) => sum + (Number(item.priceKg || 0) * Number(item.quantityKg || 0)),
+    0
+  );
+  const displayTotalPrice = isReversal ? calculatedTotalPrice : (financeRecord?.totalPrice || 0);
 
   return (
     <div className="space-y-6">
+      <ReversalTransactionCard
+        financeRecord={financeRecord as ReversalFinanceRecord | null}
+        sourceType="commodity_sales"
+        descriptionLabel="Catatan penjualan komoditas"
+      />
+
       {/* ── Summary Cards ──────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           {
             label: "Total Item",
-            value: `${dataCommodity?.data?.[0]?.orderItems?.length || 0}`,
+            value: `${orderItems.length || 0}`,
             color: "text-primary",
           },
           {
             label: "Total Ekor",
-            value: `${(dataCommodity?.data?.[0]?.orderItems?.reduce((s, i) => s + Number(i.quantity || 0), 0) || 0).toLocaleString("id-ID")} ekor`,
+            value: `${(orderItems.reduce((s, i) => s + Number(i.quantity || 0), 0) || 0).toLocaleString("id-ID")} ekor`,
             color: "text-foreground",
           },
           {
             label: "Total Berat",
-            value: `${dataCommodity?.data?.[0]?.orderItems?.reduce((s, i) => s + Number(i.quantityKg || 0), 0) || 0} kg`,
+            value: `${orderItems.reduce((s, i) => s + Number(i.quantityKg || 0), 0) || 0} kg`,
             color: "text-foreground",
           },
           {
             label: "Total Harga",
-            value: formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0),
+            value: formatRupiah(displayTotalPrice),
             color: "text-emerald-600",
           },
         ].map((card, i) => (
@@ -221,19 +248,19 @@ const DetailCommodity = ({ id }: { id: string }) => {
               <div className="space-y-4">
                 <InfoRow
                   label="ID Transaksi"
-                  value={dataFinance?.data?.[0]?.id || "-"}
+                  value={financeRecord?.id || "-"}
                 />
                 <InfoRow
                   label="Tanggal Order"
-                  value={formatDate(dataFinance?.data?.[0]?.transactionDate || "")}
+                  value={formatDate(financeRecord?.transactionDate || "")}
                 />
                 <InfoRow
                   label="Total Harga"
-                  value={formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0)}
+                  value={formatRupiah(displayTotalPrice)}
                 />
                 <InfoRow
                   label="Catatan Transaksi"
-                  value={dataFinance?.data?.[0]?.notes || "-"}
+                  value={financeRecord?.notes || "-"}
                 />
               </div>
 
@@ -242,10 +269,10 @@ const DetailCommodity = ({ id }: { id: string }) => {
                 <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
                   Nota Penjualan
                 </p>
-                {dataFinance?.data?.[0]?.image ? (
+                {financeRecord?.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={dataFinance?.data?.[0]?.image}
+                    src={financeRecord.image}
                     alt="Nota Penjualan"
                     className="rounded-md border object-cover max-h-52 w-full"
                   />
@@ -277,8 +304,8 @@ const DetailCommodity = ({ id }: { id: string }) => {
             <Separator />
 
             <div className="space-y-3">
-              {dataCommodity?.data?.[0]?.orderItems?.map((item, index) => (
-                <SaleItemCard key={item.id} item={item} index={index} />
+              {orderItems.map((item, index) => (
+                <SaleItemCard key={item.id} item={item} index={index} isReversal={isReversal} />
               ))}
             </div>
 
@@ -286,7 +313,7 @@ const DetailCommodity = ({ id }: { id: string }) => {
             <div className="flex items-center justify-between rounded-md border bg-gray-100 px-4 py-3 mt-2">
               <span className="text-sm font-semibold">Total Keseluruhan</span>
               <span className="text-base font-bold ">
-                {formatRupiah(dataFinance?.data?.[0]?.totalPrice || 0)}
+                {formatRupiah(displayTotalPrice)}
               </span>
             </div>
           </div>

@@ -51,6 +51,33 @@ const FinanceNonInventoryData = ({ dateRange }: Props) => {
     });
   }, [nonInventoryData, dateRange]);
 
+  // Compute reversal info for each item (same pattern as /dashboard/non-inventory/page.tsx)
+  const dataWithReversalInfo = useMemo(() => {
+    if (!filteredData) return [];
+    return filteredData.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? nonInventoryData?.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? nonInventoryData?.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredData, nonInventoryData]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -62,7 +89,7 @@ const FinanceNonInventoryData = ({ dateRange }: Props) => {
           Catatan Non-Inventaris
         </Link>
       </div>
-      <DataTable columns={nonInventoryColumns} data={filteredData} />
+      <DataTable columns={nonInventoryColumns} data={dataWithReversalInfo} />
     </DefaultCard>
   );
 };

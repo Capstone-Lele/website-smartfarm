@@ -51,6 +51,33 @@ const FinanceInventorySubmissionData = ({ dateRange }: Props) => {
     });
   }, [inventorySubmissionData, dateRange]);
 
+  // Compute reversal info for each item
+  const dataWithReversalInfo = useMemo(() => {
+    if (!filteredData) return [];
+    return filteredData.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? inventorySubmissionData?.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? inventorySubmissionData?.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredData, inventorySubmissionData]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -61,7 +88,7 @@ const FinanceInventorySubmissionData = ({ dateRange }: Props) => {
       </div>
       <DataTable
         columns={inventorySubmissionColumns}
-        data={filteredData}
+        data={dataWithReversalInfo}
       />
     </DefaultCard>
   );

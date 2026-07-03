@@ -2,12 +2,14 @@
 
 import React, { useMemo } from "react";
 import { format } from "date-fns";
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import DefaultCard from "@/components/card/default-card";
 import { Finance } from "@/types/finance/finance";
@@ -119,11 +121,7 @@ const TransactionCountChart = ({ data }: TransactionCountChartProps) => {
                 />
               }
             />
-            <Legend
-              wrapperStyle={{ paddingTop: 10, fontSize: 12 }}
-              iconType="circle"
-              iconSize={8}
-            />
+            <ChartLegend content={<ChartLegendContent />} />
             <Area
               type="monotone"
               dataKey="masuk"

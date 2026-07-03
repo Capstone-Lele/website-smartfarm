@@ -8,6 +8,7 @@ import {
   LuCircleArrowDown,
   LuCircleArrowUp,
   LuArrowUpDown,
+  LuUndo2,
 } from "react-icons/lu";
 import { RiResetRightLine } from "react-icons/ri";
 import {
@@ -15,14 +16,18 @@ import {
   useGetInventoryConsumptionByIdWithParams,
   useGetInventoryNotesByIdWithParams,
   useGetInventorySubmissionByIdWithParams,
-  useInventory,
 } from "@/lib/api/service/inventory/useInventory";
 import TableSkeleton from "@/components/sekeleton/table-skeleton";
 import { DataTable } from "@/components/data-table/data-table";
 import { columns } from "./column";
 import PostStockInOut from "./post";
 import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
-import { InventoryDetail } from "@/types/inventory";
+import {
+  InventoryDetail,
+  InventoryResponseParamConsumption,
+  InventoryResponseParamNote,
+  InventoryResponseParamSubmission,
+} from "@/types/inventory";
 import { DatePickerWithRange } from "@/components/date-picker/date-rage-picker";
 import {
   Tooltip,
@@ -39,7 +44,7 @@ import { formatDateShort } from "@/lib/utils/format-date";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
-  const { setTabComponent } = useSubNavbarTab();
+  useSubNavbarTab();
   const { setLabel, removeLabel } = useBreadcrumbStore();
   const [dateRange, setDateRange] = useState<{
     start: Date | null | undefined;
@@ -69,10 +74,9 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   } = useGetInventoryConsumptionByIdWithParams(id, {
     inventoryType: "consumption",
   });
-  const { data: inventoryDetail, isLoading: isLoadingInventoryDetail } =
-    useGetInventoryByIdWithParams(id, {
-      inventoryType: "all",
-    });
+  const { data: inventoryDetail } = useGetInventoryByIdWithParams(id, {
+    inventoryType: "all",
+  });
 
   const isLoading =
     isLoadingInventoryDetailNotes ||
@@ -86,25 +90,34 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   // Merge tiga sumber data menjadi satu array InventoryDetail[]
   const mergedInventoryDetails: InventoryDetail[] = [
     // 1. Notes → kategori "Inventaris", gunakan reportDate sebagai createdAt
-    ...((inventoryDetailDataNotes as any)?.data ?? []).map((item: any) => ({
-      id: item.id,
-      notes: item.notes ?? "",
-      type: item.type,
-      category: "Inventaris",
-      source: "inventory-notes",
-      unit: currentInventory?.unit ?? "",
-      quantity: item.quantity,
-      pricePerItem: item.pricePerItem ?? null,
-      reportDate: item.reportDate,
-      transactionType: item.transactionType ?? "-",
-      createdAt: item.reportDate ?? item.createdAt,
-      updatedAt: item.updatedAt,
-      deletedAt: item.deletedAt ?? null,
-    })),
+    ...(inventoryDetailDataNotes?.data ?? []).map(
+      (item: InventoryResponseParamNote) => ({
+        id: item.id,
+        notes: item.notes ?? "",
+        type: item.type,
+        category: "Inventaris",
+        source: "inventory-notes",
+        unit: currentInventory?.unit ?? "",
+        quantity: item.quantity,
+        pricePerItem: item.pricePerItem ?? null,
+        reportDate: item.reportDate,
+        transactionType: item.transactionType ?? "-",
+        createdAt: item.reportDate ?? item.createdAt,
+        updatedAt: item.updatedAt,
+        deletedAt: item.deletedAt ?? null,
+        transactionId: item.transactionId ?? null,
+        sourceId: item.sourceId ?? null,
+        referenceId: item.referenceId ?? null,
+        referenceTransactionSourceId: item.referenceTransactionSourceId ?? null,
+      }),
+    ),
     // 2. Submission → kategori "Pengajuan Inventaris", type selalu "in", hanya status "approve"
-    ...((inventoryDetailDataSubmissions as any)?.data ?? [])
-      .filter((item: any) => item.status === "approved")
-      .map((item: any) => ({
+    ...(inventoryDetailDataSubmissions?.data ?? [])
+      .filter(
+        (item: InventoryResponseParamSubmission) =>
+          item.status === "approved",
+      )
+      .map((item: InventoryResponseParamSubmission) => ({
         id: item.id,
         notes: item.notes ?? "",
         type: "in" as const,
@@ -118,10 +131,14 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         createdAt: item.reportDate ?? item.createdAt,
         updatedAt: item.updatedAt,
         deletedAt: item.deletedAt ?? null,
+        transactionId: item.transactionId ?? null,
+        sourceId: item.sourceId ?? null,
+        referenceId: item.referenceId ?? null,
+        referenceTransactionSourceId: item.referenceTransactionSourceId ?? null,
       })),
     // 3. Consumption → kategori "Inventaris", type selalu "out", gunakan reportDate sebagai createdAt
-    ...((inventoryDetailDataConsumption as any)?.data ?? []).map(
-      (item: any) => ({
+    ...(inventoryDetailDataConsumption?.data ?? []).map(
+      (item: InventoryResponseParamConsumption) => ({
         id: item.id,
         notes: "",
         type: "out" as const,
@@ -130,14 +147,20 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         unit: currentInventory?.unit ?? "",
         quantity: item.quantity,
         pricePerItem: item.pricePerItem ?? null,
-        transactionType: item.transaction_type ?? "-",
+        transactionType: item.transactionType ?? item.transaction_type ?? "-",
         reportDate: item.reportDate,
         createdAt: item.reportDate ?? item.createdAt,
         updatedAt: item.updatedAt,
         deletedAt: item.deletedAt ?? null,
+        transactionId: item.transactionId ?? null,
+        sourceId: item.sourceId ?? null,
+        referenceId: item.referenceId ?? null,
+        referenceTransactionSourceId: item.referenceTransactionSourceId ?? null,
       }),
     ),
   ];
+
+  
 
   const filteredInventoryDetails = mergedInventoryDetails.filter((item) => {
     if (!dateRange.start && !dateRange.end) return true;
@@ -150,6 +173,31 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     return true;
   });
 
+  const inventoryDetailsWithReversalInfo = filteredInventoryDetails.map(
+    (item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? mergedInventoryDetails.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? mergedInventoryDetails.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    },
+  );
+
   useEffect(() => {
     if (inventoryDetail?.data) {
       const inventory = inventoryDetail.data.find((item) => item.id === id);
@@ -160,13 +208,31 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     return () => removeLabel("inventory");
   }, [inventoryDetail?.data, id, setLabel, removeLabel]);
 
-  const totalIn = mergedInventoryDetails
+  const activeFilteredInventoryDetails = inventoryDetailsWithReversalInfo.filter(
+    (item) => item.type !== "reversal" && !item.reversedBySourceId
+  );
+
+  const activeMergedInventoryDetails = mergedInventoryDetails.filter((item) => {
+    const isReversal = item.type === "reversal";
+    const isReversed = mergedInventoryDetails.some(
+      (detail) =>
+        detail.type === "reversal" &&
+        detail.referenceTransactionSourceId === item.sourceId,
+    );
+    return !isReversal && !isReversed;
+  });
+
+  const totalIn = activeMergedInventoryDetails
     .filter((item) => item.type === "in")
     .reduce((sum, item) => sum + Number(item.quantity), 0);
 
-  const totalOut = mergedInventoryDetails
+  const totalOut = activeMergedInventoryDetails
     .filter((item) => item.type === "out")
     .reduce((sum, item) => sum + Number(item.quantity), 0);
+
+  const totalReversal = mergedInventoryDetails.filter(
+    (item) => item.type === "reversal",
+  ).length;
 
   const cardData = [
     {
@@ -186,8 +252,13 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     },
     {
       title: "Total Kejadian In/Out",
-      value: `${mergedInventoryDetails.length}`,
+      value: `${activeMergedInventoryDetails.length}`,
       icon: <LuArrowUpDown className="text-amber-500" />,
+    },
+    {
+      title: "Total Reversal",
+      value: `${totalReversal}`,
+      icon: <LuUndo2 className="text-blue-500" />,
     },
   ];
 
@@ -222,8 +293,8 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </div>
 
-      {/* 4 CardStatistic cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+      {/* 5 CardStatistic cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 w-full">
         {cardData.map((card, index) => (
           <CardStatistic
             key={index}
@@ -246,7 +317,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
             <TableSkeleton />
           ) : (
             <InventoryOverview
-              details={filteredInventoryDetails}
+              details={activeFilteredInventoryDetails}
               currentInventory={inventoryDetail?.data?.[0]}
             />
           )}
@@ -272,7 +343,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
                     </div>
                     <DataTable
                       columns={columns}
-                      data={filteredInventoryDetails}
+                      data={inventoryDetailsWithReversalInfo}
                     />
                   </div>
                 )}
@@ -283,7 +354,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
 
         <TabsContent value="laporan" className="mt-4">
           <InventoryReportTab
-            data={filteredInventoryDetails}
+            data={activeFilteredInventoryDetails}
             rentang_tanggal={
               dateRange.start && dateRange.end
                 ? `Rentang: ${formatDateShort(dateRange.start.toISOString())} - ${formatDateShort(dateRange.end.toISOString())}`

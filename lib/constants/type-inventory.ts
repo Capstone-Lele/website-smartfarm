@@ -1,6 +1,7 @@
 export const INVENTORY_TYPE_OPTIONS = [
-  { value: "in", label: "Masuk (In)" },
-  { value: "out", label: "Keluar (Out)" },
+  { value: "in", label: "Masuk" },
+  { value: "out", label: "Keluar" },
+  { value: "reversal", label: "Reversal" },
 ];
 
 export const INVENTORY_TRANSACTION_TYPE_OPTIONS = [

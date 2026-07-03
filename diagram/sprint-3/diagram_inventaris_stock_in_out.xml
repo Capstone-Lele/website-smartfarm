@@ -7,13 +7,13 @@
         <mxCell id="1" parent="0" />
 
         <!-- Outer swimlane -->
-        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Detail Inventaris &amp; Transaksi Stok Masuk/Keluar" vertex="1">
-          <mxGeometry height="1480" width="1400" x="40" y="20" as="geometry" />
+        <mxCell id="2" parent="1" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=13;align=center;childLayout=stackLayout;horizontalStack=1;resizeParent=1;resizeLast=1;collapsible=0;" value="Fitur - Detail Inventaris &amp; Transaksi Stok Masuk/Keluar (+ Reversal)" vertex="1">
+          <mxGeometry height="2100" width="1400" x="40" y="20" as="geometry" />
         </mxCell>
 
-        <!-- Penanggung Jawab lane -->
+        <!-- Admin lane -->
         <mxCell id="3" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Admin" vertex="1">
-          <mxGeometry height="1450" width="690" y="30" as="geometry" />
+          <mxGeometry height="2070" width="690" y="30" as="geometry" />
         </mxCell>
 
         <!-- Start -->
@@ -81,7 +81,32 @@
           <mxGeometry height="50" width="200" x="235" y="420" as="geometry" />
         </mxCell>
 
-        <!-- Edges petugas -->
+        <!-- ===== REVERSAL FLOW (Admin) ===== -->
+
+        <!-- Klik tombol Reversal -->
+        <mxCell id="50" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Klik tombol Reversal&#xa;pada baris transaksi" vertex="1">
+          <mxGeometry height="50" width="200" x="235" y="530" as="geometry" />
+        </mxCell>
+
+        <!-- Konfirmasi reversal -->
+        <mxCell id="51" parent="3" style="rhombus;whiteSpace=wrap;html=1;" value="Konfirmasi&#xa;reversal transaksi?" vertex="1">
+          <mxGeometry height="70" width="180" x="225" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- Batal reversal -->
+        <mxCell id="52" parent="3" style="rounded=1;whiteSpace=wrap;html=1;" value="Tutup popup&#xa;(Batal reversal)" vertex="1">
+          <mxGeometry height="50" width="160" x="45" y="630" as="geometry" />
+        </mxCell>
+
+        <!-- Edges Admin reversal -->
+        <mxCell id="e50_51" edge="1" parent="3" source="50" style="edgeStyle=orthogonalEdgeStyle;" target="51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e51_52" edge="1" parent="3" source="51" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="52" value="Batal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Edges petugas (stok in/out flow) -->
         <mxCell id="e10_11" edge="1" parent="3" source="10" style="edgeStyle=orthogonalEdgeStyle;" target="11">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -130,9 +155,14 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
+        <!-- Reversal dari aksi pilih tab (lihat tabel, lalu klik reversal) -->
+        <mxCell id="e40_50" edge="1" parent="3" source="40" style="edgeStyle=orthogonalEdgeStyle;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="50" value="Reversal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <!-- Sistem lane -->
         <mxCell id="4" parent="2" style="swimlane;startSize=30;horizontal=1;fontStyle=1;fontSize=11;align=center;collapsible=0;" value="Sistem" vertex="1">
-          <mxGeometry height="1450" width="710" x="690" y="30" as="geometry" />
+          <mxGeometry height="2070" width="710" x="690" y="30" as="geometry" />
         </mxCell>
 
         <!-- Load & merge data -->
@@ -153,6 +183,26 @@
         <!-- Detail catatan -->
         <mxCell id="80" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka halaman detail catatan&#xa;(sesuai source: notes /&#xa;submission / consumption)" vertex="1">
           <mxGeometry height="70" width="240" x="230" y="410" as="geometry" />
+        </mxCell>
+
+        <!-- ===== CEK KONDISI REVERSAL (di tabel) ===== -->
+        <mxCell id="81" parent="4" style="rhombus;whiteSpace=wrap;html=1;" value="canCreateReversal?&#xa;(type ≠ out, ≠ reversal,&#xa;!reversedBySourceId,&#xa;ada transactionId)" vertex="1">
+          <mxGeometry height="100" width="220" x="230" y="510" as="geometry" />
+        </mxCell>
+
+        <!-- Tampilkan tombol reversal aktif -->
+        <mxCell id="82" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan tombol Reversal&#xa;(aktif) pada kolom Actions" vertex="1">
+          <mxGeometry height="50" width="220" x="460" y="535" as="geometry" />
+        </mxCell>
+
+        <!-- Tampilkan tombol reversal disabled -->
+        <mxCell id="83" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan tombol Reversal&#xa;(disabled): type=reversal&#xa;atau sudah direversal" vertex="1">
+          <mxGeometry height="60" width="220" x="30" y="530" as="geometry" />
+        </mxCell>
+
+        <!-- Kolom REVERSAL: badge status -->
+        <mxCell id="84" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Kolom REVERSAL:&#xa;- Badge 'Dari data' (biru) + ID sumber → jika type=reversal&#xa;- Badge 'Direversal' (oranye) → jika reversedBySourceId ada&#xa;- Tanda '-' → tidak ada reversal" vertex="1">
+          <mxGeometry height="80" width="310" x="185" y="415" as="geometry" />
         </mxCell>
 
         <!-- Buka sheet tambah stok -->
@@ -187,20 +237,47 @@
           <mxGeometry height="60" width="240" x="455" y="1000" as="geometry" />
         </mxCell>
 
-        <!-- Toast batal -->
+        <!-- Toast batal stok -->
         <mxCell id="98" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan toast&#xa;&quot;Penambahan stok dibatalkan&quot;" vertex="1">
           <mxGeometry height="50" width="200" x="35" y="1000" as="geometry" />
         </mxCell>
 
-        <!-- End -->
-        <mxCell id="110" parent="4" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
-          <mxGeometry height="24" width="24" x="343" y="1360" as="geometry" />
-        </mxCell>
-        <mxCell id="111" parent="4" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
-          <mxGeometry height="14" width="14" x="348" y="1365" as="geometry" />
+        <!-- ===== REVERSAL FLOW (Sistem) ===== -->
+
+        <!-- Tampilkan popup konfirmasi reversal -->
+        <mxCell id="100" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Tampilkan popup konfirmasi reversal:&#xa;'Aksi ini akan membuat transaksi&#xa;pembalik untuk mengoreksi stok'" vertex="1">
+          <mxGeometry height="70" width="280" x="210" y="1110" as="geometry" />
         </mxCell>
 
-        <!-- Sistem edges -->
+        <!-- Proses reversal -->
+        <mxCell id="101" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Kirim request reversal ke API&#xa;(POST /transaction-reversal/:transactionId)" vertex="1">
+          <mxGeometry height="60" width="280" x="210" y="1220" as="geometry" />
+        </mxCell>
+
+        <!-- Cek hasil reversal -->
+        <mxCell id="102" parent="4" style="rhombus;whiteSpace=wrap;html=1;" value="Reversal&#xa;berhasil?" vertex="1">
+          <mxGeometry height="70" width="160" x="270" y="1320" as="geometry" />
+        </mxCell>
+
+        <!-- Sukses reversal -->
+        <mxCell id="103" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Toast sukses, tutup popup,&#xa;refresh data tabel &amp; statistik.&#xa;Baris lama: badge 'Direversal'.&#xa;Baris baru (type=reversal): muncul." vertex="1">
+          <mxGeometry height="80" width="280" x="370" y="1430" as="geometry" />
+        </mxCell>
+
+        <!-- Gagal reversal -->
+        <mxCell id="104" parent="4" style="rounded=1;whiteSpace=wrap;html=1;" value="Toast error&#xa;'Gagal melakukan reversal,&#xa;Silakan coba lagi.'" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="1440" as="geometry" />
+        </mxCell>
+
+        <!-- End -->
+        <mxCell id="110" parent="4" style="ellipse;aspect=fixed;fillColor=#ffffff;strokeColor=#000000;strokeWidth=3;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="343" y="1960" as="geometry" />
+        </mxCell>
+        <mxCell id="111" parent="4" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="348" y="1965" as="geometry" />
+        </mxCell>
+
+        <!-- Sistem edges (stok in/out) -->
         <mxCell id="e90_91" edge="1" parent="4" source="90" style="edgeStyle=orthogonalEdgeStyle;" target="91">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -223,6 +300,26 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
+        <!-- Reversal sistem edges -->
+        <mxCell id="e81_82" edge="1" parent="4" source="81" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="82" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e81_83" edge="1" parent="4" source="81" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="83" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e100_101" edge="1" parent="4" source="100" style="edgeStyle=orthogonalEdgeStyle;" target="101">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e101_102" edge="1" parent="4" source="101" style="edgeStyle=orthogonalEdgeStyle;" target="102">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e102_103" edge="1" parent="4" source="102" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="103" value="YES">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e102_104" edge="1" parent="4" source="102" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="104" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <!-- end connections -->
         <mxCell id="e97_end" edge="1" parent="4" source="97" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="110">
           <mxGeometry relative="1" as="geometry" />
@@ -233,7 +330,7 @@
         <mxCell id="e70_end" edge="1" parent="4" source="70" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="110">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="130" y="1360" />
+              <mxPoint x="130" y="1960" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -241,7 +338,7 @@
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="200" y="335" />
-              <mxPoint x="200" y="1340" />
+              <mxPoint x="200" y="1940" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -249,7 +346,21 @@
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="210" y="445" />
-              <mxPoint x="210" y="1345" />
+              <mxPoint x="210" y="1945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e103_end" edge="1" parent="4" source="103" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="510" y="1950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e104_end" edge="1" parent="4" source="104" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="1950" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -294,6 +405,15 @@
         </mxCell>
         <!-- error feedback dashed -->
         <mxCell id="ce10" edge="1" parent="2" source="94" style="edgeStyle=orthogonalEdgeStyle;dashed=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" target="33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Reversal cross-lane: Admin klik reversal → Sistem cek kondisi -->
+        <mxCell id="ce11" edge="1" parent="2" source="50" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="81">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Konfirmasi reversal (Admin) → Sistem tampilkan popup -->
+        <mxCell id="ce12" edge="1" parent="2" source="51" style="edgeStyle=orthogonalEdgeStyle;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="100" value="Konfirmasi">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
