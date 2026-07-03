@@ -97,7 +97,7 @@ const DashboardPage = () => {
     {
       title: "Total Benih",
       value: dashboard?.totalSeed || "-",
-      sub: "ekor aktif",
+      sub: "ekor",
     },
     {
       title: "Total Staf",

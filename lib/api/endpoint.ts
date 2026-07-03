@@ -160,5 +160,9 @@ export const API_ENDPOINTS = {
     GET_PUBLIC_FINANCE_COMMODITY:`/app/finance?sourceType=commodity_sales`,
   },
   CLEAR_REDIS_CACHE: "/app/clear-cache",
+  REVERSAL_INVENTORY_NOTE: (transaction_id: string) => `/inventory/transaction-reversal/${transaction_id}`,
+  REVERSAL_NON_INVENTORY_NOTE: (transaction_id: string) => `/inventory/non-inventory/transaction-reversal/${transaction_id}`,
+  REVERSAL_COMMODITY: (transaction_id: string) => `/commodity/transaction-reversal/${transaction_id}`,
+  INVENTORY_NOTE_DETAIL_NOT_LIST: (note_id: string) => `/inventory/note/${note_id}`
 } as const;
 

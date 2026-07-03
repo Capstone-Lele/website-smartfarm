@@ -1,7 +1,6 @@
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { InventoryDetail } from "@/types/inventory";
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
 import {
   INVENTORY_TRANSACTION_TYPE_OPTIONS,
   INVENTORY_TYPE_OPTIONS,
@@ -9,10 +8,78 @@ import {
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
-import { use } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ButtonCopy } from "@/components/button-copy";
 import { formatNumber } from "@/lib/utils/format-number";
+import PopupReversal from "@/components/popup-reversal";
+import { toast } from "sonner";
+import ButtonReversalColumn from "@/components/button-column/button-reversal-column";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { useCreateTransactionReversalInventoryNote } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
+
+const InventoryDetailActions = ({ row }: { row: InventoryDetail }) => {
+  const { id } = useParams();
+  const [isReversalOpen, setIsReversalOpen] = useState(false);
+  const createTransactionReversal = useCreateTransactionReversalInventoryNote(
+    row.transactionId || "",
+  );
+  const canCreateReversal =
+    row.type !== "out" &&
+    row.type !== "reversal" &&
+    !row.reversedBySourceId &&
+    Boolean(row.transactionId);
+
+  const handleReversal = async () => {
+    try {
+      await createTransactionReversal.mutateAsync();
+      toast.success("Transaksi reversal berhasil dilakukan");
+      setIsReversalOpen(false);
+    } catch {
+      toast.error("Gagal melakukan transaksi reversal", {
+        description: "Silakan coba lagi.",
+      });
+    }
+  };
+
+  return (
+    <div className="flex items-center text-primary gap-0.5">
+      <ButtonDetailColumn
+        href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.id}&&source=${row.source == "inventory-notes" && row.type == "out" ? "inventory-notes-out" : row.source}`}
+      />
+      {canCreateReversal ? (
+        <>
+          <Separator orientation="vertical" className="h-6" />
+          <ButtonReversalColumn
+            disabled={createTransactionReversal.isPending}
+            onClick={() => setIsReversalOpen(true)}
+          />
+          <PopupReversal
+            title="Konfirmasi Reversal"
+            message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik untuk mengoreksi stok."
+            type="warning"
+            isOpen={isReversalOpen}
+            setOpen={setIsReversalOpen}
+            isLoading={createTransactionReversal.isPending}
+            onConfirm={handleReversal}
+            onCancel={() => setIsReversalOpen(false)}
+          />
+        </>
+      ) : row.type === "reversal" ? (
+        <>
+          <Separator orientation="vertical" className="h-6" />
+          <ButtonReversalColumn disabled={true} onClick={() => {}} />
+        </>
+      ) : row.reversedBySourceId ? (
+        <>
+          <Separator orientation="vertical" className="h-6" />
+          <ButtonReversalColumn disabled={true} onClick={() => {}} />
+        </>
+      ) : null}
+    </div>
+  );
+};
 
 export const columns: ColumnDef<InventoryDetail>[] = [
   {
@@ -56,7 +123,9 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   {
     id: "type",
     accessorFn: (row) => {
-      const option = INVENTORY_TYPE_OPTIONS.find((opt) => opt.value === row.type);
+      const option = INVENTORY_TYPE_OPTIONS.find(
+        (opt) => opt.value === row.type,
+      );
       return option ? option.label : row.type || "-";
     },
     header: ({ column }) => (
@@ -69,10 +138,12 @@ export const columns: ColumnDef<InventoryDetail>[] = [
         <span
           className={` ${
             type === "in"
-              ? "text-green-600 bg-green-100 px-2 py-1 rounded-full"
+              ? "text-green-600 "
               : type === "out"
-                ? "text-destructive bg-red-100 px-2 py-1 rounded-full"
-                : ""
+                ? "text-destructive "
+                : type === "reversal"
+                  ? "text-blue-600 "
+                  : ""
           }`}
         >
           {option ? option.label : type || "-"}
@@ -119,7 +190,9 @@ export const columns: ColumnDef<InventoryDetail>[] = [
       return (
         <div>
           <span>{formatNumber(row.original.quantity)}</span>
-          <p className="font-medium">{row.original.unit ? row.original.unit : "-"}</p>
+          <p className="font-medium">
+            {row.original.unit ? row.original.unit : "-"}
+          </p>
         </div>
       );
     },
@@ -128,10 +201,15 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     id: "pricePerItem",
     accessorFn: (row) => {
       if (row.transactionType === "grant") {
-        const val = row.pricePerItem !== null ? formatRupiah(Number(row.pricePerItem)) : formatRupiah(0);
+        const val =
+          row.pricePerItem !== null
+            ? formatRupiah(Number(row.pricePerItem))
+            : formatRupiah(0);
         return `${val} (perkiraan)`;
       }
-      return row.pricePerItem !== null ? formatRupiah(Number(row.pricePerItem)) : "-";
+      return row.pricePerItem !== null
+        ? formatRupiah(Number(row.pricePerItem))
+        : "-";
     },
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -144,11 +222,11 @@ export const columns: ColumnDef<InventoryDetail>[] = [
       // jika transactionType adalah grant maka tambahi text (perkiraan)
       if (row.original.transactionType === "grant") {
         return (
-          <div>
+          <div className="flex flex-col">
             {formatRupiah(
               row.original.pricePerItem ? Number(row.original.pricePerItem) : 0,
             )}
-            <span className="text-xs text-muted-foreground ml-2">
+            <span className="text-xs text-muted-foreground mt-0.5">
               (perkiraan)
             </span>
           </div>
@@ -160,17 +238,55 @@ export const columns: ColumnDef<InventoryDetail>[] = [
     },
   },
   {
+    id: "reversalSource",
+    accessorFn: (row) => {
+      if (row.type === "reversal") {
+        return (
+          row.reversalSourceLabel || row.referenceTransactionSourceId || "-"
+        );
+      }
+      return row.reversedBySourceId ? "Direversal" : "-";
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="REVERSAL" />
+    ),
+    cell: ({ row }) => {
+      const item = row.original;
+
+      if (item.type === "reversal") {
+        return (
+          <div className="flex flex-col space-y-0.5">
+            <Badge variant="outline" className="text-blue-600 border-blue-200">
+              Dari data
+            </Badge>
+            {item.reversalSourceLabel ? (
+              <ButtonCopy
+                textToCopy={item.reversalSourceId || item.reversalSourceLabel}
+                truncateLength={5}
+              />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      }
+
+      if (item.reversedBySourceId) {
+        return (
+          <Badge variant="outline" className="text-orange-700 border-orange-200">
+            Direversal
+          </Badge>
+        );
+      }
+
+      return <span className="text-muted-foreground">-</span>;
+    },
+  },
+  {
     id: "actions",
     header: () => <span className="">Actions</span>,
     cell: ({ row }) => {
-      const { id } = useParams();
-      return (
-        <div className="flex items-center text-primary gap-0.5">
-          <ButtonDetailColumn
-            href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.original.id}&&source=${row.original.source == "inventory-notes" && row.original.type == "out" ? "inventory-notes-out" : row.original.source}`}
-          />
-        </div>
-      );
+      return <InventoryDetailActions row={row.original} />;
     },
   },
 ];

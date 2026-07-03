@@ -16,6 +16,9 @@ import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { InventoryResponseParamNote } from "@/types/inventory";
 import { useEffect } from "react";
+import ReversalTransactionCard, {
+  ReversalFinanceRecord,
+} from "./reversal-transaction-card";
 
 function InfoRow({
   label,
@@ -72,18 +75,27 @@ const DetailInventoryNotes = ({
     ? userData?.data[0]
     : userData?.data;
 
-  const financeRecord = Array.isArray(financeData?.data)
-    ? financeData?.data[0]
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
     : Array.isArray(financeData)
       ? financeData[0]
-      : financeData;
+      : null;
 
   const isIncome =
     inventoryDetailDataNotes?.data?.[0]?.type.toLowerCase() === "in";
+  const isReversal = financeRecord?.type?.toLowerCase() === "reversal";
   const badgeColor = isIncome
     ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
-    : "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20";
-  const mainTypeColor = isIncome ? "text-emerald-600" : "text-orange-500";
+    : isReversal
+      ? "bg-blue-500/10 text-blue-600 hover:bg-blue-500/20"
+      : "bg-orange-500/10 text-orange-600 hover:bg-orange-500/20";
+  const mainTypeColor = isIncome
+    ? "text-emerald-600"
+    : isReversal
+      ? "text-blue-600"
+      : "text-orange-500";
 
   if (isLoadingInventoryDetailNotes || isLoadingUser || isLoadingFinance) {
     return (
@@ -103,12 +115,18 @@ const DetailInventoryNotes = ({
 
   return (
     <div className="space-y-6">
+      <ReversalTransactionCard
+        financeRecord={financeRecord as ReversalFinanceRecord | null}
+        sourceType="inventory_notes"
+        descriptionLabel="Catatan inventaris"
+      />
+
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <DefaultCard className="p-4 rounded-sm">
           <p className="text-xs text-muted-foreground mb-1">Tipe Catatan</p>
           <p className={`text-lg font-semibold capitalize ${mainTypeColor}`}>
-            {isIncome ? "Masuk" : "Keluar"}
+            {isIncome ? "Masuk" : isReversal ? "Reversal" : "Keluar"}
           </p>
         </DefaultCard>
 
@@ -172,7 +190,11 @@ const DetailInventoryNotes = ({
                 variant="secondary"
                 className={`text-xs ${badgeColor} border-none`}
               >
-                {isIncome ? "Penambahan" : "Pengurangan"}
+                {isIncome
+                  ? "Penambahan"
+                  : isReversal
+                    ? "Reversal"
+                    : "Pengurangan"}
               </Badge>
             </div>
             <Separator />

@@ -69,11 +69,13 @@ const DetailInventorySubmissionNotes = () => {
     return () => removeLabel("inventory");
   }, [submissionData?.data, id, setLabel, removeLabel]);
 
-  const financeRecord = Array.isArray(financeDataPas?.data)
-    ? financeDataPas?.data[0]
+  const financeRecord = financeDataPas?.data
+    ? Array.isArray(financeDataPas.data)
+      ? financeDataPas.data[0]
+      : financeDataPas.data
     : Array.isArray(financeDataPas)
       ? financeDataPas[0]
-      : financeDataPas;
+      : null;
 
   const getStatusLabelText = (status?: string | null) => {
     switch (status?.toLowerCase()) {

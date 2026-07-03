@@ -4,20 +4,20 @@ import React, { useMemo } from "react";
 import { format, parseISO } from "date-fns";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   XAxis,
   YAxis,
   AreaChart,
   Area,
-  Tooltip,
 } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import DefaultCard from "@/components/card/default-card";
 import { Finance } from "@/types/finance/finance";
@@ -139,11 +139,7 @@ const CashFlowChart = ({ data }: CashFlowChartProps) => {
                 />
               }
             />
-            <Legend
-              wrapperStyle={{ paddingTop: 10, fontSize: 12 }}
-              iconType="circle"
-              iconSize={8}
-            />
+            <ChartLegend content={<ChartLegendContent />} />
             <Area
               type="monotone"
               dataKey="income"

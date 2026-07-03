@@ -34,6 +34,7 @@ export const items = [
     icon: <MdOutlineInventory2 />,
     href: "/dashboard/inventory",
     type: "menu",
+    activePaths: ["/dashboard/inventory", "/dashboard/inventory-submission"],
   },
   {
     name: "Non-Inventaris",
@@ -127,6 +128,7 @@ const DashboardSidebar = () => {
                 icon={item.icon}
                 href={item.href!}
                 isOpen={isOpen}
+                activePaths={item.activePaths}
               />
             ) : item.type === "dropdown" ? (
               <DropdownMenuItem
@@ -167,17 +169,21 @@ const MenuItem = ({
   icon,
   href,
   isOpen,
+  activePaths,
 }: {
   name: string | undefined;
   icon: React.ReactNode;
   href: string;
   isOpen: boolean;
+  activePaths?: string[];
 }) => {
   const pathName = usePathname();
   const isActive =
     href === "/dashboard"
       ? pathName === "/dashboard"
-      : pathName === href || pathName.startsWith(href + "/");
+      : activePaths
+        ? activePaths.some((p) => pathName === p || pathName.startsWith(p + "/"))
+        : pathName === href || pathName.startsWith(href + "/");
 
   return (
     <Link

@@ -38,6 +38,13 @@ export type InventoryDetail = {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  transactionId: string | null;
+  sourceId: string | null;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
+  reversalSourceId?: string | null;
+  reversalSourceLabel?: string | null;
+  reversedBySourceId?: string | null;
 };
 
 export type InventorySubmissionResponse = {
@@ -103,6 +110,10 @@ export type InventoryResponseParamNote = {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  transactionId: string | null;
+  sourceId: string | null;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
 };
 
 export type InventoryResponseParamNoteData = {
@@ -121,9 +132,14 @@ export type InventoryResponseParamSubmission = {
   status: string;
   transactionType: string | null;
   type: "in";
+  reportDate?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  transactionId: string | null;
+  sourceId: string | null;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
 };
 
 export type InventoryResponseParamSubmissionData = {
@@ -142,9 +158,15 @@ export type InventoryResponseParamConsumption = {
   type: "out";
   image?: string | null;
   pricePerItem?: string | null;
+  transactionType?: string | null;
+  transaction_type?: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
+  transactionId: string | null;
+  sourceId: string | null;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
 };
 
 export type InventoryResponseParamConsumptionData = {
@@ -195,3 +217,33 @@ export type InventoryResponseParamConsumption = {
   updatedAt: "2026-04-10T15:15:09.272Z";
   userId: "79511ba0-13a5-4e72-a3fd-e7965c50df4f";
 }; */
+
+/// Deatil notes
+export type InventoryResponseParamNoteNotList = {
+  id: string;
+  inventoryId: string;
+  userId: string;
+  notes: string;
+  quantity: string;
+  reportDate: string;
+  pricePerItem?: string | null;
+  transactionType: string | null;
+  type: string;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+  transactionId: string | null;
+  sourceId: string | null;
+  referenceId: string | null;
+  referenceTransactionSourceId: string | null;
+  isReversed: boolean;
+  transactionReversalId: string | null;
+  transactionReversalNoteId: string | null;
+};
+
+export type InventoryResponseParamNoteDataNotList = {
+  success: boolean;
+  message: string;
+  data: InventoryResponseParamNoteNotList;
+};

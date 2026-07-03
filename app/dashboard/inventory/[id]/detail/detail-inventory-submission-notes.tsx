@@ -75,12 +75,14 @@ const DetailInventorySubmissionNotes = ({
     ? userData?.data[0]
     : userData?.data;
 
-  const financeRecord = Array.isArray(financeData?.data)
-    ? financeData?.data[0]
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
     : Array.isArray(financeData)
       ? financeData[0]
-      : financeData;
-
+      : null;
+      
   const getStatusLabelText = (status?: string | null) => {
     switch (status?.toLowerCase()) {
       case "approved":

@@ -52,8 +52,9 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
     (item) => item.sourceId === id,
   );
 
+  const isApproved = submissionData?.data?.[0]?.status === "approved";
   const { data: financeData, isLoading: isLoadingFinance } =
-    useFinanceBySourceId(id);
+    useFinanceBySourceId(isApproved ? id : "");
 
   /* Breadcrumb */
   useEffect(() => {
@@ -65,11 +66,13 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
     return () => removeLabel("inventory");
   }, [submissionData?.data, id, setLabel, removeLabel]);
 
-  const financeRecord = Array.isArray(financeData?.data)
-    ? financeData?.data[0]
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
     : Array.isArray(financeData)
       ? financeData[0]
-      : financeData;
+      : null;
 
   const getStatusLabelText = (status?: string | null) => {
     switch (status?.toLowerCase()) {
@@ -129,7 +132,9 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
         <DefaultCard className="p-4 rounded-sm">
           <p className="text-xs text-muted-foreground mb-1">Kuantitas</p>
           <p className="text-lg font-semibold text-foreground">
-            {Number(getRealOne?.quantity).toLocaleString("id-ID")}
+            {Number(submissionData?.data?.[0]?.quantity).toLocaleString(
+              "id-ID",
+            )}
           </p>
         </DefaultCard>
 
@@ -139,7 +144,7 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
             {formatRupiah(
               financeRecord?.totalPrice || getRealOne?.pricePerItem
                 ? Number(getRealOne?.pricePerItem) *
-                    Number(getRealOne?.quantity)
+                    Number(submissionData?.data?.[0]?.quantity)
                 : 0,
             )}
           </p>
@@ -174,7 +179,7 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
             </div>
             <Separator />
             <div className="space-y-4">
-              <InfoRow label="ID Pengajuan" value={getRealOne?.sourceId} />
+              <InfoRow label="ID Pengajuan" value={submissionData?.data?.[0]?.id} />
               <InfoRow
                 label="Dibuat Oleh"
                 value={submissionData?.data?.[0]?.user || "Sistem"}
@@ -185,100 +190,114 @@ const DetailInventorySubmissionNotes = ({ id }: { id: string }) => {
               />
               <InfoRow
                 label="Kuantitas"
-                value={`${Number(getRealOne?.quantity).toLocaleString("id-ID")}`}
+                value={`${Number(submissionData?.data?.[0]?.quantity).toLocaleString("id-ID")} `}
               />
-              <InfoRow
-                label="Jenis Transaksi"
-                value={inventoryTransactionTypeTranslation(
-                  getRealOne?.transactionType,
-                )}
-              />
+              {getRealOne?.transactionType && (
+                <InfoRow
+                  label="Jenis Transaksi"
+                  value={inventoryTransactionTypeTranslation(
+                    getRealOne?.transactionType,
+                  )}
+                />
+              )}
               <InfoRow
                 label="Catatan Pengajuan"
                 value={
                   <span className="italic text-muted-foreground">
-                    {getRealOne?.notes || "-"}
+                    {submissionData?.data?.[0]?.notes || "-"}
                   </span>
                 }
               />
+              {submissionData?.data?.[0]?.feedback !== null && (
+                <InfoRow
+                  label="Feedback Pengajuan"
+                  value={
+                    <span className="italic text-muted-foreground">
+                      {submissionData?.data?.[0]?.feedback || "-"}
+                    </span>
+                  }
+                />
+              )}
             </div>
           </div>
         </DefaultCard>
 
         {/* Detail Transaksi Finansial */}
-        <DefaultCard className="rounded-sm">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-sm">Detail Transaksi</h3>
-            </div>
-            <Separator />
-
-            {!financeRecord && !getRealOne?.pricePerItem ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Tidak ada data finansial untuk pengajuan ini.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {financeRecord ? (
-                  <>
-                    <InfoRow label="ID Transaksi" value={financeRecord.id} />
-                    <InfoRow
-                      label="Tanggal Transaksi"
-                      value={formatDate(financeRecord.transactionDate || "-")}
-                    />
-                    <InfoRow
-                      label="Harga Per Unit"
-                      value={
-                        getRealOne?.pricePerItem
-                          ? formatRupiah(Number(getRealOne?.pricePerItem))
-                          : "-"
-                      }
-                    />
-                    <InfoRow
-                      label="Total Transaksi"
-                      value={formatRupiah(financeRecord.totalPrice)}
-                    />
-                    <InfoRow
-                      label="Catatan Transaksi"
-                      value={
-                        <span className="italic text-muted-foreground">
-                          {financeRecord.notes || "-"}
-                        </span>
-                      }
-                    />
-
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Bukti Nota / Bukti Serah Terima
-                      </p>
-                      {financeRecord.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={financeRecord.image}
-                          alt="Nota Transaksi"
-                          className="rounded-sm border object-cover max-h-52 w-full"
-                        />
-                      ) : (
-                        <div className="rounded-sm border border-dashed bg-muted/20 flex flex-col items-center justify-center h-36 gap-2 text-muted-foreground">
-                          <p className="text-xs">
-                            Nota transaksi tidak tersedia
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-sm border border-muted mt-2">
-                      Pengajuan belum diproses menjadi transaksi final (Nota
-                      belum terbit). Angka di atas berdasarkan estimasi awal.
-                    </p>
-                  </>
-                )}
+        {submissionData?.data?.[0]?.status === "approved" && (
+          <DefaultCard className="rounded-sm">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-sm">Detail Transaksi</h3>
               </div>
-            )}
-          </div>
-        </DefaultCard>
+              <Separator />
+
+              {!financeRecord && !getRealOne?.pricePerItem ? (
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  Tidak ada data finansial untuk pengajuan ini.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {financeRecord ? (
+                    <>
+                      <InfoRow label="ID Transaksi" value={financeRecord.id} />
+                      <InfoRow
+                        label="Tanggal Transaksi"
+                        value={formatDate(financeRecord.transactionDate || "-")}
+                      />
+                      <InfoRow
+                        label="Harga Per Unit"
+                        value={
+                          getRealOne?.pricePerItem
+                            ? formatRupiah(Number(getRealOne?.pricePerItem))
+                            : "-"
+                        }
+                      />
+                      <InfoRow
+                        label="Total Transaksi"
+                        value={formatRupiah(financeRecord.totalPrice)}
+                      />
+                      <InfoRow
+                        label="Catatan Transaksi"
+                        value={
+                          <span className="italic text-muted-foreground">
+                            {financeRecord.notes || "-"}
+                          </span>
+                        }
+                      />
+
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Bukti Nota / Bukti Serah Terima
+                        </p>
+                        {financeRecord.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={financeRecord.image}
+                            alt="Nota Transaksi"
+                            className="rounded-sm border object-cover max-h-52 w-full"
+                          />
+                        ) : (
+                          <div className="rounded-sm border border-dashed bg-muted/20 flex flex-col items-center justify-center h-36 gap-2 text-muted-foreground">
+                            <p className="text-xs">
+                              Nota transaksi tidak tersedia
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-sm border border-muted mt-2">
+                        Pengajuan belum diproses menjadi transaksi final (Nota
+                        belum terbit). Angka di atas berdasarkan estimasi awal.
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </DefaultCard>
+        )}
       </div>
     </div>
   );

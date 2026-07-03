@@ -47,6 +47,33 @@ const FinanceInventoryData = ({ dateRange }: Props) => {
     });
   }, [inventoryData, dateRange]);
 
+  // Compute reversal info for each item
+  const dataWithReversalInfo = useMemo(() => {
+    if (!filteredData) return [];
+    return filteredData.map((item) => {
+      const reversalSource = item.referenceTransactionSourceId
+        ? inventoryData?.find(
+            (detail) => detail.sourceId === item.referenceTransactionSourceId,
+          )
+        : null;
+      const reversedBy = item.sourceId
+        ? inventoryData?.find(
+            (detail) =>
+              detail.type === "reversal" &&
+              detail.referenceTransactionSourceId === item.sourceId,
+          )
+        : null;
+
+      return {
+        ...item,
+        reversalSourceId: reversalSource?.sourceId ?? null,
+        reversalSourceLabel:
+          reversalSource?.id || item.referenceTransactionSourceId || null,
+        reversedBySourceId: reversedBy?.sourceId ?? null,
+      };
+    });
+  }, [filteredData, inventoryData]);
+
   return (
     <DefaultCard>
       <div className="flex justify-end mb-4">
@@ -58,7 +85,7 @@ const FinanceInventoryData = ({ dateRange }: Props) => {
           Catatan Inventaris
         </Link>
       </div>
-      <DataTable columns={inventoryColumns} data={filteredData} />
+      <DataTable columns={inventoryColumns} data={dataWithReversalInfo} />
     </DefaultCard>
   );
 };

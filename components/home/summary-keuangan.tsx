@@ -58,6 +58,8 @@ export function HomeSummaryKeuangan() {
         notes: item.notes,
         totalPrice: item.totalPrice,
         createdAt: item.createdAt,
+        referenceId: item.referenceId,
+        referenceTransactionSourceId: item.referenceTransactionSourceId,
       });
     });
 
@@ -74,6 +76,8 @@ export function HomeSummaryKeuangan() {
         notes: item.notes,
         totalPrice: item.totalPrice,
         createdAt: item.createdAt,
+        referenceId: item.referenceId,
+        referenceTransactionSourceId: item.referenceTransactionSourceId,
       });
     });
 
@@ -90,6 +94,8 @@ export function HomeSummaryKeuangan() {
         notes: item.notes,
         totalPrice: item.totalPrice,
         createdAt: item.createdAt,
+        referenceId: item.referenceId,
+        referenceTransactionSourceId: item.referenceTransactionSourceId,
       });
     });
 
@@ -106,17 +112,37 @@ export function HomeSummaryKeuangan() {
         notes: item.notes,
         totalPrice: item.totalPrice || 0,
         createdAt: item.createdAt,
+        referenceId: item.referenceId,
+        referenceTransactionSourceId: item.referenceTransactionSourceId,
       });
     });
 
     return merged;
   }, [commodityData, inventoryData, inventorySubmissionData, nonInventoryData]);
 
+  const activeData = useMemo(() => {
+    const reversedSourceIds = new Set(
+      allData
+        .filter(
+          (item) =>
+            item.type?.toLowerCase() === "reversal" &&
+            item.referenceTransactionSourceId,
+        )
+        .map((item) => item.referenceTransactionSourceId),
+    );
+
+    return allData.filter((item) => {
+      if (item.type?.toLowerCase() === "reversal") return false;
+      if (item.sourceId && reversedSourceIds.has(item.sourceId)) return false;
+      return true;
+    });
+  }, [allData]);
+
   const { totalIncome, totalExpense, totalTransactions } = useMemo(() => {
     let income = 0;
     let expense = 0;
 
-    allData.forEach((item) => {
+    activeData.forEach((item) => {
       if (item.transactionType === "grant") return;
       if (item.type === "in" || item.type === "IN") {
         income += item.totalPrice || 0;
@@ -125,13 +151,17 @@ export function HomeSummaryKeuangan() {
       }
     });
 
-    return { totalIncome: income, totalExpense: expense, totalTransactions: allData.length };
-  }, [allData]);
+    return {
+      totalIncome: income,
+      totalExpense: expense,
+      totalTransactions: activeData.length,
+    };
+  }, [activeData]);
 
   const trendData = useMemo<TrendDataPoint[]>(() => {
     const grouped: Record<string, TrendDataPoint> = {};
 
-    allData.forEach((item) => {
+    activeData.forEach((item) => {
       try {
         const parsed = new Date(item.transactionDate);
         const sortKey = format(parsed, "yyyy-MM");
@@ -155,7 +185,7 @@ export function HomeSummaryKeuangan() {
     return Object.values(grouped).sort((a, b) =>
       a.sortKey.localeCompare(b.sortKey),
     );
-  }, [allData]);
+  }, [activeData]);
 
   return (
     <section className="py-16 md:py-24 bg-gray-50/50">
