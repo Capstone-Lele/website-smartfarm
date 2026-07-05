@@ -210,8 +210,6 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
             href={`/dashboard/pools/quarantine?poolId=${row.original.id}&cycleId=${row.original.cycleId}`}
           />
           <Separator orientation="vertical" className="h-6" />
-          <AssignPoolModal pool={row.original} />
-          <Separator orientation="vertical" className="h-6" />
           <EditPoolQuarantineModal pool={row.original} />
         </div>
       );

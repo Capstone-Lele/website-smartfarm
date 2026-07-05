@@ -21,7 +21,7 @@ import { FiPlusCircle } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { LuSave, LuUpload } from "react-icons/lu";
 import { RiResetRightLine } from "react-icons/ri";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, type Resolver, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import z from "zod";
@@ -98,6 +98,16 @@ const formSchema = z.object({
   }),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+type FormInputValues = Omit<
+  FormValues,
+  "quantity" | "pricePerItem" | "totalPrice"
+> & {
+  quantity: number | "";
+  pricePerItem: number | "";
+  totalPrice: number | "";
+};
+
 const PostFinance = () => {
   const { data: productsData, isLoading: isLoadingProducts } = useGetProducts();
   const [isOpen, setIsOpen] = useState(false);
@@ -105,16 +115,23 @@ const PostFinance = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const lastPriceInputRef = useRef<"pricePerItem" | "totalPrice">(
+    "pricePerItem",
+  );
   const nonInventoryMutation = usePostNonInventory();
   const [selectedProductUnitName, setSelectedProductUnitName] = useState("");
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormInputValues, unknown, FormValues>({
+    resolver: zodResolver(formSchema) as unknown as Resolver<
+      FormInputValues,
+      unknown,
+      FormValues
+    >,
     defaultValues: {
       productId: "",
-      quantity: "" as any,
-      pricePerItem: "" as any,
-      totalPrice: "" as any,
+      quantity: "",
+      pricePerItem: "",
+      totalPrice: "",
       notes: "",
       transactionDate: new Date(),
       image: undefined,
@@ -132,6 +149,10 @@ const PostFinance = () => {
   const pricePerItem = useWatch({
     control: form.control,
     name: "pricePerItem",
+  });
+  const totalPrice = useWatch({
+    control: form.control,
+    name: "totalPrice",
   });
   const selectedProductId = useWatch({
     control: form.control,
@@ -169,14 +190,38 @@ const PostFinance = () => {
   useEffect(() => {
     const qty = Number(quantity);
     const price = Number(pricePerItem);
-    if (!isNaN(qty) && !isNaN(price) && qty > 0 && price > 0) {
-      form.setValue("totalPrice", (qty * price) as any, {
-        shouldValidate: true,
-      });
-    } else {
-      form.setValue("totalPrice", "" as any);
+    const total = Number(totalPrice);
+
+    if (isNaN(qty) || qty <= 0) {
+      form.setValue("totalPrice", "");
+      return;
     }
-  }, [quantity, pricePerItem, form]);
+
+    if (lastPriceInputRef.current === "totalPrice") {
+      if (!isNaN(total) && total > 0) {
+        const calculatedPricePerItem = Number((total / qty).toFixed(2));
+        if (calculatedPricePerItem !== price) {
+          form.setValue("pricePerItem", calculatedPricePerItem, {
+            shouldValidate: true,
+          });
+        }
+      } else {
+        form.setValue("pricePerItem", "");
+      }
+      return;
+    }
+
+    if (!isNaN(price) && price > 0) {
+      const calculatedTotalPrice = qty * price;
+      if (calculatedTotalPrice !== total) {
+        form.setValue("totalPrice", calculatedTotalPrice, {
+          shouldValidate: true,
+        });
+      }
+    } else {
+      form.setValue("totalPrice", "");
+    }
+  }, [quantity, pricePerItem, totalPrice, form]);
 
   useEffect(() => {
     return () => {
@@ -215,10 +260,11 @@ const PostFinance = () => {
       setImagePreview(null);
       toast.success("Catatan non inventaris berhasil ditambahkan");
       setIsOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
+      const errorMessage = error instanceof Error ? error.message : undefined;
       toast.error("Gagal menambahkan catatan", {
-        description: error?.message || "Silakan coba lagi.",
+        description: errorMessage || "Silakan coba lagi.",
       });
     } finally {
       setIsSubmitting(false);
@@ -309,7 +355,7 @@ const PostFinance = () => {
                               if (
                                 product?.category?.toLowerCase() === "pendanaan"
                               ) {
-                                form.setValue("quantity", 1 as any, {
+                                form.setValue("quantity", 1, {
                                   shouldValidate: true,
                                 });
                               }
@@ -356,7 +402,7 @@ const PostFinance = () => {
                           </FieldLabel>
                           <Combobox
                             data={INVENTORY_TRANSACTION_TYPE_OPTIONS.filter(
-                              (item: any) => {
+                              (item) => {
                                 if (inOut === "in") {
                                   return item.value !== "grant";
                                 }
@@ -448,6 +494,7 @@ const PostFinance = () => {
                               }
                               {...field}
                               onChange={(e) => {
+                                lastPriceInputRef.current = "pricePerItem";
                                 const val = e.target.value.replace(/\D/g, "");
                                 field.onChange(val ? Number(val) : "");
                               }}
@@ -491,9 +538,13 @@ const PostFinance = () => {
                             <InputGroupInput
                               id="totalPrice"
                               type="text"
-                              placeholder="Dihitung otomatis"
-                              disabled
+                              placeholder="Contoh: 500.000"
                               {...field}
+                              onChange={(e) => {
+                                lastPriceInputRef.current = "totalPrice";
+                                const val = e.target.value.replace(/\D/g, "");
+                                field.onChange(val ? Number(val) : "");
+                              }}
                               value={
                                 field.value
                                   ? formatNumber(field.value as number | string)
@@ -505,7 +556,7 @@ const PostFinance = () => {
                             <FieldError errors={[fieldState.error]} />
                           ) : (
                             <FieldDescription>
-                              Jumlah × Harga Per Unit.
+                              Bisa diisi langsung atau dihitung otomatis.
                             </FieldDescription>
                           )}
                         </Field>
