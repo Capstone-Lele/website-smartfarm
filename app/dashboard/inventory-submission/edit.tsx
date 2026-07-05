@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { LuSave, LuUpload } from "react-icons/lu";
 import { RiResetRightLine } from "react-icons/ri";
 import { Separator } from "@/components/ui/separator";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, type Resolver, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { toast } from "sonner";
@@ -148,6 +148,8 @@ const formSchema = z
 
 // ─── Status badge helper ──────────────────────────────────────────────────────
 
+type FormValues = z.infer<typeof formSchema>;
+
 const statusBadgeVariant = (status: string) => {
   switch (status) {
     case "approved":
@@ -185,17 +187,20 @@ const EditSubmissionModal = ({
     string | null
   >(null);
   const fileInputRefTransaction = useRef<HTMLInputElement>(null);
+  const lastPriceInputRef = useRef<"pricePerItem" | "totalPrice">(
+    "pricePerItem",
+  );
   const { mutateAsync: updateInventorySubmission } =
     useUpdateInventorySubmission();
 
-  const form = useForm({
-    resolver: zodResolver(formSchema) as any,
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema) as Resolver<FormValues>,
     defaultValues: {
       status: submission.status as "pending" | "approved" | "rejected",
       transactionType: "non-grant" as const,
       transactionDate: new Date(),
-      pricePerItem: "" as any,
-      totalPrice: "" as any,
+      pricePerItem: "",
+      totalPrice: "",
       transactionNotes: "",
       image: undefined,
       feedback: "",
@@ -211,6 +216,10 @@ const EditSubmissionModal = ({
     control: form.control,
     name: "pricePerItem",
   });
+  const totalPrice = useWatch({
+    control: form.control,
+    name: "totalPrice",
+  });
 
   const isApproved = status === "approved";
   const isNonGrant = transactionType === "non-grant";
@@ -225,15 +234,39 @@ const EditSubmissionModal = ({
   // Auto-calculate totalPrice = pricePerItem × submission.quantity
   useEffect(() => {
     const price = Number(pricePerItem);
+    const total = Number(totalPrice);
     const qty = Number(submission.quantity);
-    if (!isNaN(price) && !isNaN(qty) && price > 0 && qty > 0) {
-      form.setValue("totalPrice", (price * qty) as any, {
-        shouldValidate: true,
-      });
-    } else {
-      form.setValue("totalPrice", "" as any);
+
+    if (isNaN(qty) || qty <= 0) {
+      form.setValue("totalPrice", "");
+      return;
     }
-  }, [pricePerItem, submission.quantity]);
+
+    if (lastPriceInputRef.current === "totalPrice") {
+      if (!isNaN(total) && total > 0) {
+        const calculatedPricePerItem = Number((total / qty).toFixed(2));
+        if (calculatedPricePerItem !== price) {
+          form.setValue("pricePerItem", calculatedPricePerItem, {
+            shouldValidate: true,
+          });
+        }
+      } else {
+        form.setValue("pricePerItem", "");
+      }
+      return;
+    }
+
+    if (!isNaN(price) && price > 0) {
+      const calculatedTotalPrice = price * qty;
+      if (calculatedTotalPrice !== total) {
+        form.setValue("totalPrice", calculatedTotalPrice, {
+          shouldValidate: true,
+        });
+      }
+    } else {
+      form.setValue("totalPrice", "");
+    }
+  }, [form, pricePerItem, submission.quantity, totalPrice]);
 
   useEffect(() => {
     return () => {
@@ -252,8 +285,8 @@ const EditSubmissionModal = ({
       status: submission.status as "pending" | "approved" | "rejected",
       transactionType: "non-grant",
       transactionDate: new Date(),
-      pricePerItem: "" as any,
-      totalPrice: "" as any,
+      pricePerItem: "",
+      totalPrice: "",
       transactionNotes: "",
       image: undefined,
       feedback: "",
@@ -280,16 +313,17 @@ const EditSubmissionModal = ({
       } else {
         await updateInventorySubmission({
           id: submission.id,
-          data: rejectPayload as any,
+          data: rejectPayload,
         });
       }
 
       toast.success("Pengajuan berhasil diperbarui");
       setIsOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
+      const errorMessage = error instanceof Error ? error.message : undefined;
       toast.error("Gagal memperbarui pengajuan", {
-        description: error?.message || "Silakan coba lagi.",
+        description: errorMessage || "Silakan coba lagi.",
       });
     } finally {
       setIsSubmitting(false);
@@ -575,6 +609,7 @@ const EditSubmissionModal = ({
                                   placeholder="Contoh: 50.000"
                                   {...field}
                                   onChange={(e) => {
+                                    lastPriceInputRef.current = "pricePerItem";
                                     const val = e.target.value.replace(
                                       /\D/g,
                                       "",
@@ -621,9 +656,16 @@ const EditSubmissionModal = ({
                                 <InputGroupInput
                                   id="totalPrice"
                                   type="text"
-                                  placeholder="Dihitung otomatis"
+                                  placeholder="Contoh: 500.000"
                                   {...field}
-                                  disabled
+                                  onChange={(e) => {
+                                    lastPriceInputRef.current = "totalPrice";
+                                    const val = e.target.value.replace(
+                                      /\D/g,
+                                      "",
+                                    );
+                                    field.onChange(val ? Number(val) : "");
+                                  }}
                                   value={
                                     field.value
                                       ? formatNumber(
@@ -637,7 +679,7 @@ const EditSubmissionModal = ({
                                 <FieldError errors={[fieldState.error]} />
                               ) : (
                                 <FieldDescription>
-                                  Harga × Jumlah (otomatis).
+                                  Bisa diisi langsung atau dihitung otomatis.
                                 </FieldDescription>
                               )}
                             </Field>

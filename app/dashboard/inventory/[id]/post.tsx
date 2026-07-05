@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { LuSave, LuUpload } from "react-icons/lu";
 import { RiResetRightLine } from "react-icons/ri";
 import { Separator } from "@/components/ui/separator";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, type Resolver, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "@/components/ui/spinner";
 import z from "zod";
@@ -114,6 +114,16 @@ const formSchema = z.object({
     .positive({ message: "Jumlah harus berupa angka positif" }),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+type FormInputValues = Omit<
+  FormValues,
+  "quantity" | "pricePerItem" | "totalPrice"
+> & {
+  quantity: number | "";
+  pricePerItem: number | "";
+  totalPrice: number | "";
+};
+
 const PostStockInOut = () => {
   const params = useParams();
   const inventoryId = params?.id as string;
@@ -134,19 +144,26 @@ const PostStockInOut = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileInputRefTransaction = useRef<HTMLInputElement>(null);
+  const lastPriceInputRef = useRef<"pricePerItem" | "totalPrice">(
+    "pricePerItem",
+  );
 
-  const form = useForm({
-    resolver: zodResolver(formSchema) as any,
+  const form = useForm<FormInputValues, unknown, FormValues>({
+    resolver: zodResolver(formSchema) as unknown as Resolver<
+      FormInputValues,
+      unknown,
+      FormValues
+    >,
     defaultValues: {
       transactionDate: new Date(),
-      quantity: "" as any,
+      quantity: "",
       notes: "",
       transactionType: "non-grant" as const,
       image: undefined,
       notesTransaction: "",
       imageTransaction: undefined,
-      pricePerItem: "" as any,
-      totalPrice: "" as any,
+      pricePerItem: "",
+      totalPrice: "",
     },
   });
 
@@ -181,10 +198,11 @@ const PostStockInOut = () => {
       setImageTransactionPreview(null);
       toast.success("Stok berhasil diperbarui");
       setIsOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
+      const errorMessage = error instanceof Error ? error.message : undefined;
       toast.error("Gagal memperbarui stok", {
-        description: error?.message || "Silakan coba lagi.",
+        description: errorMessage || "Silakan coba lagi.",
       });
     } finally {
       setIsSubmitting(false);
@@ -196,19 +214,47 @@ const PostStockInOut = () => {
     control: form.control,
     name: "pricePerItem",
   });
+  const totalPrice = useWatch({
+    control: form.control,
+    name: "totalPrice",
+  });
   const quantity = useWatch({ control: form.control, name: "quantity" });
 
   useEffect(() => {
     const price = Number(pricePerItem);
+    const total = Number(totalPrice);
     const qty = Number(quantity);
-    if (!isNaN(price) && !isNaN(qty) && price > 0 && qty > 0) {
-      form.setValue("totalPrice", price * qty, {
-        shouldValidate: true,
-      });
+
+    if (isNaN(qty) || qty <= 0) {
+      form.setValue("totalPrice", "");
+      return;
+    }
+
+    if (lastPriceInputRef.current === "totalPrice") {
+      if (!isNaN(total) && total > 0) {
+        const calculatedPricePerItem = Number((total / qty).toFixed(2));
+        if (calculatedPricePerItem !== price) {
+          form.setValue("pricePerItem", calculatedPricePerItem, {
+            shouldValidate: true,
+          });
+        }
+      } else {
+        form.setValue("pricePerItem", "");
+      }
+      return;
+    }
+
+    if (!isNaN(price) && price > 0) {
+      const calculatedTotalPrice = price * qty;
+      if (calculatedTotalPrice !== total) {
+        form.setValue("totalPrice", calculatedTotalPrice, {
+          shouldValidate: true,
+        });
+      }
     } else {
       form.setValue("totalPrice", "");
     }
-  }, [pricePerItem, quantity]);
+  }, [form, pricePerItem, quantity, totalPrice]);
 
   useEffect(() => {
     return () => {
@@ -466,6 +512,7 @@ const PostStockInOut = () => {
                                 placeholder="Contoh: 50.000"
                                 {...field}
                                 onChange={(e) => {
+                                  lastPriceInputRef.current = "pricePerItem";
                                   const val = e.target.value.replace(/\D/g, "");
                                   field.onChange(val ? Number(val) : "");
                                 }}
@@ -507,12 +554,14 @@ const PostStockInOut = () => {
                               </InputGroupAddon>
                               <InputGroupInput
                                 id="totalPrice"
-                                // type="number"
-                                // min={0}
-                                // step={1}
-                                placeholder="Dihitung otomatis"
+                                type="text"
+                                placeholder="Contoh: 500.000"
                                 {...field}
-                                disabled
+                                onChange={(e) => {
+                                  lastPriceInputRef.current = "totalPrice";
+                                  const val = e.target.value.replace(/\D/g, "");
+                                  field.onChange(val ? Number(val) : "");
+                                }}
                                 value={
                                   field.value
                                     ? formatNumber(
@@ -526,7 +575,7 @@ const PostStockInOut = () => {
                               <FieldError errors={[fieldState.error]} />
                             ) : (
                               <FieldDescription>
-                                Harga × Jumlah (otomatis).
+                                Bisa diisi langsung atau dihitung otomatis.
                               </FieldDescription>
                             )}
                           </Field>
