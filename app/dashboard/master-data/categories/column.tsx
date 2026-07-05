@@ -10,6 +10,7 @@ type Category = {
 export const columnsCategory: ColumnDef<Category>[] = [
   {
     accessorKey: "name",
+    meta: { label: "NAMA" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />
     ),

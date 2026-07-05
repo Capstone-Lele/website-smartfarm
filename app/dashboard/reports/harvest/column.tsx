@@ -12,6 +12,7 @@ import DetailHarvestSheet from "./detail";
 export const columns: ColumnDef<Harvest>[] = [
   {
     accessorKey: "date",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -21,6 +22,7 @@ export const columns: ColumnDef<Harvest>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -37,6 +39,7 @@ export const columns: ColumnDef<Harvest>[] = [
   },
   {
     accessorKey: "cycle",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -46,6 +49,7 @@ export const columns: ColumnDef<Harvest>[] = [
   },
   {
     accessorKey: "amount",
+    meta: { label: "JUMLAH PANEN (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -56,6 +60,7 @@ export const columns: ColumnDef<Harvest>[] = [
   },
   {
     accessorKey: "totalKg",
+    meta: { label: "BERAT PANEN (kg)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -66,6 +71,7 @@ export const columns: ColumnDef<Harvest>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -74,6 +80,7 @@ export const columns: ColumnDef<Harvest>[] = [
 
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

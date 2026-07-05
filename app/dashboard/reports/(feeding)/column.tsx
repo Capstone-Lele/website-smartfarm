@@ -12,6 +12,7 @@ import DetailFeedingSheet from "./detail";
 export const columns: ColumnDef<Feed>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -21,6 +22,7 @@ export const columns: ColumnDef<Feed>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -37,6 +39,7 @@ export const columns: ColumnDef<Feed>[] = [
   },
   {
     accessorKey: "startDate",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -46,12 +49,14 @@ export const columns: ColumnDef<Feed>[] = [
   },
   {
     accessorKey: "foodName",
+    meta: { label: "PAKAN" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PAKAN" />
     ),
   },
   {
     accessorKey: "quantity",
+    meta: { label: "JUMLAH PAKAN" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -70,6 +75,7 @@ export const columns: ColumnDef<Feed>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -78,6 +84,7 @@ export const columns: ColumnDef<Feed>[] = [
 
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

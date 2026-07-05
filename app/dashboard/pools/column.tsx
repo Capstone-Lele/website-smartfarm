@@ -33,12 +33,16 @@ function StatusAirCell({ row }: { row: Row<Pool> }) {
 
   useEffect(() => {
     if (!socket) return;
-    console.log(`[WS] join-pool emit → nodeId: "${node}" (pool: "${row.original.name}")`);
+    console.log(
+      `[WS] join-pool emit → nodeId: "${node}" (pool: "${row.original.name}")`,
+    );
     socket.emit("join-pool", { nodeId: node.toString() });
   }, [socket, node]);
 
   if (data === null) {
-    console.log(`[IoT] "${row.original.name}" (node: ${node}): belum ada data dari socket`);
+    console.log(
+      `[IoT] "${row.original.name}" (node: ${node}): belum ada data dari socket`,
+    );
     return <span>-</span>;
   }
 
@@ -54,16 +58,19 @@ function StatusAirCell({ row }: { row: Row<Pool> }) {
     row.original.temperatureMax === null ||
     row.original.temperatureNormal === null
   ) {
-    console.log(`[IoT] "${row.original.name}" (node: ${node}): parameter kolam belum diset`, {
-      ph,
-      temp,
-      acidityMin: row.original.acidityMin,
-      acidityMax: row.original.acidityMax,
-      acidityNormal: row.original.acidityNormal,
-      temperatureMin: row.original.temperatureMin,
-      temperatureMax: row.original.temperatureMax,
-      temperatureNormal: row.original.temperatureNormal,
-    });
+    console.log(
+      `[IoT] "${row.original.name}" (node: ${node}): parameter kolam belum diset`,
+      {
+        ph,
+        temp,
+        acidityMin: row.original.acidityMin,
+        acidityMax: row.original.acidityMax,
+        acidityNormal: row.original.acidityNormal,
+        temperatureMin: row.original.temperatureMin,
+        temperatureMax: row.original.temperatureMax,
+        temperatureNormal: row.original.temperatureNormal,
+      },
+    );
     return <span>-</span>;
   }
 
@@ -109,6 +116,8 @@ function StatusAirCell({ row }: { row: Row<Pool> }) {
 
 export const columnsPool: ColumnDef<Pool>[] = [
   {
+    id: "Nama Kolam",
+    meta: { label: "NAMA KOLAM" },
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA KOLAM" />
@@ -127,6 +136,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "category",
+    meta: { label: "KATEGORI" },
     accessorFn: (row) => translateCategoryPool(row.category),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
@@ -141,6 +151,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "cycle",
+    meta: { label: "KONDISI" },
     accessorFn: (row) => {
       const condition = ALL_CYCLE_CONDITIONS.find(
         (cond) => cond.value === row.cycle,
@@ -163,6 +174,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "petugas",
+    meta: { label: "PETUGAS" },
     cell: ({ row }) => {
       const staff = row.original.actor;
       if (!staff || staff.length === 0) {
@@ -213,6 +225,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "size",
+    meta: { label: "UKURAN (m)" },
     header: () => <span className="">UKURAN (m)</span>,
     cell: ({ row }) => {
       const { length, width, height, diameter } = row.original;
@@ -241,6 +254,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "cycleStartDate",
+    meta: { label: "SIKLUS" },
     header: () => <span className="">SIKLUS</span>,
     cell: ({ row }) => {
       if (!row.original.cycleStartDate) {
@@ -251,6 +265,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "currentQuantity",
+    meta: { label: "JUMLAH IKAN" },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="JUMLAH IKAN" />
     ),
@@ -268,6 +283,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "density",
+    meta: { label: "KEPADATAN" },
     accessorFn: (row) => {
       const quantity = row.currentQuantity;
       const { length, width, height, diameter } = row;
@@ -320,6 +336,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "mortality",
+    meta: { label: "KEMATIAN" },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KEMATIAN" />
     ),
@@ -337,6 +354,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "movedQuantity",
+    meta: { label: "PINDAH KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="PINDAH KOLAM" />
     ),
@@ -354,6 +372,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "umur",
+    meta: { label: "UMUR SIKLUS" },
     accessorFn: (row) => {
       const { cycleStartDate, cycleEndDate } = row;
 
@@ -381,6 +400,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "status_air",
+    meta: { label: "STATUS AIR" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS AIR" />
     ),
@@ -388,6 +408,7 @@ export const columnsPool: ColumnDef<Pool>[] = [
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     accessorFn: (row) => (row.deletedAt === null ? "Aktif" : "Nonaktif"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />

@@ -7,6 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 export const columns: ColumnDef<Commodity>[] = [
   {
     id: "date",
+    meta: { label: "TANGGAL" },
     accessorFn: (row) => formatDate(row.date),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
@@ -15,6 +16,7 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     id: "type",
+    meta: { label: "TIPE" },
     accessorFn: (row) => (row.type === "in" ? "Masuk" : "Keluar"),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
@@ -36,6 +38,7 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     id: "category",
+    meta: { label: "KATEGORI" },
     accessorFn: () => "Panen",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
@@ -44,6 +47,7 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     accessorKey: "quantity",
+    meta: { label: "TOTAL STOK (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -54,6 +58,7 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     accessorKey: "soldQuantity",
+    meta: { label: "STOK TERJUAL (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -65,6 +70,7 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     accessorKey: "currentStock",
+    meta: { label: "STOK SAAT INI (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -81,12 +87,14 @@ export const columns: ColumnDef<Commodity>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "NAMA KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA KOLAM" />
     ),
   },
    {
     id: "cycleStartDate",
+    meta: { label: "SIKLUS" },
     accessorFn: (row) => row.cycleStartDate ? formatDate(row.cycleStartDate) : "-",
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />

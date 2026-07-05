@@ -23,6 +23,7 @@ import { ALL_CYCLE_CONDITIONS } from "@/lib/constants/condition";
 export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   {
     accessorKey: "name",
+    meta: { label: "NAMA KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA KOLAM" />
     ),
@@ -41,6 +42,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
 
   {
     accessorKey: "category",
+    meta: { label: "KATEGORI" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
@@ -57,6 +59,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   },
    {
       accessorKey: "cycle",
+      meta: { label: "KONDISI" },
       header: ({ column }) => (
         <DataTableColumnHeader className="" column={column} title="KONDISI" />
       ),
@@ -75,6 +78,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
     },
   {
     accessorKey: "petugas",
+    meta: { label: "PETUGAS" },
     cell: ({ row }) => {
       const staff = row.original.actor;
       if (!staff || staff.length === 0) {
@@ -125,6 +129,7 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "size",
+    meta: { label: "UKURAN (m)" },
     header: () => <span className="">UKURAN (m)</span>,
     cell: ({ row }) => {
       const { length, width, height, diameter } = row.original;
@@ -158,10 +163,12 @@ export const columnsPoolQuarantine: ColumnDef<Pool>[] = [
   },
   {
     accessorKey: "currentQuantity",
+    meta: { label: "JUMLAH IKAN" },
     header: () => <span className="">JUMLAH IKAN</span>,
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

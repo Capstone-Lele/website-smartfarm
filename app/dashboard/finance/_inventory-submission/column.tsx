@@ -9,11 +9,13 @@ import { formatRupiahTypeTransactionColumn } from "@/lib/utils/format-rupiah-typ
 import { ButtonCopy } from "@/components/button-copy";
 import { sourceLabelTranslation } from "@/lib/constants/type-finance";
 import { Badge } from "@/components/ui/badge";
+import { INVENTORY_TRANSACTION_TYPE_OPTIONS } from "@/lib/constants/type-inventory";
 
 export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[] =
   [
     {
       accessorKey: "id",
+      meta: { label: "ID TRANSAKSI" },
       header: () => <span>ID TRANSAKSI</span>,
       cell: ({ row }) => (
         <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
@@ -21,6 +23,7 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "transactionDate",
+      meta: { label: "TANGGAL TRANSAKSI" },
       accessorFn: (row) => formatDate(row.transactionDate),
       header: ({ column }) => (
         <DataTableColumnHeader
@@ -33,6 +36,7 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "type",
+      meta: { label: "TIPE" },
       accessorFn: (row) =>
         row.type === "in"
           ? "Pemasukan"
@@ -58,28 +62,47 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "transactionSource",
+      meta: { label: "SUMBER TRANSAKSI" },
       accessorFn: (row) => sourceLabelTranslation(row.transactionSource),
       header: () => <span>SUMBER TRANSAKSI</span>,
       cell: ({ row }) => row.getValue("transactionSource"),
     },
     {
       accessorKey: "applicant",
+      meta: { label: "PENGAJU" },
       header: () => <span>PENGAJU</span>,
     },
     {
       accessorKey: "productCategory",
+      meta: { label: "KATEGORI PRODUK" },
       header: () => <span>KATEGORI PRODUK</span>,
     },
     {
       accessorKey: "product",
+      meta: { label: "PRODUK" },
       header: () => <span>PRODUK</span>,
     },
     {
-      accessorKey: "transactionType",
+      id: "transactionType",
+      meta: { label: "TIPE TRANSAKSI" },
+      accessorFn: (row) => {
+        const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
+          (opt) => opt.value === row.transactionType,
+        );
+        return option ? option.label : row.transactionType || "-";
+      },
       header: () => <span>TIPE TRANSAKSI</span>,
+      cell: ({ row }) => {
+        const transactionType = row.original.transactionType;
+        const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
+          (opt) => opt.value === transactionType,
+        );
+        return <div>{option ? option.label : transactionType || "-"}</div>;
+      },
     },
     {
       accessorKey: "notes",
+      meta: { label: "CATATAN" },
       header: ({ column }) => (
         <DataTableColumnHeader className="" column={column} title="CATATAN" />
       ),
@@ -90,12 +113,14 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "quantity",
+      meta: { label: "JUMLAH" },
       accessorFn: (row) => `${row.quantity} ${row.unit}`,
       header: () => <span>JUMLAH</span>,
       cell: ({ row }) => row.getValue("quantity"),
     },
     {
       id: "pricePerItem",
+      meta: { label: "HARGA/UNIT" },
       accessorFn: (row) => {
         const priceStr =
           row.pricePerItem !== null && row.pricePerItem !== undefined
@@ -118,10 +143,12 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       accessorKey: "unit",
+      meta: { label: "UNIT" },
       header: () => <span>UNIT</span>,
     },
     {
       id: "totalPrice",
+      meta: { label: "TOTAL HARGA" },
       accessorFn: (row) => {
         const priceStr =
           row.totalPrice !== null && row.totalPrice !== undefined
@@ -150,6 +177,7 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "createdAt",
+      meta: { label: "DIBUAT" },
       accessorFn: (row) => formatDate(row.createdAt),
       header: ({ column }) => (
         <DataTableColumnHeader className="" column={column} title="DIBUAT" />
@@ -158,6 +186,7 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
     },
     {
       id: "reversalSource",
+      meta: { label: "REVERSAL" },
       accessorFn: (row) => {
         if (row.type === "reversal") {
           return (
@@ -195,7 +224,10 @@ export const inventorySubmissionColumns: ColumnDef<FinanceInventorySubmission>[]
 
         if (item.reversedBySourceId) {
           return (
-            <Badge variant="outline" className="text-orange-700 border-orange-200">
+            <Badge
+              variant="outline"
+              className="text-orange-700 border-orange-200"
+            >
               Direversal
             </Badge>
           );

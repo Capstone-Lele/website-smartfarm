@@ -11,6 +11,7 @@ import DetailSamplingSheet from "./detail";
 export const columns: ColumnDef<Sampling>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -20,6 +21,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -36,6 +38,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "cycle",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -45,6 +48,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "quantity",
+    meta: { label: "JUMLAH (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -55,6 +59,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "averageWeight",
+    meta: { label: "BERAT RATA-RATA (gram)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -65,6 +70,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -72,6 +78,7 @@ export const columns: ColumnDef<Sampling>[] = [
   },
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

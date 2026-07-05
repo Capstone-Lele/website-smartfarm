@@ -16,30 +16,35 @@ import { useDeleteUnit } from "@/lib/api/service/master-data/unit/useUnit";
 export const columnsUnit: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
+    meta: { label: "NAMA" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />
     ),
   },
   {
     accessorKey: "category",
+    meta: { label: "KATEGORI" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
   },
   {
     accessorKey: "unit",
+    meta: { label: "UNIT" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="UNIT" />
     ),
   },
   {
     accessorKey: "type",
+    meta: { label: "TIPE" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TIPE" />
     ),
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

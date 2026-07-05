@@ -14,6 +14,7 @@ import { formatRupiah } from "@/lib/utils/format-rupiah";
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   {
     accessorKey: "id",
+    meta: { label: "ID TRANSAKSI" },
     header: () => <span>ID TRANSAKSI</span>,
     cell: ({ row }) => (
       <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
@@ -21,6 +22,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "transactionDate",
+    meta: { label: "TANGGAL TRANSAKSI" },
     accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -33,6 +35,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "type",
+    meta: { label: "TIPE" },
     accessorFn: (row) =>
       row.type === "in"
         ? "Pemasukan"
@@ -58,14 +61,17 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     accessorKey: "productCategory",
+    meta: { label: "KATEGORI PRODUK" },
     header: () => <span>KATEGORI PRODUK</span>,
   },
   {
     accessorKey: "product",
+    meta: { label: "PRODUK" },
     header: () => <span>PRODUK</span>,
   },
   {
     id: "transactionType",
+    meta: { label: "TIPE TRANSAKSI" },
     accessorFn: (row) => {
       const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
         (opt) => opt.value === row.transactionType,
@@ -83,6 +89,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     accessorKey: "notes",
+    meta: { label: "CATATAN" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="CATATAN" />
     ),
@@ -93,6 +100,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "quantity",
+    meta: { label: "JUMLAH" },
     accessorFn: (row) => {
       if (row.unit.toLowerCase() == "uang") {
         return "-";
@@ -104,10 +112,12 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     accessorKey: "unit",
+    meta: { label: "UNIT" },
     header: () => <span>UNIT</span>,
   },
   {
     id: "pricePerItem",
+    meta: { label: "HARGA/UNIT" },
     accessorFn: (row) => {
       const priceStr =
         row.pricePerItem !== null && row.pricePerItem !== undefined
@@ -128,6 +138,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
 
   {
     id: "totalPrice",
+    meta: { label: "TOTAL HARGA" },
     accessorFn: (row) => {
       const priceStr =
         row.totalPrice !== null && row.totalPrice !== undefined
@@ -149,6 +160,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "createdAt",
+    meta: { label: "DIBUAT" },
     accessorFn: (row) => formatDate(row.createdAt),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
@@ -157,6 +169,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "reversalSource",
+    meta: { label: "REVERSAL" },
     accessorFn: (row) => {
       if (row.type === "reversal") {
         return (

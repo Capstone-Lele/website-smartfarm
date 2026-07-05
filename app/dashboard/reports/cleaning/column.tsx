@@ -11,6 +11,7 @@ import DetailCleaningSheet from "./detail";
 export const columns: ColumnDef<Cleaning>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -20,6 +21,7 @@ export const columns: ColumnDef<Cleaning>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -36,6 +38,7 @@ export const columns: ColumnDef<Cleaning>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -43,6 +46,7 @@ export const columns: ColumnDef<Cleaning>[] = [
   },
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

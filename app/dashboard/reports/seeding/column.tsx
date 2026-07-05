@@ -13,6 +13,7 @@ import DetailSeedingSheet from "./detail";
 export const columns: ColumnDef<Seed>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -22,6 +23,7 @@ export const columns: ColumnDef<Seed>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -38,6 +40,7 @@ export const columns: ColumnDef<Seed>[] = [
   },
   {
     accessorKey: "createdAt",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -47,6 +50,7 @@ export const columns: ColumnDef<Seed>[] = [
   },
   {
     accessorKey: "initialQuantity",
+    meta: { label: "JUMLAH TEBAR (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -62,6 +66,7 @@ export const columns: ColumnDef<Seed>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -70,6 +75,7 @@ export const columns: ColumnDef<Seed>[] = [
 
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
