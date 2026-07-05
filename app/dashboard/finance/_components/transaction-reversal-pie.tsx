@@ -109,7 +109,7 @@ const TransactionReversalPie = ({ data }: TransactionReversalPieProps) => {
           Transaksi Reversal
         </h2>
         <p className="mt-0.5 text-sm text-muted-foreground">
-          Jumlah dan nominal reversal berdasarkan sumber transaksi
+          Jumlah dan nominal reversal semua transaksi
         </p>
       </div>
 

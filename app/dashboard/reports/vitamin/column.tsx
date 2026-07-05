@@ -12,6 +12,7 @@ import DetailVitaminSheet from "./detail";
 export const columns: ColumnDef<Vitamin>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -21,6 +22,7 @@ export const columns: ColumnDef<Vitamin>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -37,6 +39,7 @@ export const columns: ColumnDef<Vitamin>[] = [
   },
   {
     accessorKey: "cycleStartDate",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -46,12 +49,14 @@ export const columns: ColumnDef<Vitamin>[] = [
   },
   {
     accessorKey: "vitaminName",
+    meta: { label: "VITAMIN" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="VITAMIN" />
     ),
   },
   {
     accessorKey: "quantity",
+    meta: { label: "JUMLAH PAKAN" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -62,6 +67,7 @@ export const columns: ColumnDef<Vitamin>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -70,6 +76,7 @@ export const columns: ColumnDef<Vitamin>[] = [
 
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

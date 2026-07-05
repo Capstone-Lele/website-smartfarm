@@ -15,6 +15,7 @@ import { formatNumber } from "@/lib/utils/format-number";
 export const columns: ColumnDef<Inventory>[] = [
   {
     accessorKey: "product",
+    meta: { label: "PRODUK" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PRODUK" />
     ),
@@ -28,12 +29,14 @@ export const columns: ColumnDef<Inventory>[] = [
   },
   {
     accessorKey: "category",
+    meta: { label: "KATEGORI" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
   },
   {
     accessorKey: "totalQuantity",
+    meta: { label: "TOTAL STOK" },
     header: ({ column }) => (
       <span>TOTAL STOK</span>
     ),
@@ -45,6 +48,7 @@ export const columns: ColumnDef<Inventory>[] = [
   },
   {
     accessorKey: "minQuantity",
+    meta: { label: "STOK MINIMUM" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -58,12 +62,14 @@ export const columns: ColumnDef<Inventory>[] = [
   },
   {
     accessorKey: "unit",
+    meta: { label: "UNIT" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="UNIT" />
     ),
   },
   {
     id: "status",
+    meta: { label: "STATUS STOCK" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -94,6 +100,7 @@ export const columns: ColumnDef<Inventory>[] = [
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

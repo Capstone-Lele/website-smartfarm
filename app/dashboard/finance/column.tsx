@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 export const columns: ColumnDef<Finance>[] = [
   {
     accessorKey: "id",
+    meta: { label: "ID TRANSAKSI" },
     header: () => <span>ID TRANSAKSI</span>,
     cell: ({ row }) => (
       <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
@@ -24,6 +25,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "transactionDate",
+    meta: { label: "TANGGAL TRANSAKSI" },
     accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -36,6 +38,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "type",
+    meta: { label: "TIPE" },
     accessorFn: (row) =>
       row.type === "in"
         ? "Pemasukan"
@@ -61,6 +64,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     accessorKey: "notes",
+    meta: { label: "CATATAN TRANSAKSI" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -76,6 +80,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "transactionSource",
+    meta: { label: "SUMBER TRANSAKSI" },
     accessorFn: (row) => sourceLabelTranslation(row.transactionSource),
     header: () => <span>SUMBER TRANSAKSI</span>,
     cell: ({ row }) => row.getValue("transactionSource"),
@@ -83,6 +88,7 @@ export const columns: ColumnDef<Finance>[] = [
 
   {
     id: "transactionType",
+    meta: { label: "TIPE TRANSAKSI" },
     accessorFn: (row) =>
       inventoryTransactionTypeTranslation(row.transactionType),
     header: () => <span>TIPE TRANSAKSI</span>,
@@ -90,14 +96,17 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     accessorKey: "productCategory",
+    meta: { label: "KATEGORI PRODUK" },
     header: () => <span>KATEGORI PRODUK</span>,
   },
   {
     accessorKey: "product",
+    meta: { label: "PRODUK" },
     header: () => <span>PRODUK</span>,
   },
   {
     id: "totalPrice",
+    meta: { label: "TOTAL" },
     accessorFn: (row) => {
       const priceStr =
         row.totalPrice !== null && row.totalPrice !== undefined
@@ -122,6 +131,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "createdAt",
+    meta: { label: "DIBUAT" },
     accessorFn: (row) => formatDate(row.createdAt || ""),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DIBUAT" />
@@ -130,6 +140,7 @@ export const columns: ColumnDef<Finance>[] = [
   },
   {
     id: "reversalSource",
+    meta: { label: "REVERSAL" },
     accessorFn: (row) => {
       if (row.type === "reversal") {
         return (

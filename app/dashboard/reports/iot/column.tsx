@@ -11,12 +11,14 @@ export const getColumns = (
   const baseColumns: ColumnDef<IOTDataHistorical>[] = [
     {
       accessorKey: "node_id",
+      meta: { label: "Node ID" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Node ID" />
       ),
     },
     {
       accessorKey: "createdAt",
+      meta: { label: "Waktu" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Waktu" />
       ),
@@ -31,6 +33,7 @@ export const getColumns = (
   if (filterType === "ph" || filterType === "all") {
     baseColumns.push({
       accessorKey: "ph",
+      meta: { label: "pH Air" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="pH Air" />
       ),
@@ -40,6 +43,7 @@ export const getColumns = (
   if (filterType === "temp" || filterType === "all") {
     baseColumns.push({
       accessorKey: "temp",
+      meta: { label: "Suhu (Â°C)" },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Suhu (°C)" />
       ),

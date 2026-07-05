@@ -15,12 +15,14 @@ import ButtonSwitchColumn from "@/components/button-column/button-switch-column"
 export const columnsBuyer: ColumnDef<Buyer>[] = [
   {
     accessorKey: "name",
+    meta: { label: "NAMA" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />
     ),
   },
   {
     accessorKey: "type",
+    meta: { label: "JENIS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="JENIS" />
     ),
@@ -32,24 +34,28 @@ export const columnsBuyer: ColumnDef<Buyer>[] = [
   },
   {
     accessorKey: "phone",
+    meta: { label: "NOMOR TELEPON" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NOMOR TELEPON" />
     ),
   },
   {
     accessorKey: "email",
+    meta: { label: "EMAIL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="EMAIL" />
     ),
   },
   {
     accessorKey: "address",
+    meta: { label: "ALAMAT" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="ALAMAT" />
     ),
   },
   {
     accessorKey: "createdAt",
+    meta: { label: "DI BUAT" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI BUAT" />
     ),
@@ -59,6 +65,7 @@ export const columnsBuyer: ColumnDef<Buyer>[] = [
   },
   {
     accessorKey: "updatedAt",
+    meta: { label: "DI UBAH" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI UBAH" />
     ),
@@ -68,6 +75,7 @@ export const columnsBuyer: ColumnDef<Buyer>[] = [
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

@@ -73,6 +73,7 @@ const NonInventoryActions = ({ row }: { row: FinanceNonInventory }) => {
 export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   {
     accessorKey: "sourceId",
+    meta: { label: "ID CATATAN" },
     header: () => <span>ID CATATAN</span>,
     cell: ({ row }) => (
       <ButtonCopy textToCopy={row.original.sourceId} truncateLength={10} />
@@ -80,6 +81,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "transactionDate",
+    meta: { label: "TANGGAL" },
     accessorFn: (row) => formatDate(row.transactionDate),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
@@ -90,6 +92,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "type",
+    meta: { label: "TIPE" },
     accessorFn: (row) =>
       row.type === "in"
         ? "Pemasukan"
@@ -115,14 +118,17 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     accessorKey: "productCategory",
+    meta: { label: "KATEGORI PRODUK" },
     header: () => <span>KATEGORI PRODUK</span>,
   },
   {
     accessorKey: "product",
+    meta: { label: "PRODUK" },
     header: () => <span>PRODUK</span>,
   },
   {
     id: "transactionType",
+    meta: { label: "TIPE TRANSAKSI" },
     accessorFn: (row) => {
       const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
         (opt) => opt.value === row.transactionType,
@@ -146,6 +152,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "quantity",
+    meta: { label: "JUMLAH" },
     accessorFn: (row) => {
       if (row.unit.toLowerCase() == "uang") {
         return "-";
@@ -159,6 +166,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     id: "pricePerItem",
+    meta: { label: "HARGA/UNIT" },
     accessorFn: (row) => {
       const priceStr =
         row.pricePerItem !== null && row.pricePerItem !== undefined
@@ -178,10 +186,12 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
   },
   {
     accessorKey: "unit",
+    meta: { label: "UNIT" },
     header: () => <span>UNIT</span>,
   },
   {
     id: "totalPrice",
+    meta: { label: "TOTAL HARGA" },
     accessorFn: (row) => {
       const priceStr =
         row.totalPrice !== null && row.totalPrice !== undefined
@@ -204,6 +214,7 @@ export const nonInventoryColumns: ColumnDef<FinanceNonInventory>[] = [
 
   {
     id: "reversalSource",
+    meta: { label: "REVERSAL" },
     accessorFn: (row) => {
       const item = row as any;
       if (item.type === "reversal") {

@@ -11,6 +11,7 @@ import DetailMoveSheet from "./detail";
 export const columns: ColumnDef<MovePool>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -20,6 +21,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "originPoolName",
+    meta: { label: "KOLAM ASAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM ASAL" />
     ),
@@ -36,6 +38,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "originStartDate",
+    meta: { label: "SIKLUS KOLAM ASAL" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -49,6 +52,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "destinationPoolName",
+    meta: { label: "KOLAM TUJUAN" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -71,6 +75,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "destinationStartDate",
+    meta: { label: "SIKLUS KOLAM TUJUAN" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -84,6 +89,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "quantity",
+    meta: { label: "JUMLAH (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -95,6 +101,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -102,6 +109,7 @@ export const columns: ColumnDef<MovePool>[] = [
   },
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),

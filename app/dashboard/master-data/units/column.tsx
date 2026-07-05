@@ -16,12 +16,14 @@ import { Spinner } from "@/components/ui/spinner";
 export const columnsUnit: ColumnDef<Unit>[] = [
   {
     accessorKey: "name",
+    meta: { label: "NAMA" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />
     ),
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

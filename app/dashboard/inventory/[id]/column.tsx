@@ -84,6 +84,7 @@ const InventoryDetailActions = ({ row }: { row: InventoryDetail }) => {
 export const columns: ColumnDef<InventoryDetail>[] = [
   {
     accessorKey: "id",
+    meta: { label: "ID CATATAN" },
     header: () => <span>ID CATATAN</span>,
     cell: ({ row }) => (
       <ButtonCopy textToCopy={row.original.id} truncateLength={10} />
@@ -91,6 +92,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     id: "reportDate",
+    meta: { label: "TANGGAL" },
     accessorFn: (row) => formatDate(row.reportDate),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
@@ -101,6 +103,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     accessorKey: "notes",
+    meta: { label: "NOTES" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NOTES" />
     ),
@@ -122,6 +125,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     id: "type",
+    meta: { label: "TIPE" },
     accessorFn: (row) => {
       const option = INVENTORY_TYPE_OPTIONS.find(
         (opt) => opt.value === row.type,
@@ -153,6 +157,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     id: "transactionType",
+    meta: { label: "TIPE TRANSAKSI" },
     accessorFn: (row) => {
       const option = INVENTORY_TRANSACTION_TYPE_OPTIONS.find(
         (opt) => opt.value === row.transactionType,
@@ -176,12 +181,14 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     accessorKey: "category",
+    meta: { label: "DARI" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DARI" />
     ),
   },
   {
     id: "quantity",
+    meta: { label: "KUANTITAS" },
     accessorFn: (row) => formatNumber(row.quantity).toString(),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KUANTITAS" />
@@ -199,6 +206,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     id: "pricePerItem",
+    meta: { label: "HARGA PER ITEM" },
     accessorFn: (row) => {
       if (row.transactionType === "grant") {
         const val =
@@ -239,6 +247,7 @@ export const columns: ColumnDef<InventoryDetail>[] = [
   },
   {
     id: "reversalSource",
+    meta: { label: "REVERSAL" },
     accessorFn: (row) => {
       if (row.type === "reversal") {
         return (

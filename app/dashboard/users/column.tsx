@@ -21,6 +21,7 @@ export const columnsUser: ColumnDef<User>[] = [
  
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
@@ -28,18 +29,21 @@ export const columnsUser: ColumnDef<User>[] = [
   },
   {
     accessorKey: "name",
+    meta: { label: "NAMA" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="NAMA" />
     ),
   },
   {
     accessorKey: "email",
+    meta: { label: "EMAIL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="EMAIL" />
     ),
   },
   {
     id: "role",
+    meta: { label: "ROLE" },
     accessorFn: (row) => ROLE_LABEL.find((r) => r.value === row.role)?.label || row.role,
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="ROLE" />
@@ -54,6 +58,7 @@ export const columnsUser: ColumnDef<User>[] = [
   },
   {
     id: "jumlah_akses", 
+    meta: { label: "JUMLAH AKSES" },
     accessorFn: (row) => row.permission?.length || 0,
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="JUMLAH AKSES" />
@@ -64,6 +69,7 @@ export const columnsUser: ColumnDef<User>[] = [
   },
   {
     id: "createdAt",
+    meta: { label: "DI BUAT" },
     accessorFn: (row) => formatDate(row.createdAt),
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="DI BUAT" />
@@ -74,6 +80,7 @@ export const columnsUser: ColumnDef<User>[] = [
   },
   {
     id: "isActive",
+    meta: { label: "STATUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="STATUS" />
     ),

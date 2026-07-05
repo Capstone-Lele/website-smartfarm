@@ -12,6 +12,7 @@ import DetailMortalitySheet from "./detail";
 export const columns: ColumnDef<Mortality>[] = [
   {
     accessorKey: "reportDate",
+    meta: { label: "TANGGAL" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="TANGGAL" />
     ),
@@ -21,6 +22,7 @@ export const columns: ColumnDef<Mortality>[] = [
   },
   {
     accessorKey: "poolName",
+    meta: { label: "KOLAM" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KOLAM" />
     ),
@@ -37,6 +39,7 @@ export const columns: ColumnDef<Mortality>[] = [
   },
   {
     accessorKey: "cycle",
+    meta: { label: "SIKLUS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="SIKLUS" />
     ),
@@ -46,6 +49,7 @@ export const columns: ColumnDef<Mortality>[] = [
   },
   {
     accessorKey: "quantity",
+    meta: { label: "JUMLAH MATI (ekor)" },
     header: ({ column }) => (
       <DataTableColumnHeader
         className=""
@@ -63,18 +67,21 @@ export const columns: ColumnDef<Mortality>[] = [
   },
   {
     accessorKey: "image",
+    meta: { label: "GAMBAR" },
     header: () => <span>GAMBAR</span>,
     cell: ({ row }) => (
       <ImagePopup imageUrl={row.original.image || "/placeholder-image.png"} />
     ),
   },
   {    accessorKey: "notes",
+    meta: { label: "CATATAN" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="CATATAN" />
     ),
   },
   {
     accessorKey: "user",
+    meta: { label: "PETUGAS" },
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="PETUGAS" />
     ),
