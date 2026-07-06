@@ -58,7 +58,7 @@ const page = () => {
       icon: <IoFish />,
     },
     {
-      title: "Kolam Pembibitan",
+      title: "Kolam Pembenihan",
       value: data?.data
         .filter((user) => user.category === "breeding")
         .length.toString(),
