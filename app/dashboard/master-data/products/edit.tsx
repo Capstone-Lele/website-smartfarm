@@ -40,12 +40,14 @@ import { useUnit } from "@/lib/api/service/master-data/unit/useUnit";
 import { useCategory } from "@/lib/api/service/master-data/category/useCategory";
 import { Combobox } from "@/components/combobox";
 import { TYPE_PRODUCT } from "@/lib/constants/type-product";
+import { PRODUCT_CONSUMPTION_TYPE } from "@/lib/constants/product-consumtion-type";
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
 import { getDirtyValues } from "@/lib/utils/get-dirty-value";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama product wajib diisi" }),
   category: z.string().min(1, { message: "Kategori product wajib diisi" }),
+  consumptionType: z.string().optional(),
   unit: z.string().min(1, { message: "Satuan product wajib diisi" }),
   type: z.string().min(1, { message: "Tipe product wajib diisi" }),
 });
@@ -65,6 +67,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
     defaultValues: {
       name: product.name,
       category: product.category,
+      consumptionType: product.consumptionType || undefined,
       unit: product.unit,
       type: product.type,
     },
@@ -77,6 +80,7 @@ const EditProductModal = ({ product }: { product: Product }) => {
     form.reset({
       name: product.name,
       category: product.category,
+      consumptionType: product.consumptionType || undefined,
       unit: product.unit,
       type: product.type,
     });
@@ -221,6 +225,10 @@ const EditProductModal = ({ product }: { product: Product }) => {
                           } else {
                             form.setValue("unit", "", { shouldDirty: true });
                           }
+
+                          if (val.toLowerCase() !== "pakan" && val.toLowerCase() !== "vitamin") {
+                            form.setValue("consumptionType", undefined, { shouldDirty: true });
+                          }
                         }}
                         isLoading={productMutation.isPending}
                         name="Kategori"
@@ -238,6 +246,33 @@ const EditProductModal = ({ product }: { product: Product }) => {
                     </Field>
                   )}
                 />
+                {(watchCategory?.toLowerCase() === "pakan" || watchCategory?.toLowerCase() === "vitamin") && (
+                  <Controller
+                    name="consumptionType"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="consumptionType">
+                          Tipe Konsumsi
+                        </FieldLabel>
+                        <Combobox
+                          data={PRODUCT_CONSUMPTION_TYPE}
+                          onValueChange={field.onChange}
+                          isLoading={productMutation.isPending}
+                          name="Tipe Konsumsi"
+                          selectedValue={field.value}
+                        />
+                        {fieldState.invalid ? (
+                          <FieldError errors={[fieldState.error]} />
+                        ) : (
+                          <FieldDescription>
+                            Masukkan tipe konsumsi.
+                          </FieldDescription>
+                        )}
+                      </Field>
+                    )}
+                  />
+                )}
                 <Controller
                   name="unit"
                   control={form.control}

@@ -13,8 +13,14 @@ import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import { FinanceBySourceId } from "@/types/finance/finance";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { LuArrowLeftRight, LuRepeat2 } from "react-icons/lu";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCreateTransactionReversalNonInventoryNote } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
+import PopupReversal from "@/components/popup-reversal";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { TbArrowBackUpDouble } from "react-icons/tb";
 
 function InfoRow({
   label,
@@ -205,6 +211,47 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { data: financeData, isLoading: isLoadingFinance } =
     useFinanceBySourceId(source);
 
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
+    : Array.isArray(financeData)
+      ? financeData[0]
+      : null;
+
+  const [isReversalOpen, setIsReversalOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const createTransactionReversal = useCreateTransactionReversalNonInventoryNote(
+    financeRecord?.id || "",
+  );
+
+  const canCreateReversal =
+    financeRecord &&
+    financeRecord.type !== "reversal" &&
+    financeRecord.referenceId === null &&
+    financeRecord.referenceSourceId === null &&
+    financeRecord.transactionReversalId === null &&
+    financeRecord.transactionReversalNoteId === null &&
+    financeRecord.isReversed === false;
+
+  const handleReversal = async () => {
+    try {
+      await createTransactionReversal.mutateAsync();
+      toast.success("Transaksi reversal berhasil dilakukan");
+      queryClient.invalidateQueries({
+        queryKey: ["getNonInventory", source],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getFinanceBySourceId", source],
+      });
+      setIsReversalOpen(false);
+    } catch {
+      toast.error("Gagal melakukan transaksi reversal", {
+        description: "Silakan coba lagi.",
+      });
+    }
+  };
+
   /* Breadcrumb */
   useEffect(() => {
     if (productData) {
@@ -214,14 +261,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     setLabel("inventory-notes", "Detail Catatan");
     return () => removeLabel("inventory");
   }, [productData, setLabel, removeLabel]);
-
-  const financeRecord = financeData?.data
-    ? Array.isArray(financeData.data)
-      ? financeData.data[0]
-      : financeData.data
-    : Array.isArray(financeData)
-      ? financeData[0]
-      : null;
 
   const isIncome = financeRecord?.type?.toLowerCase() === "in";
   const isReversal = financeRecord?.type?.toLowerCase() === "reversal";
@@ -257,6 +296,39 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <ReversalTransactionCard
         financeRecord={financeRecord as ReversalFinanceRecord | null}
       />
+
+      {canCreateReversal && (
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-background p-4 rounded-sm border ">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">
+              Reversal Transaksi
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Silahkan klik tombol reversal transaksi untuk melakukan reversal transaksi ini
+            </p>
+          </div>
+          <div>
+            <Button
+              className="bg-primary hover:bg-primary/80 text-white gap-2 cursor-pointer"
+              onClick={() => setIsReversalOpen(true)}
+              disabled={createTransactionReversal.isPending}
+            >
+              <TbArrowBackUpDouble size={18} />
+              Reversal Transaksi
+            </Button>
+            <PopupReversal
+              title="Konfirmasi Reversal"
+              message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik. Jika hal ini dilakukan, tolong segera lakukan transaksi pembenaran."
+              type="warning"
+              isOpen={isReversalOpen}
+              setOpen={setIsReversalOpen}
+              isLoading={createTransactionReversal.isPending}
+              onConfirm={handleReversal}
+              onCancel={() => setIsReversalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

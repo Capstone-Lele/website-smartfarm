@@ -62,6 +62,10 @@ const dataPath = [
         path: "/dashboard/master-data/buyers",
         name: "Pembeli",
       },
+      {
+        path: "/dashboard/master-data/disease",
+        name: "Tipe Penyakit",
+      },
     ],
   },
   {

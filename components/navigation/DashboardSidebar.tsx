@@ -74,6 +74,7 @@ export const items = [
     type: "dropdown",
     subMenuList: [
       { name: "Kategori", href: "/dashboard/master-data/categories" },
+      { name: "Tipe Penyakit", href: "/dashboard/master-data/disease" },
       { name: "Produk", href: "/dashboard/master-data/products" },
       { name: "Pembeli", href: "/dashboard/master-data/buyers" },
       { name: "Unit", href: "/dashboard/master-data/units" },

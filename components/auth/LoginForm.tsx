@@ -51,11 +51,10 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      const result = await loginMutation.mutateAsync(data);
-      toast.success("Login berhasil!");
-      // timeout sebentar sebelum redirect
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      route.push("/dashboard");
+      await loginMutation.mutateAsync(data);
+      toast.success("OTP telah dikirim ke email Anda!");
+      // Redirect ke halaman OTP, bawa email sebagai query param
+      route.push(`/otp?email=${encodeURIComponent(data.email)}`);
     } catch (error: any) {
       toast.error("Login Gagal", {
         description: error?.message || "Login gagal. Silakan coba lagi.",

@@ -1,67 +1,15 @@
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import ButtonReversalColumn from "@/components/button-column/button-reversal-column";
-import PopupReversal from "@/components/popup-reversal";
-import { toast } from "sonner";
-import { useState } from "react";
 import { DataTableColumnHeader } from "@/components/data-table/column-header-sorting";
 import { formatDate } from "@/lib/utils/format-date";
 import { Commodity } from "@/types/comodity";
 import { ColumnDef } from "@tanstack/react-table";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
 import { ButtonCopy } from "@/components/button-copy";
-import { useCreateTransactionReversalCommodity } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
 
 const CommodityOutActions = ({ row }: { row: any }) => {
-  const [isReversalOpen, setIsReversalOpen] = useState(false);
-  const createTransactionReversal = useCreateTransactionReversalCommodity(
-    row.transactionId || "",
-  );
-  
-  const canCreateReversal =
-    row.type !== "reversal" &&
-    !row.reversedBySourceId &&
-    Boolean(row.transactionId);
-
-  const handleReversal = async () => {
-    try {
-      await createTransactionReversal.mutateAsync();
-      toast.success("Transaksi reversal berhasil dilakukan");
-      setIsReversalOpen(false);
-    } catch {
-      toast.error("Gagal melakukan transaksi reversal", {
-        description: "Silakan coba lagi.",
-      });
-    }
-  };
-
   return (
     <div className="flex items-center text-primary gap-0.5">
       <ButtonDetailColumn href={`/dashboard/commodity/${row.id}`} />
-      {canCreateReversal ? (
-        <>
-          <Separator orientation="vertical" className="h-6" />
-          <ButtonReversalColumn
-            disabled={createTransactionReversal.isPending}
-            onClick={() => setIsReversalOpen(true)}
-          />
-          <PopupReversal
-            title="Konfirmasi Reversal"
-            message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik."
-            type="warning"
-            isOpen={isReversalOpen}
-            setOpen={setIsReversalOpen}
-            isLoading={createTransactionReversal.isPending}
-            onConfirm={handleReversal}
-            onCancel={() => setIsReversalOpen(false)}
-          />
-        </>
-      ) : row.type === "reversal" || row.reversedBySourceId ? (
-        <>
-          <Separator orientation="vertical" className="h-6" />
-          <ButtonReversalColumn disabled={true} onClick={() => {}} />
-        </>
-      ) : null}
     </div>
   );
 };

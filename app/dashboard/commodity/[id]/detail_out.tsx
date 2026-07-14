@@ -16,6 +16,12 @@ import { useFinanceBySourceId } from "@/lib/api/service/finance/useFinance";
 import { CommodityByIdAndSourceIdItems } from "@/types/comodity";
 import { useDetailCycle } from "@/lib/api/service/cycles/useCycle";
 import { FinanceBySourceId } from "@/types/finance/finance";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCreateTransactionReversalCommodity } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
+import PopupReversal from "@/components/popup-reversal";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { TbArrowBackUpDouble } from "react-icons/tb";
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
@@ -314,11 +320,77 @@ const DetailOut = ({ id }: { id: string }) => {
   );
   const displayTotalPrice = isReversal ? calculatedTotalPrice : (financeRecord?.totalPrice || 0);
 
+  const [isReversalOpen, setIsReversalOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const createTransactionReversal = useCreateTransactionReversalCommodity(
+    financeRecord?.id || "",
+  );
+
+  const canCreateReversal =
+    financeRecord &&
+    financeRecord.type !== "reversal" &&
+    financeRecord.referenceId === null &&
+    financeRecord.referenceSourceId === null &&
+    financeRecord.transactionReversalId === null &&
+    financeRecord.transactionReversalNoteId === null &&
+    financeRecord.isReversed === false;
+
+  const handleReversal = async () => {
+    try {
+      await createTransactionReversal.mutateAsync();
+      toast.success("Transaksi reversal berhasil dilakukan");
+      queryClient.invalidateQueries({
+        queryKey: ["getCommodityByIdAndType", id, "in"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getFinanceBySourceId", id],
+      });
+      setIsReversalOpen(false);
+    } catch {
+      toast.error("Gagal melakukan transaksi reversal", {
+        description: "Silakan coba lagi.",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <ReversalTransactionCard
         financeRecord={financeRecord as ReversalFinanceRecord | null}
       />
+
+      {canCreateReversal && (
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-background p-4 rounded-sm border ">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">
+              Reversal Transaksi
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Silahkan klik tombol reversal transaksi untuk melakukan reversal transaksi ini
+            </p>
+          </div>
+          <div>
+            <Button
+              className="bg-primary hover:bg-primary/80 text-white gap-2 cursor-pointer"
+              onClick={() => setIsReversalOpen(true)}
+              disabled={createTransactionReversal.isPending}
+            >
+              <TbArrowBackUpDouble size={18} />
+              Reversal Transaksi
+            </Button>
+            <PopupReversal
+              title="Konfirmasi Reversal"
+              message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik. Jika hal ini dilakukan, tolong segera lakukan transaksi pembenaran."
+              type="warning"
+              isOpen={isReversalOpen}
+              setOpen={setIsReversalOpen}
+              isLoading={createTransactionReversal.isPending}
+              onConfirm={handleReversal}
+              onCancel={() => setIsReversalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* ── Summary Cards ──────────────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

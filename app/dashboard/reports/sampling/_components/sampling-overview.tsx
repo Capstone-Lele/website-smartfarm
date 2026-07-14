@@ -14,7 +14,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { formatDate } from "@/lib/utils/format-date";
+import { formatDate, formatDateLong } from "@/lib/utils/format-date";
 import DefaultCard from "@/components/card/default-card";
 import CardStatistic from "@/components/card/card-statistic";
 import { Sampling } from "@/types/notes/sampling.types";
@@ -25,7 +25,7 @@ import { useListCycle } from "@/lib/api/service/cycles/useCycle";
 
 const HARVEST_TARGET_GRAM = 750; // Use your actual target here
 const MIN_PREDICTION_POINTS = 3;
-const MAX_PREDICTION_POINTS = 20;
+const MAX_PREDICTION_DAYS = 120;
 
 type ChartPoint = {
   reportDate: string;
@@ -50,21 +50,37 @@ const toWeight = (value: string | number) => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
-const getAverageIntervalMs = (points: ChartPoint[]) => {
-  const timestamps = points
-    .map((point) => new Date(point.reportDate).getTime())
-    .filter((time) => Number.isFinite(time));
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-  if (timestamps.length < 2) return 24 * 60 * 60 * 1000;
-
-  const total = timestamps
-    .slice(1)
-    .reduce((acc, current, index) => acc + (current - timestamps[index]), 0);
-
-  return Math.max(
-    24 * 60 * 60 * 1000,
-    Math.round(total / (timestamps.length - 1)),
+/**
+ * Menghitung ADG (Average Daily Gain) dari data sampling.
+ * Sesuai logika: ADG = (berat_terakhir - berat_awal) / selisih_hari_total
+ */
+const calculateADG = (
+  points: Array<{ reportDate: string; actual: number | null }>,
+): number | null => {
+  const validPoints = points.filter(
+    (p): p is { reportDate: string; actual: number } => p.actual !== null,
   );
+
+  if (validPoints.length < 2) return null;
+
+  const firstPoint = validPoints[0];
+  const lastPoint = validPoints[validPoints.length - 1];
+
+  const firstDateObj = new Date(firstPoint.reportDate);
+  firstDateObj.setHours(0, 0, 0, 0);
+  const firstDate = firstDateObj.getTime();
+
+  const lastDateObj = new Date(lastPoint.reportDate);
+  lastDateObj.setHours(0, 0, 0, 0);
+  const lastDate = lastDateObj.getTime();
+  
+  const days = Math.round((lastDate - firstDate) / MS_PER_DAY);
+
+  if (days <= 0) return null; // Data di hari yang sama
+
+  return (lastPoint.actual - firstPoint.actual) / days;
 };
 
 const buildChartData = (samplings: Sampling[]) => {
@@ -75,7 +91,7 @@ const buildChartData = (samplings: Sampling[]) => {
 
   const baseData: ChartPoint[] = sorted.map((item) => ({
     reportDate: item.reportDate,
-    label: formatDate(item.reportDate),
+    label: formatDateLong(item.reportDate),
     actual: toWeight(item.averageWeight),
     prediction: null,
   }));
@@ -84,33 +100,42 @@ const buildChartData = (samplings: Sampling[]) => {
     .map((item, index) => ({ x: index, y: item.actual }))
     .filter((item): item is { x: number; y: number } => item.y !== null);
 
+  const adg = calculateADG(baseData);
+  let message = "";
+
   if (points.length < MIN_PREDICTION_POINTS) {
+    message = `Butuh minimal ${MIN_PREDICTION_POINTS} data untuk prediksi ADG.`;
     return {
       chartData: baseData,
       canPredict: false,
       estimatedHarvestDate: null as string | null,
-      predictionPointCount: points.length,
+      message,
+      adg,
     };
   }
 
-  const n = points.length;
-  const sumX = points.reduce((acc, point) => acc + point.x, 0);
-  const sumY = points.reduce((acc, point) => acc + point.y, 0);
-  const sumXY = points.reduce((acc, point) => acc + point.x * point.y, 0);
-  const sumXX = points.reduce((acc, point) => acc + point.x * point.x, 0);
-  const denominator = n * sumXX - sumX * sumX;
-
-  if (denominator === 0) {
+  if (adg === null) {
+    message = "Data sampling harus pada tanggal berbeda.";
     return {
       chartData: baseData,
       canPredict: false,
       estimatedHarvestDate: null as string | null,
-      predictionPointCount: points.length,
+      message,
+      adg,
     };
   }
 
-  const slope = (n * sumXY - sumX * sumY) / denominator;
-  const intercept = (sumY - slope * sumX) / n;
+  if (adg <= 0) {
+    message = "Berat rata-rata tidak bertambah, estimasi panen belum tersedia.";
+    return {
+      chartData: baseData,
+      canPredict: false,
+      estimatedHarvestDate: null as string | null,
+      message,
+      adg,
+    };
+  }
+
   const mergedData: ChartPoint[] = [...baseData];
   const lastKnown = mergedData[mergedData.length - 1];
 
@@ -119,41 +144,59 @@ const buildChartData = (samplings: Sampling[]) => {
       chartData: mergedData,
       canPredict: false,
       estimatedHarvestDate: null as string | null,
-      predictionPointCount: points.length,
+      message,
+      adg,
+    };
+  }
+
+  // Cek apakah sudah capai target
+  if (lastKnown.actual >= HARVEST_TARGET_GRAM) {
+    message = "Target panen sudah tercapai!";
+    return {
+      chartData: mergedData,
+      canPredict: true,
+      estimatedHarvestDate: formatDateLong(lastKnown.reportDate),
+      message,
+      adg,
     };
   }
 
   lastKnown.prediction = Number(lastKnown.actual.toFixed(2));
 
-  const averageIntervalMs = getAverageIntervalMs(baseData);
   const lastDate = new Date(lastKnown.reportDate).getTime();
+  const lastWeight = lastKnown.actual;
   let estimatedHarvestDate: string | null = null;
 
-  for (let offset = 1; offset <= MAX_PREDICTION_POINTS; offset += 1) {
-    const xValue = points[points.length - 1].x + offset;
-    const predicted = slope * xValue + intercept;
-    const predictionDate = new Date(
-      lastDate + averageIntervalMs * offset,
-    ).toISOString();
+  for (let day = 1; day <= MAX_PREDICTION_DAYS; day += 1) {
+    const predictionDateMs = lastDate + MS_PER_DAY * day;
+    const predicted = lastWeight + adg * day;
+    const predictionDate = new Date(predictionDateMs).toISOString();
 
     mergedData.push({
       reportDate: predictionDate,
-      label: formatDate(predictionDate),
+      label: formatDateLong(predictionDate),
       actual: null,
       prediction: Number(predicted.toFixed(2)),
     });
 
     if (!estimatedHarvestDate && predicted >= HARVEST_TARGET_GRAM) {
-      estimatedHarvestDate = formatDate(predictionDate);
+      estimatedHarvestDate = formatDateLong(predictionDate);
       break;
     }
+  }
+
+  if (estimatedHarvestDate) {
+    message = `Estimasi target panen pada ${estimatedHarvestDate}.`;
+  } else {
+    message = `Target panen belum tercapai dalam ${MAX_PREDICTION_DAYS} hari ke depan.`;
   }
 
   return {
     chartData: mergedData,
     canPredict: true,
     estimatedHarvestDate,
-    predictionPointCount: points.length,
+    message,
+    adg,
   };
 };
 
@@ -177,7 +220,7 @@ const SamplingOverview: React.FC<SamplingOverviewProps> = ({ data }) => {
     );
   }, [data, selectedPool, selectedCycle]);
 
-  const { chartData, canPredict, estimatedHarvestDate, predictionPointCount } =
+  const { chartData, canPredict, message, adg } =
     useMemo(() => buildChartData(filteredDataForChart), [filteredDataForChart]);
 
   const summaryData = useMemo(() => {
@@ -328,14 +371,13 @@ const SamplingOverview: React.FC<SamplingOverviewProps> = ({ data }) => {
                 </LineChart>
               </ChartContainer>
 
-              <div className="text-xs leading-relaxed text-muted-foreground wrap-break-word">
-                Prediksi ditampilkan jika minimal {MIN_PREDICTION_POINTS} data
-                sampling.
-                {canPredict
-                  ? estimatedHarvestDate
-                    ? ` Estimasi target panen pada ${estimatedHarvestDate}.`
-                    : " Target panen belum tercapai dalam horizon prediksi saat ini."
-                  : ` Saat ini baru ${predictionPointCount} data.`}
+              <div className="text-xs leading-relaxed text-muted-foreground flex flex-row gap-1">
+                <span>{message}</span>
+                {adg !== null && adg > 0 && (
+                  <span className="font-medium text-foreground">
+                    ADG: {adg.toFixed(2)} g/hari
+                  </span>
+                )}
               </div>
             </div>
           </DefaultCard>

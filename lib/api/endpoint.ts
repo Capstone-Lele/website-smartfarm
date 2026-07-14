@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
     LOGIN: "/auth/login",
     LOGOUT: "/logout",
     INFO: "/app/user-info",
+    VERIFY_OTP: "/auth/verify-otp",
   },
   MASTER_DATA: {
     KATEGORI: {
@@ -21,6 +22,13 @@ export const API_ENDPOINTS = {
       CREATE: "/master-data/product",
       DELETE: (id: string) => `/master-data/product/${id}`,
       UPDATE: (id: string) => `/master-data/product/${id}`,
+    },
+    DISEASE: {
+      GET_ALL: "/master-data/sick-type",
+      GET_BY_ID: (id: string) => `/master-data/sick-type/${id}`,
+      CREATE: "/master-data/sick-type",
+      DELETE: (id: string) => `/master-data/sick-type/${id}`,
+      UPDATE: (id: string) => `/master-data/sick-type/${id}`,
     },
   },
   USERS: {

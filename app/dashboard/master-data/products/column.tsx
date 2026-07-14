@@ -12,6 +12,7 @@ import ButtonDeleteColumn from "@/components/button-column/button-delete-column"
 import ButtonEditColumn from "@/components/button-column/button-edit-column";
 import ButtonSwitchColumn from "@/components/button-column/button-switch-column";
 import { useDeleteUnit } from "@/lib/api/service/master-data/unit/useUnit";
+import { PRODUCT_CONSUMPTION_TYPE } from "@/lib/constants/product-consumtion-type";
 
 export const columnsUnit: ColumnDef<Product>[] = [
   {
@@ -27,6 +28,19 @@ export const columnsUnit: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader className="" column={column} title="KATEGORI" />
     ),
+  },
+  {
+    accessorKey: "consumptionType",
+    meta: { label: "TIPE KONSUMSI" },
+    header: ({ column }) => (
+      <DataTableColumnHeader className="" column={column} title="TIPE KONSUMSI" />
+    ),
+    cell: ({ row }) => {
+      const val = row.original.consumptionType;
+      if (!val) return <span className="text-gray-400">-</span>;
+      const found = PRODUCT_CONSUMPTION_TYPE.find((t) => t.value === val);
+      return found ? found.label : val;
+    },
   },
   {
     accessorKey: "unit",

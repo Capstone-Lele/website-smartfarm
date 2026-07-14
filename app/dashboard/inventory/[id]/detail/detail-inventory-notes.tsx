@@ -11,10 +11,16 @@ import { inventoryTransactionTypeTranslation } from "@/lib/constants/type-invent
 import { useBreadcrumbStore } from "@/lib/store/useBreadcrumbStore";
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ButtonCopy } from "@/components/button-copy";
 import ButtonRedirectColumn from "@/components/button-column/button-redirect-column";
 import { LuRepeat2, LuArrowLeftRight } from "react-icons/lu";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCreateTransactionReversalInventoryNote } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
+import PopupReversal from "@/components/popup-reversal";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { TbArrowBackUpDouble } from "react-icons/tb";
 
 function InfoRow({
   label,
@@ -57,6 +63,49 @@ const DetailInventoryNotes = ({
   const { data: financeData, isLoading: isLoadingFinance } =
     useFinanceBySourceId(source);
 
+  const financeRecord = financeData?.data
+    ? Array.isArray(financeData.data)
+      ? financeData.data[0]
+      : financeData.data
+    : Array.isArray(financeData)
+      ? financeData[0]
+      : null;
+
+  const [isReversalOpen, setIsReversalOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const createTransactionReversal = useCreateTransactionReversalInventoryNote(
+    noteData?.transactionId || "",
+  );
+
+  const canCreateReversal =
+    noteData?.type !== "out" &&
+    noteData?.type !== "reversal" &&
+    Boolean(noteData?.transactionId) &&
+    financeRecord &&
+    financeRecord.referenceId === null &&
+    financeRecord.referenceSourceId === null &&
+    financeRecord.transactionReversalId === null &&
+    financeRecord.transactionReversalNoteId === null &&
+    financeRecord.isReversed === false;
+
+  const handleReversal = async () => {
+    try {
+      await createTransactionReversal.mutateAsync();
+      toast.success("Transaksi reversal berhasil dilakukan");
+      queryClient.invalidateQueries({
+        queryKey: ["inventory-detail-not-list", source],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["getFinanceBySourceId", source],
+      });
+      setIsReversalOpen(false);
+    } catch {
+      toast.error("Gagal melakukan transaksi reversal", {
+        description: "Silakan coba lagi.",
+      });
+    }
+  };
+
   /* Breadcrumb */
   useEffect(() => {
     if (inventoryData?.data) {
@@ -72,14 +121,6 @@ const DetailInventoryNotes = ({
   const reportingUser = Array.isArray(userData?.data)
     ? userData?.data[0]
     : userData?.data;
-
-  const financeRecord = financeData?.data
-    ? Array.isArray(financeData.data)
-      ? financeData.data[0]
-      : financeData.data
-    : Array.isArray(financeData)
-      ? financeData[0]
-      : null;
 
   const isIncome = noteData?.type?.toLowerCase() === "in";
   const isReversal = noteData?.type?.toLowerCase() === "reversal";
@@ -112,6 +153,40 @@ const DetailInventoryNotes = ({
 
   return (
     <div className="space-y-6">
+      {/* Header Halaman */}
+      {canCreateReversal && (
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-background p-4 rounded-sm border ">
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">
+              Reversal Transaksi
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Silahkan klik tombol reversal transaksi untuk melakukan reversal transaksi ini
+            </p>
+          </div>
+          <div>
+            <Button
+              className="bg-primary hover:bg-primary/80 text-white gap-2 cursor-pointer"
+              onClick={() => setIsReversalOpen(true)}
+              disabled={createTransactionReversal.isPending}
+            >
+              <TbArrowBackUpDouble size={18} />
+              Reversal Transaksi
+            </Button>
+            <PopupReversal
+              title="Konfirmasi Reversal"
+              message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik untuk mengoreksi stok. Jika hal ini dilakukan, tolong segera lakukan transaksi pembenaran."
+              type="warning"
+              isOpen={isReversalOpen}
+              setOpen={setIsReversalOpen}
+              isLoading={createTransactionReversal.isPending}
+              onConfirm={handleReversal}
+              onCancel={() => setIsReversalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Card: Transaksi ini telah di-reversal */}
       {(noteData?.isReversed || noteData?.transactionReversalId) && (
         <DefaultCard className="rounded-sm  ">
