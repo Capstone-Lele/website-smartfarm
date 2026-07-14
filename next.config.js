@@ -27,14 +27,18 @@ const nextConfig = {
         pathname: "/**",
       },
       {
-        protocol: "http",
-        hostname: "72.62.120.189",
-        port: "9000",
-        pathname: "/smartfarm-storage/**",
+        protocol: 'http',
+        hostname: '72.62.120.189',
+        port: '9000',
+        pathname: '/smartfarm-storage/**',
       },
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },
+  experimental: {
+    mcpServer: true,
+  },
+  devIndicators: false,
 };
 
-export default nextConfig;
+module.exports = nextConfig;
