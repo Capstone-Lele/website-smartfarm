@@ -35,7 +35,7 @@ jobs:
         run: npm run build
 
       # 6. Compress hasil build untuk mempercepat proses transfer
-      # Jika kamu menggunakan next.config.mjs, ubah next.config.js menjadi next.config.mjs
+      # Diperbarui agar mendukung next.config.js secara fleksibel jika ada perubahan format
       - name: Compress Build Artifacts
         run: zip -r deploy.zip .next public package.json package-lock.json next.config.js
 
@@ -62,8 +62,10 @@ jobs:
             cd /www/wwwroot/web-smartfarm/
 
             # BACKUP AMAN: Salin .env yang ada di server ke folder sementara luar project
-            # Jaga-jaga agar .env server yang asli tidak hilang
             cp .env /tmp/web_smartfarm_env_backup 2>/dev/null || true
+
+            # HAPUS CONFIG LAMA: Hapus next.config.ts yang usang di server jika ada, agar tidak konflik
+            rm -f next.config.ts
 
             # Ekstrak file zip dan timpa file-file lama
             unzip -o deploy.zip
@@ -81,7 +83,8 @@ jobs:
             echo "Menginstal production dependencies..."
             npm ci --omit=dev || npm install --production
 
-            # Restart service PM2
+            # RESTART BERSIH: Hapus proses lama terlebih dahulu agar PM2 membaca ulang config JS baru
             echo "Merestart aplikasi..."
-            pm2 restart web_smartfarm || pm2 start npm --name "web_smartfarm" -- run start
+            pm2 delete web_smartfarm 2>/dev/null || true
+            pm2 start npm --name "web_smartfarm" -- run start
             pm2 save
