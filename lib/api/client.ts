@@ -36,7 +36,8 @@ function isSessionExpired(token: SessionPayload): boolean {
 function isProtectedRoute(): boolean {
   if (typeof window === "undefined") return false;
   const pathname = window.location.pathname;
-  return pathname !== "/login" && pathname !== "/";
+  // /login dan /otp adalah halaman publik yang tidak butuh session
+  return pathname !== "/login" && pathname !== "/" && pathname !== "/otp";
 }
 
 const axiosInstance: AxiosInstance = axios.create({

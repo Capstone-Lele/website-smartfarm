@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
     LOGIN: "/auth/login",
     LOGOUT: "/logout",
     INFO: "/app/user-info",
+    VERIFY_OTP: "/auth/verify-otp",
   },
   MASTER_DATA: {
     KATEGORI: {

@@ -1,4 +1,4 @@
-import { LoginRequest, LoginResponse } from "@/types/auth.types";
+import { LoginRequest, LoginResponse, VerifyOtpSend } from "@/types/auth.types";
 import { API_CLIENT } from "../../client";
 import { API_ENDPOINTS } from "../../endpoint";
 import { clearSession, createSession } from "@/lib/session";
@@ -22,6 +22,15 @@ export const authService = {
 
   getUserInfo: async (): Promise<any> => {
     const response = await API_CLIENT.get<any>(API_ENDPOINTS.AUTH.INFO);
+    return response;
+  },
+
+  // verify otp
+  verifyOtp: async (credentials: VerifyOtpSend): Promise<LoginResponse> => {
+    const response = await API_CLIENT.post<LoginResponse>(
+      API_ENDPOINTS.AUTH.VERIFY_OTP,
+      credentials,
+    );
     return response;
   },
 };

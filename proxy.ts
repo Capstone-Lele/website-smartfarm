@@ -5,12 +5,14 @@ import { decrypt, getCookieDecryptedSession } from "@/lib/session";
 export async function proxy(request: NextRequest) {
   const cookies = request.cookies.get("session_token");
   const isLoginPage = request.nextUrl.pathname === "/login";
+  const isOtpPage = request.nextUrl.pathname === "/otp";
+  const isPublicAuthPage = isLoginPage || isOtpPage;
 
-  if (!cookies && !isLoginPage) { // jika tidak ada cookie dan bukan halaman login
+  if (!cookies && !isPublicAuthPage) { // jika tidak ada cookie dan bukan halaman auth publik
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (isLoginPage && !cookies) {
+  if (isPublicAuthPage && !cookies) {
     return NextResponse.next();
   }
 
@@ -31,5 +33,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login/:path*", "/dashboard/:path*"],
+  matcher: ["/login/:path*", "/otp/:path*", "/dashboard/:path*"],
 };
