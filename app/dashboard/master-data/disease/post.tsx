@@ -131,7 +131,7 @@ const PostDiseaseModal = () => {
                         <FieldError errors={[fieldState.error]} />
                       ) : (
                         <FieldDescription>
-                          Masukkan deskripsi penyakit (opsional).
+                          Masukkan deskripsi penyakit.
                         </FieldDescription>
                       )}
                     </Field>

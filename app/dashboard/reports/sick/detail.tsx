@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/utils/format-date";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
 import { translateCategoryPool } from "@/lib/utils/translate-category-pool";
+import { Badge } from "@/components/ui/badge";
 
 const DetailSickSheet = ({ item }: { item: Sick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,6 +74,35 @@ const DetailSickSheet = ({ item }: { item: Sick }) => {
                 <span className="text-muted-foreground">Petugas</span>
                 <span className="font-medium capitalize">{item.user}</span>
               </div>
+              <Separator />
+            </div>
+          </div>
+
+          {/* Penyakit / Catatan Section */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold tracking-tight">
+              Penyakit / Catatan
+            </h4>
+            <div className="flex flex-col space-y-3 pt-2">
+              {item.sickTypes && item.sickTypes.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs text-muted-foreground">Jenis Penyakit</span>
+                  <div className="flex flex-wrap gap-2">
+                    {item.sickTypes.map((type) => (
+                      <Badge key={type.id} variant="destructive">
+                        {type.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-xs text-muted-foreground">Catatan</span>
+                  <span className="text-sm font-medium bg-muted/50 p-3 rounded-md break-words border text-foreground">
+                    {item.notes || "-"}
+                  </span>
+                </div>
+              )}
               <Separator />
             </div>
           </div>

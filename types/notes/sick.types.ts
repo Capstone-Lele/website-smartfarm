@@ -17,6 +17,8 @@ export type Sick = {
   user: string;
   originStartDate: string;
   destinationStartDate: string;
+  notes?: string | null;
+  sickTypes?: { id: string; name: string }[];
 };
 
 export type SickResponse = {
