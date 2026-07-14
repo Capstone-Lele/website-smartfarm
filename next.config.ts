@@ -37,11 +37,6 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },
-  experimental: {
-    mcpServer: true,
-  },
-  devIndicators: false,
-
   // Rewrites untuk proxy API for prod only
   // async rewrites() {
   //   return [
