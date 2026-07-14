@@ -1,7 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -29,23 +27,14 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
-        protocol: 'http',
-        hostname: '72.62.120.189',
-        port: '9000',
-        pathname: '/smartfarm-storage/**', // Mengizinkan semua gambar di dalam path ini
+        protocol: "http",
+        hostname: "72.62.120.189",
+        port: "9000",
+        pathname: "/smartfarm-storage/**",
       },
     ],
     unoptimized: process.env.NODE_ENV === "development",
   },
-  // Rewrites untuk proxy API for prod only
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/proxy/:path*',
-  //       destination: 'http://72.62.120.189:3001/api/:path*',
-  //     },
-  //   ];
-  // },
 };
 
 export default nextConfig;
