@@ -2,6 +2,7 @@ export type Product = {
   id: string;
   name: string;
   category: string;
+  consumptionType?: string | null;
   unit: string;
   type: string;
   deletedAt: string | null;
@@ -10,6 +11,7 @@ export type Product = {
 export type ProductRequest = {
   name: string;
   category: string;
+  consumptionType?: string;
   unit: string;
   type: string;
 };
@@ -27,6 +29,7 @@ export interface ProductUsage {
     name: string;
     type: string;
     unit: string;
+    consumptionType: string | null;
 }
 
 export interface Response {

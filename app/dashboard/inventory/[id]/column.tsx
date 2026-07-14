@@ -8,75 +8,19 @@ import {
 import { formatDate } from "@/lib/utils/format-date";
 import { formatRupiah } from "@/lib/utils/format-rupiah";
 import ButtonDetailColumn from "@/components/button-column/button-detail-column";
-import { useState } from "react";
 import { useParams } from "next/navigation";
 import { ButtonCopy } from "@/components/button-copy";
 import { formatNumber } from "@/lib/utils/format-number";
-import PopupReversal from "@/components/popup-reversal";
-import { toast } from "sonner";
-import ButtonReversalColumn from "@/components/button-column/button-reversal-column";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useCreateTransactionReversalInventoryNote } from "@/lib/api/service/transaction-reversal/useTransactionReversal";
 
 const InventoryDetailActions = ({ row }: { row: InventoryDetail }) => {
   const { id } = useParams();
-  const [isReversalOpen, setIsReversalOpen] = useState(false);
-  const createTransactionReversal = useCreateTransactionReversalInventoryNote(
-    row.transactionId || "",
-  );
-  const canCreateReversal =
-    row.type !== "out" &&
-    row.type !== "reversal" &&
-    !row.reversedBySourceId &&
-    Boolean(row.transactionId);
-
-  const handleReversal = async () => {
-    try {
-      await createTransactionReversal.mutateAsync();
-      toast.success("Transaksi reversal berhasil dilakukan");
-      setIsReversalOpen(false);
-    } catch {
-      toast.error("Gagal melakukan transaksi reversal", {
-        description: "Silakan coba lagi.",
-      });
-    }
-  };
 
   return (
     <div className="flex items-center text-primary gap-0.5">
       <ButtonDetailColumn
         href={`/dashboard/inventory/${id}/detail/?inventoryId=${row.id}&&source=${row.source == "inventory-notes" && row.type == "out" ? "inventory-notes-out" : row.source}`}
       />
-      {canCreateReversal ? (
-        <>
-          <Separator orientation="vertical" className="h-6" />
-          <ButtonReversalColumn
-            disabled={createTransactionReversal.isPending}
-            onClick={() => setIsReversalOpen(true)}
-          />
-          <PopupReversal
-            title="Konfirmasi Reversal"
-            message="Apakah Anda yakin ingin melakukan reversal transaksi ini? Aksi ini akan membuat transaksi pembalik untuk mengoreksi stok."
-            type="warning"
-            isOpen={isReversalOpen}
-            setOpen={setIsReversalOpen}
-            isLoading={createTransactionReversal.isPending}
-            onConfirm={handleReversal}
-            onCancel={() => setIsReversalOpen(false)}
-          />
-        </>
-      ) : row.type === "reversal" ? (
-        <>
-          <Separator orientation="vertical" className="h-6" />
-          <ButtonReversalColumn disabled={true} onClick={() => {}} />
-        </>
-      ) : row.reversedBySourceId ? (
-        <>
-          <Separator orientation="vertical" className="h-6" />
-          <ButtonReversalColumn disabled={true} onClick={() => {}} />
-        </>
-      ) : null}
     </div>
   );
 };
@@ -282,7 +226,10 @@ export const columns: ColumnDef<InventoryDetail>[] = [
 
       if (item.reversedBySourceId) {
         return (
-          <Badge variant="outline" className="text-orange-700 border-orange-200">
+          <Badge
+            variant="outline"
+            className="text-orange-700 border-orange-200"
+          >
             Direversal
           </Badge>
         );

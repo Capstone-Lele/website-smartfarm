@@ -41,10 +41,12 @@ import { useCategory } from "@/lib/api/service/master-data/category/useCategory"
 import { Combobox } from "@/components/combobox";
 import { Unit } from "@/types/master-data/unit.types";
 import { TYPE_PRODUCT } from "@/lib/constants/type-product";
+import { PRODUCT_CONSUMPTION_TYPE } from "@/lib/constants/product-consumtion-type";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Nama product wajib diisi" }),
   category: z.string().min(1, { message: "Kategori product wajib diisi" }),
+  consumptionType: z.string().optional(),
   unit: z.string().min(1, { message: "Satuan product wajib diisi" }),
   type: z.string().min(1, { message: "Tipe product wajib diisi" }),
 });
@@ -62,6 +64,7 @@ const PostProductModal = () => {
     defaultValues: {
       name: "",
       category: "",
+      consumptionType: "",
       unit: "",
       type: "",
     },
@@ -203,6 +206,10 @@ const PostProductModal = () => {
                               )?.name || "uang",
                             );
                           }
+
+                          if (val.toLowerCase() !== "pakan" && val.toLowerCase() !== "vitamin") {
+                            form.setValue("consumptionType", undefined);
+                          }
                         }}
                         isLoading={productMutation.isPending}
                         name="Kategori"
@@ -220,6 +227,33 @@ const PostProductModal = () => {
                     </Field>
                   )}
                 />
+                {(watchCategory?.toLowerCase() === "pakan" || watchCategory?.toLowerCase() === "vitamin") && (
+                  <Controller
+                    name="consumptionType"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field>
+                        <FieldLabel htmlFor="consumptionType">
+                          Tipe Konsumsi
+                        </FieldLabel>
+                        <Combobox
+                          data={PRODUCT_CONSUMPTION_TYPE}
+                          onValueChange={field.onChange}
+                          isLoading={productMutation.isPending}
+                          name="Tipe Konsumsi"
+                          selectedValue={field.value}
+                        />
+                        {fieldState.invalid ? (
+                          <FieldError errors={[fieldState.error]} />
+                        ) : (
+                          <FieldDescription>
+                            Masukkan tipe konsumsi.
+                          </FieldDescription>
+                        )}
+                      </Field>
+                    )}
+                  />
+                )}
                 <Controller
                   name="unit"
                   control={form.control}

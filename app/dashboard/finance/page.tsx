@@ -203,10 +203,12 @@ const page = () => {
     activeForSummary.forEach((item) => {
       if (item.transactionType === "grant") return;
 
+      const price = Number(item.totalPrice) || 0;
+
       if (item.type === "in" || item.type === "IN") {
-        income += item.totalPrice || 0;
+        income += price;
       } else if (item.type === "out" || item.type === "OUT") {
-        expense += item.totalPrice || 0;
+        expense += price;
       }
     });
 

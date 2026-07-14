@@ -22,6 +22,13 @@ export const API_ENDPOINTS = {
       DELETE: (id: string) => `/master-data/product/${id}`,
       UPDATE: (id: string) => `/master-data/product/${id}`,
     },
+    DISEASE: {
+      GET_ALL: "/master-data/sick-type",
+      GET_BY_ID: (id: string) => `/master-data/sick-type/${id}`,
+      CREATE: "/master-data/sick-type",
+      DELETE: (id: string) => `/master-data/sick-type/${id}`,
+      UPDATE: (id: string) => `/master-data/sick-type/${id}`,
+    },
   },
   USERS: {
     GET_ALL: "/user",
